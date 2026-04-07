@@ -1151,11 +1151,11 @@
             <div class="toggle-row">
               <div class="info">
                 Equalizar Histograma<small
-                  >Melhora contraste — recomendado para exames reais</small
+                  >Ativar apenas se imagem tiver baixo contraste</small
                 >
               </div>
               <label class="toggle"
-                ><input type="checkbox" id="togEqualize" checked /><span
+                ><input type="checkbox" id="togEqualize" /><span
                   class="tog-sl"
                 ></span
               ></label>
@@ -1231,7 +1231,7 @@
             <div class="ctrl-group" id="grpWatershed">
               <label
                 >Distância mínima (watershed)
-                <span id="vWatershed">40</span>%</label
+                <span id="vWatershed">30</span>%</label
               >
               <input
                 type="range"
@@ -1239,19 +1239,19 @@
                 min="10"
                 max="90"
                 step="5"
-                value="40"
+                value="30"
               />
             </div>
 
             <div class="ctrl-group">
-              <label>Área Mínima (px²) <span id="vArea">500</span></label>
+              <label>Área Mínima (px²) <span id="vArea">800</span></label>
               <input
                 type="range"
                 id="sArea"
                 min="50"
                 max="6000"
                 step="50"
-                value="500"
+                value="800"
               />
             </div>
             <div class="ctrl-group">
@@ -1266,14 +1266,14 @@
               />
             </div>
             <div class="ctrl-group">
-              <label>Solidez Mínima <span id="vSolidity">40</span>%</label>
+              <label>Solidez Mínima <span id="vSolidity">50</span>%</label>
               <input
                 type="range"
                 id="sSolidity"
                 min="10"
                 max="90"
                 step="5"
-                value="40"
+                value="50"
               />
             </div>
             <div class="ctrl-group">
@@ -1862,18 +1862,47 @@
         minSolid,
         maxAspect,
       ) {
-        let dist = null,
-          fg = null,
-          bgDil = null,
-          unknown = null,
-          markers = null,
-          shifted = null,
-          srcBgr = null,
-          kBg = null;
+        let labelsM = null, statsM = null, centroidsM = null, cleanBin = null,
+          dist = null, fg = null, bgDil = null, unknown = null,
+          markers = null, shifted = null, srcBgr = null, kBg = null;
         try {
-          // 1. Transformada de distância: cada pixel recebe sua distância à borda
+          // 0. PRE-FILTRO: remove blobs fora do intervalo de área do binário
+          //    antes de qualquer processamento. Isso impede que artefatos de fundo
+          //    (manchas, irregularidades de iluminação) sejam detectados como
+          //    cromossomos pelo watershed.
+          labelsM    = new cv.Mat();
+          statsM     = new cv.Mat();
+          centroidsM = new cv.Mat();
+          const nL   = cv.connectedComponentsWithStats(
+            binary, labelsM, statsM, centroidsM
+          );
+          cleanBin = cv.Mat.zeros(binary.rows, binary.cols, cv.CV_8U);
+          let hasCandidates = false;
+          for (let i = 1; i < nL; i++) {
+            const a = statsM.intAt(i, cv.CC_STAT_AREA);
+            if (a < minArea || a > maxArea) continue;
+            const bw = statsM.intAt(i, cv.CC_STAT_WIDTH);
+            const bh = statsM.intAt(i, cv.CC_STAT_HEIGHT);
+            const ar = Math.max(bw, bh) / (Math.min(bw, bh) || 1);
+            if (ar > maxAspect) continue;
+            // Pinta o blob qualificado no binário limpo
+            let lMat = new cv.Mat(
+              labelsM.rows, labelsM.cols, cv.CV_32S,
+              new cv.Scalar(i, 0, 0, 0)
+            );
+            let msk = new cv.Mat();
+            cv.compare(labelsM, lMat, msk, cv.CMP_EQ);
+            cv.bitwise_or(cleanBin, msk, cleanBin);
+            lMat.delete(); msk.delete();
+            hasCandidates = true;
+          }
+          safeDel(labelsM, statsM, centroidsM);
+          labelsM = statsM = centroidsM = null;
+          if (!hasCandidates) return; // nenhum candidato → fallback no chamador
+
+          // 1. Transformada de distância sobre o binário filtrado
           dist = new cv.Mat();
-          cv.distanceTransform(binary, dist, cv.DIST_L2, 5);
+          cv.distanceTransform(cleanBin, dist, cv.DIST_L2, 5);
           cv.normalize(dist, dist, 0, 255, cv.NORM_MINMAX);
           dist.convertTo(dist, cv.CV_8U);
 
@@ -1881,17 +1910,13 @@
           const pct = parseInt(document.getElementById("sWatershed").value);
           fg = new cv.Mat();
           cv.threshold(
-            dist,
-            fg,
-            Math.round((pct * 255) / 100),
-            255,
-            cv.THRESH_BINARY,
+            dist, fg, Math.round((pct * 255) / 100), 255, cv.THRESH_BINARY,
           );
 
-          // 3. "Fundo seguro" = dilatação do binário
+          // 3. "Fundo seguro" = dilatação do binário filtrado
           bgDil = new cv.Mat();
           kBg = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
-          cv.dilate(binary, bgDil, kBg, new cv.Point(-1, -1), 3);
+          cv.dilate(cleanBin, bgDil, kBg, new cv.Point(-1, -1), 3);
 
           // 4. Região desconhecida = fundo − frente
           unknown = new cv.Mat();
@@ -1899,8 +1924,8 @@
 
           // 5. Componentes conectados da frente → marcadores
           markers = new cv.Mat();
-          const numLabels = cv.connectedComponents(fg, markers); // 0=bg, 1..n=objetos
-          if (numLabels <= 1) return; // sem frente segura → fallback no chamador
+          const numLabels = cv.connectedComponents(fg, markers);
+          if (numLabels <= 1) return;
 
           // 6. Desloca marcadores +1 (0 = desconhecido para watershed)
           shifted = new cv.Mat();
@@ -1913,28 +1938,22 @@
           srcBgr = new cv.Mat();
           cv.cvtColor(srcRGBA, srcBgr, cv.COLOR_RGBA2BGR);
           cv.watershed(srcBgr, shifted);
-          // Após watershed: -1 = fronteiras, 1 = fundo, 2..numLabels = objetos
 
           // 9. Extrai bounding rect por rótulo
           for (let lbl = 2; lbl <= numLabels; lbl++) {
-            let lblMat = null,
-              mask = null,
-              ctr = null,
-              hier = null;
+            let lblMat = null, mask = null, ctr = null, hier = null;
             try {
-              lblMat = new cv.Mat(shifted.rows, shifted.cols, cv.CV_32S);
-              lblMat.setTo(new cv.Scalar(lbl, 0, 0, 0));
+              lblMat = new cv.Mat(
+                shifted.rows, shifted.cols, cv.CV_32S,
+                new cv.Scalar(lbl, 0, 0, 0)
+              );
               mask = new cv.Mat();
-              cv.compare(shifted, lblMat, mask, cv.CMP_EQ); // CV_8U: 255 onde == lbl
+              cv.compare(shifted, lblMat, mask, cv.CMP_EQ);
 
               ctr = new cv.MatVector();
               hier = new cv.Mat();
               cv.findContours(
-                mask,
-                ctr,
-                hier,
-                cv.RETR_EXTERNAL,
-                cv.CHAIN_APPROX_SIMPLE,
+                mask, ctr, hier, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE,
               );
 
               for (let ci = 0; ci < ctr.size(); ci++) {
@@ -1962,7 +1981,7 @@
             }
           }
         } finally {
-          safeDel(dist, fg, bgDil, unknown, markers, shifted, srcBgr, kBg);
+          safeDel(labelsM, statsM, centroidsM, cleanBin, dist, fg, bgDil, unknown, markers, shifted, srcBgr, kBg);
         }
       }
 
