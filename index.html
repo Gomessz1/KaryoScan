@@ -8,34 +8,44 @@
       /* ===============================================================
          Reset & Variáveis — KaryoScan Redesign
       =============================================================== */
-      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
       :root {
-        --bg:          #0f172a;
-        --surface:     #1e293b;
-        --surface-2:   #263347;
-        --surface-3:   #334155;
-        --border:      #334155;
-        --border-h:    #475569;
-        --accent:      #3b82f6;
-        --accent-h:    #2563eb;
-        --accent-glow: rgba(59,130,246,.3);
-        --green:       #10b981;
-        --green-h:     #059669;
-        --green-glow:  rgba(16,185,129,.25);
-        --yellow:      #f59e0b;
-        --red:         #ef4444;
-        --text:        #e2e8f0;
-        --text-2:      #cbd5e1;
-        --text-3:      #94a3b8;
-        --muted:       #64748b;
-        --r:           16px;
-        --rs:          10px;
-        --tr:          0.2s cubic-bezier(.4,0,.2,1);
+        --bg: #0f172a;
+        --surface: #1e293b;
+        --surface-2: #263347;
+        --surface-3: #334155;
+        --border: #334155;
+        --border-h: #475569;
+        --accent: #3b82f6;
+        --accent-h: #2563eb;
+        --accent-glow: rgba(59, 130, 246, 0.3);
+        --green: #10b981;
+        --green-h: #059669;
+        --green-glow: rgba(16, 185, 129, 0.25);
+        --yellow: #f59e0b;
+        --red: #ef4444;
+        --text: #e2e8f0;
+        --text-2: #cbd5e1;
+        --text-3: #94a3b8;
+        --muted: #64748b;
+        --r: 16px;
+        --rs: 10px;
+        --tr: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       body {
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
         background: var(--bg);
         color: var(--text);
         min-height: 100vh;
@@ -55,51 +65,87 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        box-shadow: 0 4px 24px rgba(0,0,0,.4);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
       }
 
-      .brand { display: flex; align-items: center; gap: 14px; }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
 
       .brand-icon {
-        width: 48px; height: 48px;
+        width: 48px;
+        height: 48px;
         background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
         border-radius: 14px;
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 24px;
-        box-shadow: 0 4px 14px rgba(59,130,246,.4);
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
         flex-shrink: 0;
       }
 
       .brand-name {
-        font-size: 1.5rem; font-weight: 800;
+        font-size: 1.5rem;
+        font-weight: 800;
         background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        letter-spacing: -.01em;
+        letter-spacing: -0.01em;
       }
-      .brand-sub { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+      .brand-sub {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 1px;
+      }
 
-      .header-status { display: flex; align-items: center; gap: 10px; }
+      .header-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
       .status-pill {
-        display: flex; align-items: center; gap: 7px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
         padding: 6px 12px;
         background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: 99px;
-        font-size: 0.75rem; color: var(--text-3);
+        font-size: 0.75rem;
+        color: var(--text-3);
       }
 
       .status-dot {
-        width: 7px; height: 7px; border-radius: 50%;
-        background: var(--muted); flex-shrink: 0;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--muted);
+        flex-shrink: 0;
         animation: blink 1.4s infinite;
       }
-      .status-dot.ready { background: var(--green); animation: none; }
-      .status-dot.error { background: var(--red);   animation: none; }
+      .status-dot.ready {
+        background: var(--green);
+        animation: none;
+      }
+      .status-dot.error {
+        background: var(--red);
+        animation: none;
+      }
 
-      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+      }
 
       /* ===============================================================
          Layout
@@ -122,31 +168,49 @@
         border: 1px solid var(--border);
         border-radius: var(--r);
         padding: 20px;
-        box-shadow: 0 4px 24px rgba(0,0,0,.25);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
         transition: border-color var(--tr);
       }
-      .card:hover { border-color: var(--border-h); }
-      .card + .card { margin-top: 14px; }
+      .card:hover {
+        border-color: var(--border-h);
+      }
+      .card + .card {
+        margin-top: 14px;
+      }
 
       .card-title {
-        font-size: 0.7rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: .1em;
-        color: var(--text-3); margin-bottom: 16px;
-        display: flex; align-items: center; gap: 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
       .card-title::before {
-        content: ''; width: 3px; height: 14px;
+        content: "";
+        width: 3px;
+        height: 14px;
         background: linear-gradient(180deg, var(--accent), #10b981);
-        border-radius: 2px; flex-shrink: 0;
+        border-radius: 2px;
+        flex-shrink: 0;
       }
 
       /* ===============================================================
          Drop Zone
       =============================================================== */
       #fileInput {
-        position: absolute; width: 1px; height: 1px;
-        padding: 0; margin: -1px; overflow: hidden;
-        clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
 
       .drop-zone {
@@ -154,33 +218,66 @@
         border: 2px dashed var(--border);
         border-radius: var(--rs);
         padding: 32px 16px;
-        text-align: center; cursor: pointer;
+        text-align: center;
+        cursor: pointer;
         transition: all var(--tr);
         -webkit-tap-highlight-color: transparent;
-        background: rgba(59,130,246,.02);
+        background: rgba(59, 130, 246, 0.02);
       }
-      .drop-zone:hover, .drop-zone:active, .drop-zone.drag-over {
+      .drop-zone:hover,
+      .drop-zone:active,
+      .drop-zone.drag-over {
         border-color: var(--accent);
-        background: rgba(59,130,246,.07);
+        background: rgba(59, 130, 246, 0.07);
         transform: scale(1.01);
       }
-      .dz-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: .5; }
-      .drop-zone p  { font-size: 0.83rem; color: var(--text-3); }
-      .drop-zone strong { color: var(--accent); }
-      .drop-zone small  { color: var(--muted); font-size: .72rem; }
+      .dz-icon {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 10px;
+        opacity: 0.5;
+      }
+      .drop-zone p {
+        font-size: 0.83rem;
+        color: var(--text-3);
+      }
+      .drop-zone strong {
+        color: var(--accent);
+      }
+      .drop-zone small {
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
 
       .upload-btn {
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        width: 100%; margin-top: 12px; padding: 11px 16px;
-        background: linear-gradient(135deg, rgba(59,130,246,.15), rgba(16,185,129,.1));
-        border: 1px solid rgba(59,130,246,.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 12px;
+        padding: 11px 16px;
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.15),
+          rgba(16, 185, 129, 0.1)
+        );
+        border: 1px solid rgba(59, 130, 246, 0.5);
         border-radius: var(--rs);
-        color: #93c5fd; font-size: 0.85rem; font-weight: 600;
-        cursor: pointer; transition: all var(--tr);
+        color: #93c5fd;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--tr);
         -webkit-tap-highlight-color: transparent;
       }
-      .upload-btn:hover, .upload-btn:active {
-        background: linear-gradient(135deg, rgba(59,130,246,.3), rgba(16,185,129,.2));
+      .upload-btn:hover,
+      .upload-btn:active {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.3),
+          rgba(16, 185, 129, 0.2)
+        );
         border-color: var(--accent);
         box-shadow: 0 0 0 3px var(--accent-glow);
       }
@@ -188,323 +285,790 @@
       /* ===============================================================
          Controls
       =============================================================== */
-      .ctrl-list { display: flex; flex-direction: column; gap: 18px; }
+      .ctrl-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
 
       .ctrl-group label {
-        display: flex; justify-content: space-between;
-        font-size: 0.8rem; color: var(--text-2); margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: var(--text-2);
+        margin-bottom: 8px;
       }
       .ctrl-group label span {
-        color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums;
-        background: rgba(59,130,246,.12); padding: 1px 8px; border-radius: 99px; font-size: .75rem;
+        color: var(--accent);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        background: rgba(59, 130, 246, 0.12);
+        padding: 1px 8px;
+        border-radius: 99px;
+        font-size: 0.75rem;
       }
 
       input[type="range"] {
-        width: 100%; height: 4px; appearance: none;
-        background: var(--surface-3); border-radius: 2px; outline: none; cursor: pointer;
+        width: 100%;
+        height: 4px;
+        appearance: none;
+        background: var(--surface-3);
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
       }
       input[type="range"]::-webkit-slider-thumb {
-        appearance: none; width: 16px; height: 16px; border-radius: 50%;
-        background: var(--accent); cursor: pointer;
-        box-shadow: 0 0 0 3px rgba(59,130,246,.25);
-        transition: transform var(--tr), box-shadow var(--tr);
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--accent);
+        cursor: pointer;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        transition:
+          transform var(--tr),
+          box-shadow var(--tr);
       }
       input[type="range"]::-webkit-slider-thumb:hover {
         transform: scale(1.3);
         box-shadow: 0 0 0 5px var(--accent-glow);
       }
-      input[type="range"]:disabled { opacity: 0.4; cursor: default; }
+      input[type="range"]:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
 
       .toggle-row {
-        display: flex; align-items: center; justify-content: space-between; gap: 10px;
-        font-size: 0.8rem; padding: 10px 14px;
-        background: var(--surface-2); border-radius: var(--rs); border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 0.8rem;
+        padding: 10px 14px;
+        background: var(--surface-2);
+        border-radius: var(--rs);
+        border: 1px solid var(--border);
       }
-      .toggle-row .info { color: var(--text-2); }
-      .toggle-row .info small { display: block; font-size: .7rem; color: var(--muted); margin-top: 1px; }
+      .toggle-row .info {
+        color: var(--text-2);
+      }
+      .toggle-row .info small {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--muted);
+        margin-top: 1px;
+      }
 
-      .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
-      .toggle input { opacity: 0; width: 0; height: 0; }
+      .toggle {
+        position: relative;
+        width: 40px;
+        height: 22px;
+        flex-shrink: 0;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
       .tog-sl {
-        position: absolute; inset: 0; background: var(--surface-3);
-        border-radius: 11px; cursor: pointer; transition: background var(--tr);
+        position: absolute;
+        inset: 0;
+        background: var(--surface-3);
+        border-radius: 11px;
+        cursor: pointer;
+        transition: background var(--tr);
       }
       .tog-sl::before {
-        content: ''; position: absolute; width: 16px; height: 16px;
-        left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform var(--tr);
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        left: 3px;
+        top: 3px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform var(--tr);
       }
-      .toggle input:checked + .tog-sl { background: var(--accent); }
-      .toggle input:checked + .tog-sl::before { transform: translateX(18px); }
+      .toggle input:checked + .tog-sl {
+        background: var(--accent);
+      }
+      .toggle input:checked + .tog-sl::before {
+        transform: translateX(18px);
+      }
 
       /* ===============================================================
          Buttons
       =============================================================== */
       .btn {
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        width: 100%; padding: 11px 20px; border: none; border-radius: var(--rs);
-        font-size: 0.87rem; font-weight: 600; cursor: pointer;
-        transition: all var(--tr); letter-spacing: .01em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 11px 20px;
+        border: none;
+        border-radius: var(--rs);
+        font-size: 0.87rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--tr);
+        letter-spacing: 0.01em;
       }
-      .btn:disabled { opacity: .35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+      .btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+      }
 
       .btn-primary {
         background: linear-gradient(135deg, #3b82f6, #2563eb);
-        color: #fff; box-shadow: 0 4px 14px rgba(59,130,246,.35);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
       }
-      .btn-primary:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(59,130,246,.55); transform: translateY(-2px); }
+      .btn-primary:hover:not(:disabled) {
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.55);
+        transform: translateY(-2px);
+      }
 
       .btn-success {
         background: linear-gradient(135deg, #10b981, #059669);
-        color: #fff; box-shadow: 0 4px 14px rgba(16,185,129,.3);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
       }
-      .btn-success:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(16,185,129,.5); transform: translateY(-2px); }
+      .btn-success:hover:not(:disabled) {
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        transform: translateY(-2px);
+      }
 
-      .btn-ghost { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
-      .btn-ghost:hover:not(:disabled) { background: var(--surface-3); border-color: var(--border-h); }
+      .btn-ghost {
+        background: var(--surface-2);
+        color: var(--text-2);
+        border: 1px solid var(--border);
+      }
+      .btn-ghost:hover:not(:disabled) {
+        background: var(--surface-3);
+        border-color: var(--border-h);
+      }
 
-      .btn-group { display: flex; flex-direction: column; gap: 10px; }
+      .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
       /* ===============================================================
          Control & Results panels
       =============================================================== */
-      .control-panel { display: flex; flex-direction: column; }
-      .results-panel { display: flex; flex-direction: column; gap: 18px; }
+      .control-panel {
+        display: flex;
+        flex-direction: column;
+      }
+      .results-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
 
       /* ===============================================================
          Hero stat — chromosome count
       =============================================================== */
       .hero-stat {
         background: linear-gradient(135deg, #1e293b 0%, #162032 100%);
-        border: 1px solid rgba(59,130,246,.35);
-        border-radius: var(--r); padding: 22px 28px;
-        display: flex; align-items: center; justify-content: space-between;
-        box-shadow: 0 4px 24px rgba(59,130,246,.12);
+        border: 1px solid rgba(59, 130, 246, 0.35);
+        border-radius: var(--r);
+        padding: 22px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 24px rgba(59, 130, 246, 0.12);
       }
       .hero-label {
-        font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
-        letter-spacing: .1em; color: var(--text-3); margin-bottom: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        margin-bottom: 4px;
       }
       .hero-value {
-        font-size: 4rem; font-weight: 900; line-height: 1;
+        font-size: 4rem;
+        font-weight: 900;
+        line-height: 1;
         font-variant-numeric: tabular-nums;
         background: linear-gradient(135deg, #60a5fa, #34d399);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
-      .hero-sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
-      .hero-icon { font-size: 3.5rem; opacity: .12; }
+      .hero-sub {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .hero-icon {
+        font-size: 3.5rem;
+        opacity: 0.12;
+      }
 
       /* ===============================================================
          Stats bar (secondary)
       =============================================================== */
-      .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
       .stat-card {
-        background: var(--surface); border: 1px solid var(--border); border-radius: var(--rs);
-        padding: 16px 12px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rs);
+        padding: 16px 12px;
+        text-align: center;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
       }
       .stat-val {
-        font-size: 1.6rem; font-weight: 800; line-height: 1;
-        margin-bottom: 3px; font-variant-numeric: tabular-nums; color: var(--accent);
+        font-size: 1.6rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 3px;
+        font-variant-numeric: tabular-nums;
+        color: var(--accent);
       }
-      .stat-val.g { color: var(--green); }
-      .stat-val.y { color: var(--yellow); }
-      .stat-val.sm { font-size: 1.1rem; }
-      .stat-lbl { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+      .stat-val.g {
+        color: var(--green);
+      }
+      .stat-val.y {
+        color: var(--yellow);
+      }
+      .stat-val.sm {
+        font-size: 1.1rem;
+      }
+      .stat-lbl {
+        font-size: 0.65rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
 
       /* ===============================================================
          Canvas cards
       =============================================================== */
-      .canvas-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .canvas-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
 
       .cv-card {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--r); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.3);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       }
       .cv-head {
-        padding: 10px 16px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         background: var(--surface-2);
       }
-      .cv-head-title { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
+      .cv-head-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-3);
+      }
 
-      .badge { font-size: .65rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; letter-spacing: .04em; }
-      .badge-blue  { background: rgba(59,130,246,.2);  color: #93c5fd; }
-      .badge-green { background: rgba(16,185,129,.2);  color: #6ee7b7; }
+      .badge {
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 99px;
+        letter-spacing: 0.04em;
+      }
+      .badge-blue {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+      }
+      .badge-green {
+        background: rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+      }
 
       .cv-body {
-        display: flex; align-items: center; justify-content: center;
-        min-height: 240px; background: #060d1f; position: relative; overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 240px;
+        background: #060d1f;
+        position: relative;
+        overflow: auto;
       }
-      .cv-placeholder { text-align: center; color: var(--muted); font-size: 0.82rem; }
-      .cv-placeholder span { font-size: 2.8rem; display: block; margin-bottom: 8px; opacity: .2; }
+      .cv-placeholder {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .cv-placeholder span {
+        font-size: 2.8rem;
+        display: block;
+        margin-bottom: 8px;
+        opacity: 0.2;
+      }
 
-      canvas { max-width: 100%; height: auto; display: block; }
+      canvas {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
 
       /* ===============================================================
          Thumbnails
       =============================================================== */
       .thumb-section {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--r); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.25);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
       }
       .thumb-head {
-        padding: 12px 18px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         background: var(--surface-2);
       }
-      .thumb-head h3 { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
-      .thumb-count {
-        font-size: .75rem; color: var(--accent); font-weight: 700;
-        background: rgba(59,130,246,.12); padding: 2px 10px; border-radius: 99px;
+      .thumb-head h3 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-3);
       }
-      .thumb-grid { padding: 14px; display: flex; flex-wrap: wrap; gap: 10px; max-height: 230px; overflow-y: auto; }
-      .thumb-grid::-webkit-scrollbar { width: 4px; }
-      .thumb-grid::-webkit-scrollbar-track { background: var(--surface-2); }
-      .thumb-grid::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 2px; }
+      .thumb-count {
+        font-size: 0.75rem;
+        color: var(--accent);
+        font-weight: 700;
+        background: rgba(59, 130, 246, 0.12);
+        padding: 2px 10px;
+        border-radius: 99px;
+      }
+      .thumb-grid {
+        padding: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-height: 230px;
+        overflow-y: auto;
+      }
+      .thumb-grid::-webkit-scrollbar {
+        width: 4px;
+      }
+      .thumb-grid::-webkit-scrollbar-track {
+        background: var(--surface-2);
+      }
+      .thumb-grid::-webkit-scrollbar-thumb {
+        background: var(--surface-3);
+        border-radius: 2px;
+      }
 
       .thumb-item {
-        display: flex; flex-direction: column; align-items: center; gap: 4px;
-        padding: 8px; border-radius: var(--rs); border: 1px solid var(--border);
-        background: var(--surface-2); cursor: pointer; transition: all var(--tr);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px;
+        border-radius: var(--rs);
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        cursor: pointer;
+        transition: all var(--tr);
       }
       .thumb-item:hover {
-        border-color: var(--accent); background: rgba(59,130,246,.08);
-        transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,.2);
+        border-color: var(--accent);
+        background: rgba(59, 130, 246, 0.08);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
       }
-      .thumb-item canvas { border-radius: 4px; }
-      .thumb-lbl { font-size: .66rem; font-weight: 700; color: var(--text-3); }
-      .thumb-area { font-size: .6rem; color: var(--muted); }
-      .thumb-empty { padding: 32px; text-align: center; color: var(--muted); font-size: .82rem; width: 100%; }
+      .thumb-item canvas {
+        border-radius: 4px;
+      }
+      .thumb-lbl {
+        font-size: 0.66rem;
+        font-weight: 700;
+        color: var(--text-3);
+      }
+      .thumb-area {
+        font-size: 0.6rem;
+        color: var(--muted);
+      }
+      .thumb-empty {
+        padding: 32px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+        width: 100%;
+      }
 
       /* ===============================================================
          Overlay
       =============================================================== */
       .overlay {
-        position: fixed; inset: 0; background: rgba(10,15,30,.85);
-        display: none; align-items: center; justify-content: center;
-        z-index: 200; backdrop-filter: blur(6px);
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 15, 30, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        backdrop-filter: blur(6px);
       }
-      .overlay.show { display: flex; }
+      .overlay.show {
+        display: flex;
+      }
       .overlay-box {
-        background: var(--surface); border: 1px solid rgba(59,130,246,.3);
-        border-radius: 20px; padding: 36px 52px; text-align: center; min-width: 270px;
-        box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(59,130,246,.1);
+        background: var(--surface);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 20px;
+        padding: 36px 52px;
+        text-align: center;
+        min-width: 270px;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(59, 130, 246, 0.1);
       }
       .spinner {
-        width: 48px; height: 48px; border: 3px solid var(--surface-3);
-        border-top-color: var(--accent); border-radius: 50%;
-        margin: 0 auto 16px; animation: spin .7s linear infinite;
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--surface-3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        animation: spin 0.7s linear infinite;
       }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      .ov-title { font-size: .95rem; color: var(--text-2); font-weight: 600; }
-      .ov-step  { font-size: .75rem; color: var(--muted); margin-top: 6px; }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .ov-title {
+        font-size: 0.95rem;
+        color: var(--text-2);
+        font-weight: 600;
+      }
+      .ov-step {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 6px;
+      }
 
       /* ===============================================================
          Toast
       =============================================================== */
       .toast {
-        position: fixed; bottom: 24px; right: 24px;
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: 12px; padding: 12px 20px;
-        font-size: .83rem; color: var(--text-2);
-        transform: translateY(80px); opacity: 0;
-        transition: all .25s cubic-bezier(.4,0,.2,1);
-        z-index: 300; max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,.4);
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-size: 0.83rem;
+        color: var(--text-2);
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 300;
+        max-width: 340px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       }
-      .toast.show    { transform: translateY(0); opacity: 1; }
-      .toast.success { border-left: 3px solid var(--green);  }
-      .toast.info    { border-left: 3px solid var(--accent); }
-      .toast.warning { border-left: 3px solid var(--yellow); }
-      .toast.err     { border-left: 3px solid var(--red);    }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .toast.success {
+        border-left: 3px solid var(--green);
+      }
+      .toast.info {
+        border-left: 3px solid var(--accent);
+      }
+      .toast.warning {
+        border-left: 3px solid var(--yellow);
+      }
+      .toast.err {
+        border-left: 3px solid var(--red);
+      }
 
       /* ===============================================================
          ML / Classification panels
       =============================================================== */
       .ml-status {
-        display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--text-3);
-        border-left: 1px solid var(--border); padding-left: 14px; margin-left: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: var(--text-3);
+        border-left: 1px solid var(--border);
+        padding-left: 14px;
+        margin-left: 6px;
       }
 
       .group-section {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--r); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.25);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
       }
       .group-head {
-        padding: 12px 18px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 8px; background: var(--surface-2);
-      }
-      .group-head h3 { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
-      .group-meta { display: flex; align-items: center; gap: 10px; }
-      .group-badge {
-        font-size: .65rem; font-weight: 700; padding: 3px 10px; border-radius: 99px;
-        letter-spacing: .04em; cursor: pointer; user-select: none; transition: all var(--tr);
-      }
-      .group-badge:hover { opacity: .75; transform: scale(1.05); }
-      .group-badge.active { outline: 2px solid currentColor; outline-offset: 2px; }
-      .group-body { padding: 14px; }
-
-      .grp-row { margin-bottom: 20px; }
-      .grp-row:last-child { margin-bottom: 0; }
-      .grp-label { display: flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700; color: var(--text-2); margin-bottom: 9px; }
-      .grp-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
-      .grp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-      .grp-chip {
-        position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px;
-        padding: 7px 9px; border-radius: var(--rs); border: 2px solid transparent;
-        background: var(--surface-2); cursor: pointer; transition: all var(--tr);
-      }
-      .grp-chip:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,.4); }
-      .grp-chip canvas { border-radius: 4px; }
-      .grp-chip-lbl { font-size: .62rem; font-weight: 700; color: var(--text-3); }
-      .grp-chip-sub { font-size: .58rem; color: var(--muted); }
-      .grp-empty { padding: 28px; text-align: center; color: var(--muted); font-size: .82rem; }
-
-      .pair-section {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--r); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.25);
-      }
-      .pair-head {
-        padding: 12px 18px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
         background: var(--surface-2);
       }
-      .pair-head h3 { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
-      .pair-grid { padding: 14px; display: flex; flex-wrap: wrap; gap: 10px; max-height: 210px; overflow-y: auto; }
-      .pair-grid::-webkit-scrollbar { width: 4px; }
-      .pair-grid::-webkit-scrollbar-track { background: var(--surface-2); }
-      .pair-grid::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 2px; }
-      .pair-card {
-        display: flex; flex-direction: column; align-items: center; gap: 6px;
-        padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--rs);
-        background: var(--surface-2); min-width: 110px; transition: all var(--tr);
+      .group-head h3 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-3);
       }
-      .pair-card:hover { transform: translateY(-2px); border-color: var(--border-h); }
-      .pair-thumbs { display: flex; align-items: center; gap: 6px; }
-      .pair-plus { font-size: .9rem; color: var(--muted); font-weight: 700; }
-      .pair-lbl { font-size: .68rem; font-weight: 700; color: var(--text-3); text-align: center; }
-      .pair-score { font-size: .6rem; color: var(--muted); }
-      .pair-empty { padding: 28px; text-align: center; color: var(--muted); font-size: .82rem; width: 100%; }
+      .group-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .group-badge {
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 99px;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        user-select: none;
+        transition: all var(--tr);
+      }
+      .group-badge:hover {
+        opacity: 0.75;
+        transform: scale(1.05);
+      }
+      .group-badge.active {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+      }
+      .group-body {
+        padding: 14px;
+      }
 
-      .feat-table { width: 100%; border-collapse: collapse; font-size: .75rem; }
-      .feat-table td { padding: 4px 6px; color: var(--text-3); }
-      .feat-table td:last-child { text-align: right; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
-      .feat-table tr:nth-child(even) td { background: var(--surface-2); }
+      .grp-row {
+        margin-bottom: 20px;
+      }
+      .grp-row:last-child {
+        margin-bottom: 0;
+      }
+      .grp-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--text-2);
+        margin-bottom: 9px;
+      }
+      .grp-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .grp-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .grp-chip {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 7px 9px;
+        border-radius: var(--rs);
+        border: 2px solid transparent;
+        background: var(--surface-2);
+        cursor: pointer;
+        transition: all var(--tr);
+      }
+      .grp-chip:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      }
+      .grp-chip canvas {
+        border-radius: 4px;
+      }
+      .grp-chip-lbl {
+        font-size: 0.62rem;
+        font-weight: 700;
+        color: var(--text-3);
+      }
+      .grp-chip-sub {
+        font-size: 0.58rem;
+        color: var(--muted);
+      }
+      .grp-empty {
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .pair-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      }
+      .pair-head {
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--surface-2);
+      }
+      .pair-head h3 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-3);
+      }
+      .pair-grid {
+        padding: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-height: 210px;
+        overflow-y: auto;
+      }
+      .pair-grid::-webkit-scrollbar {
+        width: 4px;
+      }
+      .pair-grid::-webkit-scrollbar-track {
+        background: var(--surface-2);
+      }
+      .pair-grid::-webkit-scrollbar-thumb {
+        background: var(--surface-3);
+        border-radius: 2px;
+      }
+      .pair-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--rs);
+        background: var(--surface-2);
+        min-width: 110px;
+        transition: all var(--tr);
+      }
+      .pair-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--border-h);
+      }
+      .pair-thumbs {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .pair-plus {
+        font-size: 0.9rem;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .pair-lbl {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--text-3);
+        text-align: center;
+      }
+      .pair-score {
+        font-size: 0.6rem;
+        color: var(--muted);
+      }
+      .pair-empty {
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+        width: 100%;
+      }
+
+      .feat-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.75rem;
+      }
+      .feat-table td {
+        padding: 4px 6px;
+        color: var(--text-3);
+      }
+      .feat-table td:last-child {
+        text-align: right;
+        color: var(--accent);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .feat-table tr:nth-child(even) td {
+        background: var(--surface-2);
+      }
 
       /* ===============================================================
          Responsive
       =============================================================== */
       @media (max-width: 1024px) {
-        main { grid-template-columns: 1fr; padding: 16px; }
-        .canvas-row { grid-template-columns: 1fr 1fr; }
-        .stats-bar { grid-template-columns: repeat(3, 1fr); }
+        main {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+        .canvas-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stats-bar {
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
       @media (max-width: 600px) {
-        header { padding: 12px 16px; }
-        .brand-name { font-size: 1.2rem; }
-        .header-status { display: none; }
-        .canvas-row { grid-template-columns: 1fr; }
-        .stats-bar { grid-template-columns: repeat(2, 1fr); }
-        .hero-value { font-size: 3rem; }
+        header {
+          padding: 12px 16px;
+        }
+        .brand-name {
+          font-size: 1.2rem;
+        }
+        .header-status {
+          display: none;
+        }
+        .canvas-row {
+          grid-template-columns: 1fr;
+        }
+        .stats-bar {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .hero-value {
+          font-size: 3rem;
+        }
       }
     </style>
   </head>
@@ -545,7 +1109,6 @@
     <main>
       <!-- LEFT: control panel -->
       <aside class="control-panel">
-
         <!-- Upload card -->
         <div class="card">
           <div class="card-title">Imagem de Entrada</div>
@@ -553,16 +1116,22 @@
           <label class="drop-zone" id="dropZone" for="fileInput">
             <span class="dz-icon">📂</span>
             <p><strong>Toque aqui</strong> para escolher</p>
-            <p style="margin-top:3px"><small>Galeria · Câmera · Arquivos</small></p>
-            <p style="margin-top:2px"><small>PNG · JPG · BMP · TIFF</small></p>
+            <p style="margin-top: 3px">
+              <small>Galeria · Câmera · Arquivos</small>
+            </p>
+            <p style="margin-top: 2px"><small>PNG · JPG · BMP · TIFF</small></p>
           </label>
-          <label for="fileInput" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+          <label
+            for="fileInput"
+            class="upload-btn"
+            onclick="document.getElementById('fileInput').click()"
+          >
             📷 Selecionar Imagem
           </label>
         </div>
 
         <!-- Original image card -->
-        <div class="card" style="padding:0;">
+        <div class="card" style="padding: 0">
           <div class="cv-head">
             <span class="cv-head-title">Imagem Original</span>
             <span class="badge badge-blue">Entrada</span>
@@ -571,7 +1140,7 @@
             <div class="cv-placeholder" id="phOrig">
               <span>🖼️</span>Aguardando imagem…
             </div>
-            <canvas id="canvasOrig" style="display:none"></canvas>
+            <canvas id="canvasOrig" style="display: none"></canvas>
           </div>
         </div>
 
@@ -579,29 +1148,144 @@
         <div class="card">
           <div class="card-title">Parâmetros de Detecção</div>
           <div class="ctrl-list">
-            <div class="ctrl-group">
-              <label>Suavização Gaussiana <span id="vBlur">5</span></label>
-              <input type="range" id="sBlur" min="1" max="21" step="2" value="5" />
+            <div class="toggle-row">
+              <div class="info">
+                Equalizar Histograma<small
+                  >Melhora contraste — recomendado para exames reais</small
+                >
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="togEqualize" checked /><span
+                  class="tog-sl"
+                ></span
+              ></label>
             </div>
+
+            <div class="ctrl-group">
+              <label>Suavização Gaussiana <span id="vBlur">3</span></label>
+              <input
+                type="range"
+                id="sBlur"
+                min="1"
+                max="21"
+                step="2"
+                value="3"
+              />
+            </div>
+
             <div class="ctrl-group" id="grpThresh">
-              <label>Threshold (Binarização) <span id="vThresh">90</span></label>
+              <label
+                >Threshold (Binarização) <span id="vThresh">90</span></label
+              >
               <input type="range" id="sThresh" min="0" max="255" value="90" />
             </div>
             <div class="toggle-row">
-              <div class="info">Auto Threshold (Otsu)<small>Calcula o limite automaticamente</small></div>
-              <label class="toggle"><input type="checkbox" id="togOtsu"><span class="tog-sl"></span></label>
+              <div class="info">
+                Auto Threshold (Otsu)<small
+                  >Calcula limite automaticamente — recomendado</small
+                >
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="togOtsu" checked /><span
+                  class="tog-sl"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div class="info">Inverter Binarização<small>Para cromossomos escuros em fundo claro</small></div>
-              <label class="toggle"><input type="checkbox" id="togInvert" checked><span class="tog-sl"></span></label>
+              <div class="info">
+                Inverter Binarização<small
+                  >Para cromossomos escuros em fundo claro</small
+                >
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="togInvert" checked /><span
+                  class="tog-sl"
+                ></span
+              ></label>
             </div>
-            <div class="ctrl-group">
-              <label>Área Mínima (px²) <span id="vArea">300</span></label>
-              <input type="range" id="sArea" min="50" max="6000" step="50" value="300" />
-            </div>
+
             <div class="ctrl-group">
               <label>Kernel Morfológico <span id="vMorph">3</span></label>
-              <input type="range" id="sMorph" min="1" max="13" step="2" value="3" />
+              <input
+                type="range"
+                id="sMorph"
+                min="1"
+                max="13"
+                step="2"
+                value="3"
+              />
+            </div>
+
+            <div class="toggle-row">
+              <div class="info">
+                Separar cromossomos sobrepostos<small
+                  >Watershed — divide objetos que se tocam</small
+                >
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="togWatershed" checked /><span
+                  class="tog-sl"
+                ></span
+              ></label>
+            </div>
+            <div class="ctrl-group" id="grpWatershed">
+              <label
+                >Distância mínima (watershed)
+                <span id="vWatershed">40</span>%</label
+              >
+              <input
+                type="range"
+                id="sWatershed"
+                min="10"
+                max="90"
+                step="5"
+                value="40"
+              />
+            </div>
+
+            <div class="ctrl-group">
+              <label>Área Mínima (px²) <span id="vArea">500</span></label>
+              <input
+                type="range"
+                id="sArea"
+                min="50"
+                max="6000"
+                step="50"
+                value="500"
+              />
+            </div>
+            <div class="ctrl-group">
+              <label>Área Máxima (px²) <span id="vMaxArea">50000</span></label>
+              <input
+                type="range"
+                id="sMaxArea"
+                min="1000"
+                max="200000"
+                step="1000"
+                value="50000"
+              />
+            </div>
+            <div class="ctrl-group">
+              <label>Solidez Mínima <span id="vSolidity">40</span>%</label>
+              <input
+                type="range"
+                id="sSolidity"
+                min="10"
+                max="90"
+                step="5"
+                value="40"
+              />
+            </div>
+            <div class="ctrl-group">
+              <label>Proporção máx. (L/C) <span id="vAspect">8</span>:1</label>
+              <input
+                type="range"
+                id="sAspect"
+                min="2"
+                max="20"
+                step="1"
+                value="8"
+              />
             </div>
           </div>
         </div>
@@ -615,16 +1299,35 @@
               <input type="range" id="sK" min="2" max="12" step="1" value="5" />
             </div>
             <div class="toggle-row">
-              <div class="info">Classificar após detecção<small>Executa K-Means automaticamente</small></div>
-              <label class="toggle"><input type="checkbox" id="togAutoClassify" checked><span class="tog-sl"></span></label>
+              <div class="info">
+                Classificar após detecção<small
+                  >Executa K-Means automaticamente</small
+                >
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="togAutoClassify" checked /><span
+                  class="tog-sl"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div class="info">Sugerir pares<small>Par mais similar por grupo</small></div>
-              <label class="toggle"><input type="checkbox" id="togPairs" checked><span class="tog-sl"></span></label>
+              <div class="info">
+                Sugerir pares<small>Par mais similar por grupo</small>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="togPairs" checked /><span
+                  class="tog-sl"
+                ></span
+              ></label>
             </div>
           </div>
-          <div style="margin-top:14px">
-            <button class="btn btn-ghost" id="btnClassify" onclick="runClassification()" disabled>
+          <div style="margin-top: 14px">
+            <button
+              class="btn btn-ghost"
+              id="btnClassify"
+              onclick="runClassification()"
+              disabled
+            >
               🧠 Classificar Agora
             </button>
           </div>
@@ -634,10 +1337,20 @@
         <div class="card">
           <div class="card-title">Ações</div>
           <div class="btn-group">
-            <button class="btn btn-primary" id="btnProcess" onclick="processImage()" disabled>
+            <button
+              class="btn btn-primary"
+              id="btnProcess"
+              onclick="processImage()"
+              disabled
+            >
               ⚡ Detectar Cromossomos
             </button>
-            <button class="btn btn-success" id="btnDownload" onclick="downloadResult()" disabled>
+            <button
+              class="btn btn-success"
+              id="btnDownload"
+              onclick="downloadResult()"
+              disabled
+            >
               ⬇ Baixar Imagem Processada
             </button>
             <button class="btn btn-ghost" onclick="clearAll()">
@@ -645,12 +1358,10 @@
             </button>
           </div>
         </div>
-
       </aside>
 
       <!-- RIGHT: results panel -->
       <div class="results-panel">
-
         <!-- Hero stat: chromosome count -->
         <div class="hero-stat">
           <div>
@@ -687,7 +1398,7 @@
             <div class="cv-placeholder" id="phResult">
               <span>🔬</span>Execute a detecção…
             </div>
-            <canvas id="canvasResult" style="display:none"></canvas>
+            <canvas id="canvasResult" style="display: none"></canvas>
           </div>
         </div>
 
@@ -698,7 +1409,9 @@
             <span class="thumb-count" id="thumbCount">0 objetos</span>
           </div>
           <div class="thumb-grid" id="thumbGrid">
-            <div class="thumb-empty">As miniaturas aparecerão aqui após a detecção.</div>
+            <div class="thumb-empty">
+              As miniaturas aparecerão aqui após a detecção.
+            </div>
           </div>
         </div>
 
@@ -707,12 +1420,21 @@
           <div class="group-head">
             <h3>Agrupamento por Similaridade</h3>
             <div class="group-meta">
-              <span style="font-size:.72rem;color:var(--muted)" id="groupMeta">—</span>
-              <div id="groupLegend" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+              <span
+                style="font-size: 0.72rem; color: var(--muted)"
+                id="groupMeta"
+                >—</span
+              >
+              <div
+                id="groupLegend"
+                style="display: flex; gap: 6px; flex-wrap: wrap"
+              ></div>
             </div>
           </div>
           <div class="group-body" id="groupBody">
-            <div class="grp-empty">Execute a detecção e a classificação para ver os grupos.</div>
+            <div class="grp-empty">
+              Execute a detecção e a classificação para ver os grupos.
+            </div>
           </div>
         </div>
 
@@ -720,14 +1442,18 @@
         <div class="pair-section" id="pairSection">
           <div class="pair-head">
             <h3>Sugestão de Pares</h3>
-            <span style="font-size:.72rem;color:var(--muted)" id="pairMeta">—</span>
+            <span style="font-size: 0.72rem; color: var(--muted)" id="pairMeta"
+              >—</span
+            >
           </div>
           <div class="pair-grid" id="pairGrid">
-            <div class="pair-empty">Os pares sugeridos aparecerão aqui após a classificação.</div>
+            <div class="pair-empty">
+              Os pares sugeridos aparecerão aqui após a classificação.
+            </div>
           </div>
         </div>
-
-      </div><!-- /results-panel -->
+      </div>
+      <!-- /results-panel -->
     </main>
 
     <!-- ================================================================
@@ -772,8 +1498,22 @@
       document.getElementById("sArea").addEventListener("input", (e) => {
         document.getElementById("vArea").textContent = e.target.value;
       });
+      document.getElementById("sMaxArea").addEventListener("input", (e) => {
+        document.getElementById("vMaxArea").textContent = Number(
+          e.target.value,
+        ).toLocaleString("pt-BR");
+      });
       document.getElementById("sMorph").addEventListener("input", (e) => {
         document.getElementById("vMorph").textContent = e.target.value;
+      });
+      document.getElementById("sWatershed").addEventListener("input", (e) => {
+        document.getElementById("vWatershed").textContent = e.target.value;
+      });
+      document.getElementById("sSolidity").addEventListener("input", (e) => {
+        document.getElementById("vSolidity").textContent = e.target.value;
+      });
+      document.getElementById("sAspect").addEventListener("input", (e) => {
+        document.getElementById("vAspect").textContent = e.target.value;
       });
 
       // Toggle Otsu desabilita o slider de threshold manual
@@ -784,6 +1524,24 @@
           grp.style.opacity = this.checked ? ".38" : "1";
           document.getElementById("sThresh").disabled = this.checked;
         });
+
+      // Toggle Watershed desabilita o slider de distância
+      document
+        .getElementById("togWatershed")
+        .addEventListener("change", function () {
+          const grp = document.getElementById("grpWatershed");
+          grp.style.opacity = this.checked ? "1" : ".38";
+          document.getElementById("sWatershed").disabled = !this.checked;
+        });
+
+      // Aplica estado inicial dos toggles (Otsu ON por padrão)
+      (function () {
+        const otsuOn = document.getElementById("togOtsu").checked;
+        document.getElementById("grpThresh").style.opacity = otsuOn
+          ? ".38"
+          : "1";
+        document.getElementById("sThresh").disabled = otsuOn;
+      })();
 
       // ================================================================
       //  Upload & Drag-and-Drop
@@ -892,9 +1650,9 @@
         const t0 = performance.now();
         const origCanvas = document.getElementById("canvasOrig");
 
-        // Matrizes OpenCV — declaradas fora do bloco para serem deletadas no finally
         let src = null,
           gray = null,
+          equalized = null,
           blurred = null,
           binary = null,
           morphed = null,
@@ -904,22 +1662,31 @@
           result = null;
 
         try {
-          // 1. Lê a imagem do canvas (formato RGBA)
+          // 1. Ler pixels
           stepMsg("Lendo pixels…");
           src = cv.imread(origCanvas);
 
-          // 2. Converte para escala de cinza
+          // 2. Escala de cinza
           stepMsg("Convertendo para escala de cinza…");
           gray = new cv.Mat();
           cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
 
-          // 3. Suavização Gaussiana (reduz ruído / artefatos)
+          // 3. Equalização de histograma — aumenta contraste em exames reais
+          equalized = new cv.Mat();
+          if (document.getElementById("togEqualize").checked) {
+            stepMsg("Equalizando histograma…");
+            cv.equalizeHist(gray, equalized);
+          } else {
+            gray.copyTo(equalized);
+          }
+
+          // 4. Filtro Gaussiano
           stepMsg("Aplicando filtro Gaussiano…");
           blurred = new cv.Mat();
           const kBlur = parseInt(document.getElementById("sBlur").value);
-          cv.GaussianBlur(gray, blurred, new cv.Size(kBlur, kBlur), 0);
+          cv.GaussianBlur(equalized, blurred, new cv.Size(kBlur, kBlur), 0);
 
-          // 4. Binarização (threshold)
+          // 5. Binarização (threshold manual, Otsu ou adaptativo)
           stepMsg("Binarizando…");
           binary = new cv.Mat();
           const invert = document.getElementById("togInvert").checked;
@@ -931,9 +1698,7 @@
           if (useOtsu) tType |= cv.THRESH_OTSU;
           cv.threshold(blurred, binary, tVal, 255, tType);
 
-          // 5. Operações morfológicas
-          //    - OPEN:  remove ruído pequeno (erosão seguida de dilatação)
-          //    - CLOSE: fecha buracos nos objetos (dilatação seguida de erosão)
+          // 6. Morfologia: OPEN remove ruído, CLOSE fecha buracos nos cromossomos
           stepMsg("Aplicando morfologia…");
           morphed = new cv.Mat();
           const kMorph = parseInt(document.getElementById("sMorph").value);
@@ -944,50 +1709,80 @@
           cv.morphologyEx(binary, morphed, cv.MORPH_OPEN, kernel);
           cv.morphologyEx(morphed, morphed, cv.MORPH_CLOSE, kernel);
 
-          // 6. Detecção de contornos externos
-          stepMsg("Detectando contornos…");
-          contours = new cv.MatVector();
-          hierarchy = new cv.Mat();
-          cv.findContours(
-            morphed,
-            contours,
-            hierarchy,
-            cv.RETR_EXTERNAL,
-            cv.CHAIN_APPROX_SIMPLE,
-          );
-
-          // 7. Filtra por área mínima e coleta bounding rects
+          // Parâmetros de filtro de forma
           const minArea = parseInt(document.getElementById("sArea").value);
+          const maxArea = parseInt(document.getElementById("sMaxArea").value);
+          const minSolid =
+            parseInt(document.getElementById("sSolidity").value) / 100;
+          const maxAspect = parseInt(document.getElementById("sAspect").value);
+          const useWS = document.getElementById("togWatershed").checked;
+
           rects = [];
           areas = [];
-          for (let i = 0; i < contours.size(); i++) {
-            const c = contours.get(i);
-            const area = cv.contourArea(c);
-            if (area >= minArea) {
-              rects.push(cv.boundingRect(c));
+
+          // 7a. Watershed: separa cromossomos que se tocam
+          if (useWS) {
+            stepMsg("Separando cromossomos (watershed)…");
+            _runWatershed(morphed, src, minArea, maxArea, minSolid, maxAspect);
+          }
+
+          // 7b. Fallback: detecção direta por contornos
+          if (!useWS || rects.length === 0) {
+            stepMsg("Detectando contornos…");
+            contours = new cv.MatVector();
+            hierarchy = new cv.Mat();
+            cv.findContours(
+              morphed,
+              contours,
+              hierarchy,
+              cv.RETR_EXTERNAL,
+              cv.CHAIN_APPROX_SIMPLE,
+            );
+
+            rects = [];
+            areas = [];
+            for (let i = 0; i < contours.size(); i++) {
+              const c = contours.get(i);
+              const area = cv.contourArea(c);
+              if (area < minArea || area > maxArea) continue;
+
+              // Filtro de solidez: rejeita artefatos irregulares
+              const hull = new cv.Mat();
+              cv.convexHull(c, hull);
+              const hullArea = cv.contourArea(hull);
+              hull.delete();
+              if (hullArea > 0 && area / hullArea < minSolid) continue;
+
+              // Filtro de proporção: rejeita objetos excessivamente alongados
+              const rect = cv.boundingRect(c);
+              const ar =
+                Math.max(rect.width, rect.height) /
+                (Math.min(rect.width, rect.height) || 1);
+              if (ar > maxAspect) continue;
+
+              rects.push(rect);
               areas.push(Math.round(area));
             }
           }
 
-          // Ordena por área decrescente (maior cromossomo primeiro)
+          // 8. Ordena por área decrescente
           const paired = rects.map((r, i) => ({ r, a: areas[i] }));
           paired.sort((a, b) => b.a - a.a);
           rects = paired.map((p) => p.r);
           areas = paired.map((p) => p.a);
 
-          // 8. Desenha bounding boxes + rótulos sobre clone colorido
+          // 9. Desenha bounding boxes + rótulos
           stepMsg("Desenhando resultados…");
           result = src.clone();
-
           rects.forEach((rect, idx) => {
             const col = PALETTE[idx % PALETTE.length];
-            const p1 = new cv.Point(rect.x, rect.y);
-            const p2 = new cv.Point(rect.x + rect.width, rect.y + rect.height);
-
-            // Caixa colorida
-            cv.rectangle(result, p1, p2, col, 2);
-
-            // Calculamos a escala de fonte proporcional ao objeto
+            cv.rectangle(
+              result,
+              new cv.Point(rect.x, rect.y),
+              new cv.Point(rect.x + rect.width, rect.y + rect.height),
+              col,
+              2,
+            );
             const fs = Math.min(
               0.65,
               Math.max(0.3, Math.min(rect.width, rect.height) / 55),
@@ -995,8 +1790,6 @@
             const label = "" + (idx + 1);
             const lx = rect.x + 3;
             const ly = Math.max(rect.y + Math.round(16 * fs) + 2, 16);
-
-            // Contorno preto para legibilidade
             cv.putText(
               result,
               label,
@@ -1006,7 +1799,6 @@
               [0, 0, 0, 255],
               3,
             );
-            // Texto colorido
             cv.putText(
               result,
               label,
@@ -1018,16 +1810,12 @@
             );
           });
 
-          // 9. Exibe no canvas de resultado
           cv.imshow("canvasResult", result);
           document.getElementById("phResult").style.display = "none";
           document.getElementById("canvasResult").style.display = "block";
 
-          // 10. Atualiza métricas
           const elapsed = Math.round(performance.now() - t0);
           updateStats(rects.length, areas, elapsed);
-
-          // 11. Gera miniaturas
           buildThumbnails(origCanvas, rects, areas);
 
           document.getElementById("btnDownload").disabled = false;
@@ -1037,20 +1825,18 @@
             "success",
           );
 
-          // Auto-classify se toggle ativado e TF.js pronto
           if (
             document.getElementById("togAutoClassify").checked &&
             tfReady &&
             rects.length >= 2
           ) {
-            // Executa após um tick para liberar o overlay primeiro
             setTimeout(() => runClassification(), 10);
           }
         } finally {
-          // Libera memória da WebAssembly do OpenCV
           safeDel(
             src,
             gray,
+            equalized,
             blurred,
             binary,
             morphed,
@@ -1059,6 +1845,124 @@
             hierarchy,
             result,
           );
+        }
+      }
+
+      /**
+       * Watershed transform — separa cromossomos sobrepostos.
+       * Utiliza transformada de distância + componentes conectados para gerar
+       * marcadores individuais e aplica o algoritmo de watershed do OpenCV.
+       * Popula diretamente as arrays globais rects[] e areas[].
+       */
+      function _runWatershed(
+        binary,
+        srcRGBA,
+        minArea,
+        maxArea,
+        minSolid,
+        maxAspect,
+      ) {
+        let dist = null,
+          fg = null,
+          bgDil = null,
+          unknown = null,
+          markers = null,
+          shifted = null,
+          srcBgr = null,
+          kBg = null;
+        try {
+          // 1. Transformada de distância: cada pixel recebe sua distância à borda
+          dist = new cv.Mat();
+          cv.distanceTransform(binary, dist, cv.DIST_L2, 5);
+          cv.normalize(dist, dist, 0, 255, cv.NORM_MINMAX);
+          dist.convertTo(dist, cv.CV_8U);
+
+          // 2. "Frente segura" = centros dos cromossomos (alta distância)
+          const pct = parseInt(document.getElementById("sWatershed").value);
+          fg = new cv.Mat();
+          cv.threshold(
+            dist,
+            fg,
+            Math.round((pct * 255) / 100),
+            255,
+            cv.THRESH_BINARY,
+          );
+
+          // 3. "Fundo seguro" = dilatação do binário
+          bgDil = new cv.Mat();
+          kBg = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
+          cv.dilate(binary, bgDil, kBg, new cv.Point(-1, -1), 3);
+
+          // 4. Região desconhecida = fundo − frente
+          unknown = new cv.Mat();
+          cv.subtract(bgDil, fg, unknown);
+
+          // 5. Componentes conectados da frente → marcadores
+          markers = new cv.Mat();
+          const numLabels = cv.connectedComponents(fg, markers); // 0=bg, 1..n=objetos
+          if (numLabels <= 1) return; // sem frente segura → fallback no chamador
+
+          // 6. Desloca marcadores +1 (0 = desconhecido para watershed)
+          shifted = new cv.Mat();
+          markers.convertTo(shifted, cv.CV_32S, 1, 1);
+
+          // 7. Marca região desconhecida como 0
+          shifted.setTo(new cv.Scalar(0, 0, 0, 0), unknown);
+
+          // 8. Watershed (requer imagem BGR 3 canais)
+          srcBgr = new cv.Mat();
+          cv.cvtColor(srcRGBA, srcBgr, cv.COLOR_RGBA2BGR);
+          cv.watershed(srcBgr, shifted);
+          // Após watershed: -1 = fronteiras, 1 = fundo, 2..numLabels = objetos
+
+          // 9. Extrai bounding rect por rótulo
+          for (let lbl = 2; lbl <= numLabels; lbl++) {
+            let lblMat = null,
+              mask = null,
+              ctr = null,
+              hier = null;
+            try {
+              lblMat = new cv.Mat(shifted.rows, shifted.cols, cv.CV_32S);
+              lblMat.setTo(new cv.Scalar(lbl, 0, 0, 0));
+              mask = new cv.Mat();
+              cv.compare(shifted, lblMat, mask, cv.CMP_EQ); // CV_8U: 255 onde == lbl
+
+              ctr = new cv.MatVector();
+              hier = new cv.Mat();
+              cv.findContours(
+                mask,
+                ctr,
+                hier,
+                cv.RETR_EXTERNAL,
+                cv.CHAIN_APPROX_SIMPLE,
+              );
+
+              for (let ci = 0; ci < ctr.size(); ci++) {
+                const c = ctr.get(ci);
+                const area = cv.contourArea(c);
+                if (area < minArea || area > maxArea) continue;
+
+                const hull = new cv.Mat();
+                cv.convexHull(c, hull);
+                const hullArea = cv.contourArea(hull);
+                hull.delete();
+                if (hullArea > 0 && area / hullArea < minSolid) continue;
+
+                const rect = cv.boundingRect(c);
+                const ar =
+                  Math.max(rect.width, rect.height) /
+                  (Math.min(rect.width, rect.height) || 1);
+                if (ar > maxAspect) continue;
+
+                rects.push(rect);
+                areas.push(Math.round(area));
+              }
+            } finally {
+              safeDel(lblMat, mask, ctr, hier);
+            }
+          }
+        } finally {
+          safeDel(dist, fg, bgDil, unknown, markers, shifted, srcBgr, kBg);
         }
       }
 
