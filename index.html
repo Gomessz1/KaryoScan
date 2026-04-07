@@ -1375,11 +1375,23 @@
             resetResult(false);
             document.getElementById("sRes").textContent =
               img.width + "×" + img.height;
-            document.getElementById("btnProcess").disabled = !cvReady;
-            toast(
-              "Imagem carregada (" + img.width + "×" + img.height + ")",
-              "info",
-            );
+
+            if (cvReady) {
+              document.getElementById("btnProcess").disabled = false;
+              toast(
+                "Imagem carregada (" + img.width + "×" + img.height + ")",
+                "info",
+              );
+            } else {
+              // OpenCV ainda carregando — avisa o usuário e habilita
+              // o botão automaticamente quando ele estiver pronto
+              document.getElementById("btnProcess").textContent =
+                "⏳ Aguardando OpenCV...";
+              toast(
+                "Imagem carregada! Aguardando OpenCV.js carregar para habilitar a detecção...",
+                "warning",
+              );
+            }
           };
           img.src = ev.target.result;
         };
@@ -1801,8 +1813,15 @@
           cvReady = true;
           document.getElementById("cvDot").classList.add("ready");
           document.getElementById("cvTxt").textContent = "OpenCV.js pronto";
-          if (srcImage) document.getElementById("btnProcess").disabled = false;
-          toast("OpenCV.js carregado com sucesso!", "success");
+          // Se já há imagem carregada, habilita o botão e avisa
+          if (srcImage) {
+            const btn = document.getElementById("btnProcess");
+            btn.disabled = false;
+            btn.textContent = "⚡ Detectar Cromóssomos";
+            toast("OpenCV.js pronto! Agora pode detectar.", "success");
+          } else {
+            toast("OpenCV.js carregado com sucesso!", "success");
+          }
         },
       };
 
