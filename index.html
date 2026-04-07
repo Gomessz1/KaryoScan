@@ -978,25 +978,122 @@
         align-items: center;
         gap: 6px;
         padding: 12px 14px;
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: var(--rs);
         background: var(--surface-2);
-        min-width: 110px;
+        min-width: 130px;
         transition: all var(--tr);
+        cursor: pointer;
+        position: relative;
       }
       .pair-card:hover {
         transform: translateY(-2px);
         border-color: var(--border-h);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      }
+      .pair-card.selected-a {
+        outline: 3px solid #f59e0b;
+        outline-offset: 2px;
+      }
+      .pair-card.manual-pair {
+        border-style: dashed;
+      }
+      .pair-card .pair-num {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        font-size: 0.6rem;
+        font-weight: 800;
+        color: var(--muted);
       }
       .pair-thumbs {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
       }
       .pair-plus {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
         color: var(--muted);
         font-weight: 700;
+        flex-shrink: 0;
+      }
+      .pair-lbl {
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: var(--text-3);
+        text-align: center;
+      }
+      .pair-score {
+        font-size: 0.62rem;
+        color: var(--muted);
+      }
+      .pair-sim-bar {
+        width: 100%;
+        height: 3px;
+        background: var(--surface-3);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .pair-sim-fill {
+        height: 100%;
+        border-radius: 2px;
+      }
+      .pair-unpaired {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 10px;
+        border: 1px dashed var(--border);
+        border-radius: var(--rs);
+        background: transparent;
+        min-width: 80px;
+        opacity: 0.65;
+        cursor: pointer;
+        transition: all var(--tr);
+      }
+      .pair-unpaired:hover {
+        opacity: 1;
+        border-color: var(--accent);
+      }
+      .pair-unpaired.selected-a {
+        outline: 3px solid #f59e0b;
+        outline-offset: 2px;
+        opacity: 1;
+      }
+      .pair-section-sep {
+        width: 100%;
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 4px 0;
+      }
+      .pair-mode-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        background: rgba(245, 158, 11, 0.08);
+        border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+        font-size: 0.75rem;
+        color: #fbbf24;
+      }
+      .pair-mode-bar button {
+        margin-left: auto;
+        padding: 3px 10px;
+        border: 1px solid #f59e0b;
+        background: transparent;
+        color: #fbbf24;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+      .pair-empty {
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+        width: 100%;
       }
       .pair-lbl {
         font-size: 0.68rem;
@@ -1294,28 +1391,14 @@
         <div class="card">
           <div class="card-title">Classificação ML</div>
           <div class="ctrl-list">
-            <div class="ctrl-group">
-              <label>Nº de Grupos (K-Means) <span id="vK">5</span></label>
-              <input type="range" id="sK" min="2" max="12" step="1" value="5" />
-            </div>
             <div class="toggle-row">
               <div class="info">
                 Classificar após detecção<small
-                  >Executa K-Means automaticamente</small
+                  >Executa pareamento automaticamente</small
                 >
               </div>
               <label class="toggle"
                 ><input type="checkbox" id="togAutoClassify" checked /><span
-                  class="tog-sl"
-                ></span
-              ></label>
-            </div>
-            <div class="toggle-row">
-              <div class="info">
-                Sugerir pares<small>Par mais similar por grupo</small>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="togPairs" checked /><span
                   class="tog-sl"
                 ></span
               ></label>
@@ -1328,7 +1411,7 @@
               onclick="runClassification()"
               disabled
             >
-              🧠 Classificar Agora
+              🧠 Parear Cromossomos
             </button>
           </div>
         </div>
@@ -1441,14 +1524,40 @@
         <!-- Pairs -->
         <div class="pair-section" id="pairSection">
           <div class="pair-head">
-            <h3>Sugestão de Pares</h3>
-            <span style="font-size: 0.72rem; color: var(--muted)" id="pairMeta"
-              >—</span
-            >
+            <h3>Pares de Cromossomos Homólogos</h3>
+            <div style="display: flex; align-items: center; gap: 8px">
+              <span
+                style="font-size: 0.72rem; color: var(--muted)"
+                id="pairMeta"
+                >—</span
+              >
+              <button
+                id="btnManualPair"
+                onclick="toggleManualMode()"
+                style="
+                  padding: 3px 10px;
+                  border: 1px solid var(--border);
+                  background: var(--surface-3);
+                  color: var(--text-3);
+                  border-radius: 6px;
+                  cursor: pointer;
+                  font-size: 0.7rem;
+                  font-weight: 700;
+                  display: none;
+                "
+              >
+                ✏️ Corrigir
+              </button>
+            </div>
+          </div>
+          <div id="pairModeBar" style="display: none" class="pair-mode-bar">
+            ✏️ Modo de correção: clique no primeiro cromossomo, depois no
+            segundo para formá-los como par.
+            <button onclick="toggleManualMode()">Sair</button>
           </div>
           <div class="pair-grid" id="pairGrid">
             <div class="pair-empty">
-              Os pares sugeridos aparecerão aqui após a classificação.
+              Os pares aparecerão aqui após a classificação.
             </div>
           </div>
         </div>
@@ -1880,11 +1989,14 @@
           //    cromossomo). Clusters de cromossomos COLADOS têm área N×cromossomo,
           //    então usamos limite generoso para não descartar esses grupos antes
           //    do watershed tentar separá-los.
-          labelsM    = new cv.Mat();
-          statsM     = new cv.Mat();
+          labelsM = new cv.Mat();
+          statsM = new cv.Mat();
           centroidsM = new cv.Mat();
-          const nL   = cv.connectedComponentsWithStats(
-            binary, labelsM, statsM, centroidsM,
+          const nL = cv.connectedComponentsWithStats(
+            binary,
+            labelsM,
+            statsM,
+            centroidsM,
           );
           cleanBin = cv.Mat.zeros(binary.rows, binary.cols, cv.CV_8U);
           let hasCandidates = false;
@@ -1899,13 +2011,16 @@
             // Pinta o blob no binário limpo (sem filtro de aspecto aqui —
             // os filtros de forma são aplicados após o watershed)
             let lMat = new cv.Mat(
-              labelsM.rows, labelsM.cols, cv.CV_32S,
+              labelsM.rows,
+              labelsM.cols,
+              cv.CV_32S,
               new cv.Scalar(i, 0, 0, 0),
             );
             let msk = new cv.Mat();
             cv.compare(labelsM, lMat, msk, cv.CMP_EQ);
             cv.bitwise_or(cleanBin, msk, cleanBin);
-            lMat.delete(); msk.delete();
+            lMat.delete();
+            msk.delete();
             hasCandidates = true;
           }
           safeDel(labelsM, statsM, centroidsM);
@@ -1916,9 +2031,12 @@
           //     cromossomos que se tocam, aumentando o vale na transformada
           //     de distância e facilitando a criação de 2 sementes separadas.
           let eroded = new cv.Mat();
-          let kEr = cv.getStructuringElement(cv.MORPH_ELLIPSE, new cv.Size(3,3));
-          cv.erode(cleanBin, eroded, kEr, new cv.Point(-1,-1), 1);
-          cv.dilate(eroded, eroded, kEr, new cv.Point(-1,-1), 1); // reopen
+          let kEr = cv.getStructuringElement(
+            cv.MORPH_ELLIPSE,
+            new cv.Size(3, 3),
+          );
+          cv.erode(cleanBin, eroded, kEr, new cv.Point(-1, -1), 1);
+          cv.dilate(eroded, eroded, kEr, new cv.Point(-1, -1), 1); // reopen
           kEr.delete();
           // Usa binário erodido APENAS para a transformada de distância/sementes;
           // o cleanBin original é mantido para o "fundo seguro" na etapa 3.
@@ -2261,11 +2379,6 @@
         document.getElementById("tfTxt").textContent = "TF.js pronto";
       }
 
-      // Slider de K
-      document.getElementById("sK").addEventListener("input", (e) => {
-        document.getElementById("vK").textContent = e.target.value;
-      });
-
       // ---------------------------------------------------------------
       //  Paleta de cores para grupos (hex + rgba)
       // ---------------------------------------------------------------
@@ -2283,6 +2396,35 @@
         "#14b8a6",
         "#e11d48",
       ];
+
+      // 24 cores distintas — uma por par de cromossomos (humano tem 23 pares + sexuais)
+      const PAIR_COLORS_HEX = [
+        "#3b82f6",
+        "#10b981",
+        "#f59e0b",
+        "#ef4444",
+        "#8b5cf6",
+        "#06b6d4",
+        "#f97316",
+        "#ec4899",
+        "#84cc16",
+        "#6366f1",
+        "#14b8a6",
+        "#e11d48",
+        "#0ea5e9",
+        "#a3e635",
+        "#fb923c",
+        "#c084fc",
+        "#34d399",
+        "#fbbf24",
+        "#f87171",
+        "#60a5fa",
+        "#4ade80",
+        "#e879f9",
+        "#22d3ee",
+        "#facc15",
+      ];
+
       function hexToRgba(hex, a = 255) {
         const r = parseInt(hex.slice(1, 3), 16);
         const g = parseInt(hex.slice(3, 5), 16);
@@ -2426,122 +2568,101 @@
       //  Sugestão de pares: dentro de cada grupo, encontra o par com
       //  menor distância de features (euclidiana) entre dois elementos.
       // ---------------------------------------------------------------
-      function suggestPairs(featNorm, labels, k) {
+      // ---------------------------------------------------------------
+      //  PAREAMENTO 1:1 de cromóssomos homólogos
+      //  Algoritmo: greedy nearest-neighbour com distância euclidiana
+      //  nas features normalizadas. Não requer K (número de grupos).
+      //  Cada cromossomo emparelha com o mais similar ainda disponível.
+      //  Cromóssomos ímpar ficam como "sem par" (número ímpar de detecções).
+      // ---------------------------------------------------------------
+
+      // Estado do pareamento
+      let pairedPairs = []; // [{idxA, idxB, sim}, ...]
+      let unpairedIdxs = []; // [idx, ...] — cromossomos sem par
+      let manualMode = false;
+      let manualFirstIdx = -1;
+
+      /**
+       * Forma os melhores pares 1:1 por greedy matching.
+       * @param  {number[][]} featNorm  Features normalizadas (z-score)
+       * @returns {{ pairs: {idxA,idxB,sim}[], unpaired: number[] }}
+       */
+      function pairChromosomes(featNorm) {
+        const n = featNorm.length;
+        const used = new Array(n).fill(false);
         const pairs = [];
-        for (let c = 0; c < k; c++) {
-          const members = featNorm
-            .map((f, i) => ({ f, i }))
-            .filter(({ i }) => labels[i] === c);
-          if (members.length < 2) continue;
-          let best = Infinity,
-            bA = -1,
-            bB = -1;
-          for (let a = 0; a < members.length; a++) {
-            for (let b = a + 1; b < members.length; b++) {
-              const d = euclidean(members[a].f, members[b].f);
-              if (d < best) {
-                best = d;
-                bA = members[a].i;
-                bB = members[b].i;
-              }
+
+        // Para cada cromossomo não usado, encontra o parceiro mais próximo
+        for (let i = 0; i < n; i++) {
+          if (used[i]) continue;
+          let bestD = Infinity,
+            bestJ = -1;
+          for (let j = i + 1; j < n; j++) {
+            if (used[j]) continue;
+            const d = euclidean(featNorm[i], featNorm[j]);
+            if (d < bestD) {
+              bestD = d;
+              bestJ = j;
             }
           }
-          if (bA >= 0)
-            pairs.push({ group: c, idxA: bA, idxB: bB, score: best });
-        }
-        // Ordena por similaridade (menor distância = mais similar)
-        pairs.sort((a, b) => a.score - b.score);
-        return pairs;
-      }
-
-      // ---------------------------------------------------------------
-      //  Ponto de entrada da classificação
-      // ---------------------------------------------------------------
-
-      // Estado ML
-      let mlLabels = []; // rótulo de grupo para cada cromossomo (na ordem de rects)
-      let mlFeatNorm = []; // features normalizadas
-      let mlK = 5; // número de grupos usados
-
-      async function runClassification() {
-        if (!tfReady) {
-          toast("TF.js ainda não carregou.", "warning");
-          return;
-        }
-        if (rects.length === 0) {
-          toast("Detecte cromossomos primeiro.", "warning");
-          return;
-        }
-
-        document.getElementById("btnClassify").disabled = true;
-        showOverlay(true);
-        stepMsg("Extraindo features…");
-
-        try {
-          // 1. Extrai features brutas
-          const featRaw = rects.map((r, i) => extractFeatures(r, areas[i]));
-
-          // 2. Normalização z-score
-          stepMsg("Normalizando features…");
-          mlFeatNorm = zScoreNormalize(featRaw);
-          mlK = Math.min(
-            parseInt(document.getElementById("sK").value),
-            rects.length,
-          );
-
-          // 3. K-Means
-          stepMsg("Executando K-Means (TF.js)…");
-          mlLabels = await kMeansTF(mlFeatNorm, mlK);
-
-          // 4. Renderiza agrupamentos
-          stepMsg("Renderizando grupos…");
-          const origCanvas = document.getElementById("canvasOrig");
-          renderGroups(origCanvas, rects, areas, mlLabels, mlK);
-
-          // 5. Colore bboxes no canvas de resultado por grupo
-          reColorResult(origCanvas, rects, mlLabels, mlK);
-
-          // 6. Pares
-          if (document.getElementById("togPairs").checked) {
-            const pairs = suggestPairs(mlFeatNorm, mlLabels, mlK);
-            renderPairs(origCanvas, rects, areas, mlLabels, pairs, mlK);
-          } else {
-            document.getElementById("pairGrid").innerHTML =
-              '<div class="pair-empty">Sugestão de pares desativada.</div>';
-            document.getElementById("pairMeta").textContent = "—";
+          if (bestJ >= 0) {
+            used[i] = used[bestJ] = true;
+            // Similaridade: transforma distância em 0-100%
+            const sim = Math.round(
+              Math.max(0, 1 - Math.min(bestD, 4) / 4) * 100,
+            );
+            pairs.push({ idxA: i, idxB: bestJ, sim });
           }
-
-          // 7. Atualiza miniaturas com borda colorida por grupo
-          colorThumbnailBorders(mlLabels, mlK);
-
-          toast("Classificação concluída — " + mlK + " grupos", "success");
-        } catch (err) {
-          console.error("[KaryoScan-ML]", err);
-          toast("Erro na classificação: " + err.message, "err");
-        } finally {
-          showOverlay(false);
-          document.getElementById("btnClassify").disabled = false;
         }
+
+        const unpaired = [];
+        for (let i = 0; i < n; i++) if (!used[i]) unpaired.push(i);
+
+        // Ordena por número do cromóssomo A (mantém ordem visual)
+        pairs.sort((a, b) => a.idxA - b.idxA);
+        return { pairs, unpaired };
       }
 
-      // ---------------------------------------------------------------
-      //  Re-desenha o canvas de resultado com cores de grupo
-      // ---------------------------------------------------------------
-      function reColorResult(origCanvas, rects, labels, k) {
+      /**
+       * Redesenha o canvas de resultado com cada par em uma cor única.
+       * Par 0 = cor 0, par 1 = cor 1, etc.
+       * Cromossomos sem par ficam em cinza.
+       */
+      function reColorByPairs(origCanvas, rects, pairs, unpaired) {
         const src = cv.imread(origCanvas);
-        rects.forEach((rect, idx) => {
-          const col = hexToRgba(
-            GROUP_COLORS_HEX[labels[idx] % GROUP_COLORS_HEX.length],
-          );
-          const p1 = new cv.Point(rect.x, rect.y);
-          const p2 = new cv.Point(rect.x + rect.width, rect.y + rect.height);
-          cv.rectangle(src, p1, p2, col, 3);
+        const PAL_HEX = PAIR_COLORS_HEX;
 
+        // Mapeia idx → cor
+        const colMap = {};
+        pairs.forEach(({ idxA, idxB }, pi) => {
+          const hex = PAL_HEX[pi % PAL_HEX.length];
+          colMap[idxA] = hex;
+          colMap[idxB] = hex;
+        });
+        unpaired.forEach((idx) => {
+          colMap[idx] = "#94a3b8";
+        }); // cinza
+
+        rects.forEach((rect, idx) => {
+          const hex = colMap[idx] || "#94a3b8";
+          const col = hexToRgba(hex);
+          cv.rectangle(
+            src,
+            new cv.Point(rect.x, rect.y),
+            new cv.Point(rect.x + rect.width, rect.y + rect.height),
+            col,
+            3,
+          );
           const fs = Math.min(
             0.65,
             Math.max(0.3, Math.min(rect.width, rect.height) / 55),
           );
-          const lbl = "" + (idx + 1);
+          // Rótulo: "Xa" ou "Xb" (onde X = número do par)
+          let lbl = "" + (idx + 1);
+          pairs.forEach(({ idxA, idxB }, pi) => {
+            if (idx === idxA) lbl = pi + 1 + "a";
+            if (idx === idxB) lbl = pi + 1 + "b";
+          });
           const lx = rect.x + 3;
           const ly = Math.max(rect.y + Math.round(18 * fs) + 2, 18);
           cv.putText(
@@ -2567,8 +2688,340 @@
         src.delete();
       }
 
+      /**
+       * Renderiza o painel de pares (lado a lado).
+       */
+      function renderPairsPanel(origCanvas, rects, areas, pairs, unpaired) {
+        const grid = document.getElementById("pairGrid");
+        grid.innerHTML = "";
+
+        document.getElementById("pairMeta").textContent =
+          pairs.length + " par(es) · " + unpaired.length + " sem par";
+        document.getElementById("btnManualPair").style.display = "inline-flex";
+
+        if (pairs.length === 0 && unpaired.length === 0) {
+          grid.innerHTML =
+            '<div class="pair-empty">Nenhum cromossomo detectado.</div>';
+          return;
+        }
+
+        const PAD = 5,
+          THUMB = 60;
+
+        function makeThumb(idx, borderHex) {
+          const rect = rects[idx];
+          const sx = Math.max(0, rect.x - PAD);
+          const sy = Math.max(0, rect.y - PAD);
+          const sx2 = Math.min(origCanvas.width, rect.x + rect.width + PAD);
+          const sy2 = Math.min(origCanvas.height, rect.y + rect.height + PAD);
+          const sw = sx2 - sx,
+            sh = sy2 - sy;
+          const scale = THUMB / Math.max(sw, sh);
+          const tw = Math.max(1, Math.round(sw * scale));
+          const th = Math.max(1, Math.round(sh * scale));
+          const tc = document.createElement("canvas");
+          tc.width = tw;
+          tc.height = th;
+          tc.style.border = "2px solid " + borderHex;
+          tc.style.borderRadius = "4px";
+          tc.getContext("2d").drawImage(
+            origCanvas,
+            sx,
+            sy,
+            sw,
+            sh,
+            0,
+            0,
+            tw,
+            th,
+          );
+          return tc;
+        }
+
+        // Pares automáticos / confirmados
+        pairs.forEach(({ idxA, idxB, sim, manual }, pi) => {
+          const hex = PAIR_COLORS_HEX[pi % PAIR_COLORS_HEX.length];
+          const card = document.createElement("div");
+          card.className = "pair-card" + (manual ? " manual-pair" : "");
+          card.style.borderColor = hex;
+          card.dataset.pairIdx = pi;
+
+          // Número do par
+          const num = document.createElement("span");
+          num.className = "pair-num";
+          num.textContent = "Par " + (pi + 1);
+          card.appendChild(num);
+
+          const thumbs = document.createElement("div");
+          thumbs.className = "pair-thumbs";
+          thumbs.appendChild(makeThumb(idxA, hex));
+          const arrow = document.createElement("span");
+          arrow.className = "pair-plus";
+          arrow.textContent = "⇄";
+          thumbs.appendChild(arrow);
+          thumbs.appendChild(makeThumb(idxB, hex));
+          card.appendChild(thumbs);
+
+          const lbl = document.createElement("div");
+          lbl.className = "pair-lbl";
+          lbl.style.color = hex;
+          lbl.textContent =
+            "#" +
+            (idxA + 1) +
+            (pi < 9 ? "a" : "") +
+            " + #" +
+            (idxB + 1) +
+            (pi < 9 ? "b" : "");
+          card.appendChild(lbl);
+
+          // Barra de similaridade
+          const bar = document.createElement("div");
+          bar.className = "pair-sim-bar";
+          const fill = document.createElement("div");
+          fill.className = "pair-sim-fill";
+          fill.style.width = sim + "%";
+          fill.style.background = hex;
+          bar.appendChild(fill);
+          card.appendChild(bar);
+
+          const sc = document.createElement("div");
+          sc.className = "pair-score";
+          sc.textContent = manual ? "✏️ manual" : sim + "% similar";
+          card.appendChild(sc);
+
+          // Clique no card para modo manual
+          card.onclick = () => handlePairCardClick(pi, -1);
+          grid.appendChild(card);
+        });
+
+        // Separádor + cromóssomos sem par
+        if (unpaired.length > 0) {
+          const sep = document.createElement("div");
+          sep.style.cssText =
+            "width:100%;padding:6px 0 2px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)";
+          sep.textContent = "Sem par (" + unpaired.length + ")";
+          grid.appendChild(sep);
+
+          unpaired.forEach((idx) => {
+            const card = document.createElement("div");
+            card.className = "pair-unpaired";
+            card.dataset.unpairedIdx = idx;
+            card.title =
+              "Cromóssomo #" + (idx + 1) + " — clique para parear manualmente";
+            card.appendChild(makeThumb(idx, "#94a3b8"));
+            const lbl2 = document.createElement("div");
+            lbl2.className = "pair-score";
+            lbl2.textContent = "#" + (idx + 1);
+            card.appendChild(lbl2);
+            card.onclick = () => handlePairCardClick(-1, idx);
+            grid.appendChild(card);
+          });
+        }
+
+        // Colore bordas das miniaturas
+        colorThumbnailBordersByPairs(pairs, unpaired);
+      }
+
       // ---------------------------------------------------------------
-      //  Renderiza painéis de grupo
+      //  Modo de correção manual
+      // ---------------------------------------------------------------
+      function toggleManualMode() {
+        manualMode = !manualMode;
+        manualFirstIdx = -1;
+        document.getElementById("pairModeBar").style.display = manualMode
+          ? "flex"
+          : "none";
+        document.getElementById("btnManualPair").textContent = manualMode
+          ? "✓ Sair"
+          : "✏️ Corrigir";
+        // Remove highlight de seleção anterior
+        document
+          .querySelectorAll(".selected-a")
+          .forEach((el) => el.classList.remove("selected-a"));
+        if (!manualMode) toast("Modo manual desativado.", "info");
+        else toast("Clique no 1º cromóssomo do par.", "info");
+      }
+
+      /**
+       * Trata clique em card de par ou sem-par no modo manual.
+       * pairIdx = índice em pairedPairs (ou -1 se unpaired)
+       * unpairedIdx = índice em rects (ou -1 se paired)
+       */
+      function handlePairCardClick(pairIdx, unpairedIdx) {
+        if (!manualMode) return;
+        // Resolve o índice real do cromóssomo clicado
+        // Para simplificiação: clique em um card de par seleciona o par inteiro
+        // como um dos lados; clique em unpaired seleciona aquele cromóssomo.
+        // Implementação simplificada: qualquer clique em dois cards TROCA os seus
+        // parceiros ou forma um novo par entre eles.
+        const el = event.currentTarget;
+        if (manualFirstIdx === -1) {
+          // Primeira seleção
+          manualFirstIdx = { pairIdx, unpairedIdx, el };
+          el.classList.add("selected-a");
+          toast("Agora clique no 2º cromossomo.", "info");
+        } else {
+          // Segunda seleção — tenta formar par
+          manualFirstIdx.el.classList.remove("selected-a");
+          const first = manualFirstIdx;
+          manualFirstIdx = -1;
+
+          // Obtém índice real de cada lado
+          let idxA =
+            first.unpairedIdx >= 0
+              ? first.unpairedIdx
+              : first.pairIdx >= 0
+                ? pairedPairs[first.pairIdx].idxA
+                : -1;
+          let idxB =
+            unpairedIdx >= 0
+              ? unpairedIdx
+              : pairIdx >= 0
+                ? pairedPairs[pairIdx].idxA
+                : -1;
+          if (idxA === idxB || idxA < 0 || idxB < 0) {
+            toast("Selecione dois cromossomos diferentes.", "warning");
+            return;
+          }
+
+          // Remove ambos de quaisquer pares existentes
+          pairedPairs = pairedPairs.filter(
+            (p) =>
+              p.idxA !== idxA &&
+              p.idxB !== idxA &&
+              p.idxA !== idxB &&
+              p.idxB !== idxB,
+          );
+          // Adiciona novo par manual
+          pairedPairs.push({
+            idxA: Math.min(idxA, idxB),
+            idxB: Math.max(idxA, idxB),
+            sim: 100,
+            manual: true,
+          });
+          pairedPairs.sort((a, b) => a.idxA - b.idxA);
+
+          // Recalcula unpaired
+          const usedSet = new Set();
+          pairedPairs.forEach((p) => {
+            usedSet.add(p.idxA);
+            usedSet.add(p.idxB);
+          });
+          unpairedIdxs = rects.map((_, i) => i).filter((i) => !usedSet.has(i));
+
+          // Re-renderiza
+          const origCanvas = document.getElementById("canvasOrig");
+          reColorByPairs(origCanvas, rects, pairedPairs, unpairedIdxs);
+          renderPairsPanel(origCanvas, rects, areas, pairedPairs, unpairedIdxs);
+          toast("Par formado: #" + (idxA + 1) + " + #" + (idxB + 1), "success");
+        }
+      }
+
+      // ---------------------------------------------------------------
+      //  Colore bordas das miniaturas por par
+      // ---------------------------------------------------------------
+      function colorThumbnailBordersByPairs(pairs, unpaired) {
+        const grid = document.getElementById("thumbGrid");
+        const items = grid.querySelectorAll(".thumb-item");
+        // Monta mapa idx→hex
+        const colMap = {};
+        pairs.forEach(({ idxA, idxB }, pi) => {
+          const hex = PAIR_COLORS_HEX[pi % PAIR_COLORS_HEX.length];
+          colMap[idxA] = hex;
+          colMap[idxB] = hex;
+        });
+        unpaired.forEach((idx) => {
+          colMap[idx] = "#94a3b8";
+        });
+        items.forEach((item, idx) => {
+          const hex = colMap[idx] || "#94a3b8";
+          item.style.borderColor = hex;
+          item.style.boxShadow = "0 0 0 1px " + hex + "40";
+        });
+      }
+
+      // ---------------------------------------------------------------
+      //  Ponto de entrada da classificação
+      // ---------------------------------------------------------------
+
+      // Estado do pareamento
+      let mlLabels = []; // mantido por compatibilidade com renderGroups
+      let mlFeatNorm = [];
+      let mlK = 5;
+
+      async function runClassification() {
+        if (!tfReady) {
+          toast("TF.js ainda não carregou.", "warning");
+          return;
+        }
+        if (rects.length === 0) {
+          toast("Detecte cromossomos primeiro.", "warning");
+          return;
+        }
+
+        document.getElementById("btnClassify").disabled = true;
+        showOverlay(true);
+        stepMsg("Extraindo features…");
+
+        try {
+          // 1. Features + normalização
+          const featRaw = rects.map((r, i) => extractFeatures(r, areas[i]));
+          stepMsg("Normalizando features…");
+          mlFeatNorm = zScoreNormalize(featRaw);
+
+          // 2. Pareamento 1:1
+          stepMsg("Calculando pares homólogos…");
+          const { pairs, unpaired } = pairChromosomes(mlFeatNorm);
+          pairedPairs = pairs;
+          unpairedIdxs = unpaired;
+
+          // 3. Re-colore imagem por par
+          stepMsg("Colorindo pares na imagem…");
+          const origCanvas = document.getElementById("canvasOrig");
+          reColorByPairs(origCanvas, rects, pairedPairs, unpairedIdxs);
+
+          // 4. Renderiza painel de pares
+          stepMsg("Renderizando painel…");
+          renderPairsPanel(origCanvas, rects, areas, pairedPairs, unpairedIdxs);
+
+          // 5. K-Means ainda é usado para o painel de grupos (secundário)
+          mlK = Math.min(Math.ceil(rects.length / 2), 12);
+          if (rects.length >= 2) {
+            mlLabels = await kMeansTF(mlFeatNorm, mlK);
+            renderGroups(origCanvas, rects, areas, mlLabels, mlK);
+          }
+
+          toast(
+            pairedPairs.length +
+              " par(es) identificado(s)" +
+              (unpairedIdxs.length
+                ? " · " + unpairedIdxs.length + " sem par"
+                : ""),
+            "success",
+          );
+        } catch (err) {
+          console.error("[KaryoScan-ML]", err);
+          toast("Erro na classificação: " + err.message, "err");
+        } finally {
+          showOverlay(false);
+          document.getElementById("btnClassify").disabled = false;
+        }
+      }
+
+      // ---------------------------------------------------------------
+      //  Re-desenha o canvas de resultado com cores de grupo (legado)
+      // ---------------------------------------------------------------
+      function reColorResult(origCanvas, rects, labels, k) {
+        reColorByPairs(
+          origCanvas,
+          rects,
+          pairedPairs.length ? pairedPairs : [],
+          unpairedIdxs.length ? unpairedIdxs : rects.map((_, i) => i),
+        );
+      }
+
+      // ---------------------------------------------------------------
+      //  Renderiza painéis de grupo (legado, ainda mostrado abaixo dos pares)
       // ---------------------------------------------------------------
       function renderGroups(origCanvas, rects, areas, labels, k) {
         const body = document.getElementById("groupBody");
@@ -2663,93 +3116,6 @@
           row.appendChild(chips);
           body.appendChild(row);
         }
-      }
-
-      // ---------------------------------------------------------------
-      //  Renderiza painel de pares sugeridos
-      // ---------------------------------------------------------------
-      function renderPairs(origCanvas, rects, areas, labels, pairs, k) {
-        const grid = document.getElementById("pairGrid");
-        grid.innerHTML = "";
-        document.getElementById("pairMeta").textContent =
-          pairs.length + " par(es) encontrado(s)";
-
-        if (pairs.length === 0) {
-          grid.innerHTML =
-            '<div class="pair-empty">Grupos com apenas 1 elemento — sem pares.</div>';
-          return;
-        }
-
-        const PAD = 4,
-          THUMB = 54;
-
-        pairs.forEach(({ group, idxA, idxB, score }) => {
-          const hex = GROUP_COLORS_HEX[group % GROUP_COLORS_HEX.length];
-          const similarity = Math.max(
-            0,
-            Math.round((1 - Math.min(score, 5) / 5) * 100),
-          );
-
-          const card = document.createElement("div");
-          card.className = "pair-card";
-          card.style.borderColor = hex + "60";
-
-          // Miniaturas dos dois candidatos
-          const thumbsDiv = document.createElement("div");
-          thumbsDiv.className = "pair-thumbs";
-
-          [idxA, idxB].forEach((idx, ti) => {
-            if (ti === 1) {
-              const plus = document.createElement("span");
-              plus.className = "pair-plus";
-              plus.textContent = "⟷";
-              thumbsDiv.appendChild(plus);
-            }
-            const rect = rects[idx];
-            const sx = Math.max(0, rect.x - PAD);
-            const sy = Math.max(0, rect.y - PAD);
-            const sx2 = Math.min(origCanvas.width, rect.x + rect.width + PAD);
-            const sy2 = Math.min(origCanvas.height, rect.y + rect.height + PAD);
-            const sw = sx2 - sx,
-              sh = sy2 - sy;
-            const scale = THUMB / Math.max(sw, sh);
-            const tw = Math.max(1, Math.round(sw * scale));
-            const th = Math.max(1, Math.round(sh * scale));
-
-            const tc = document.createElement("canvas");
-            tc.width = tw;
-            tc.height = th;
-            tc.style.border = "2px solid " + hex;
-            tc.style.borderRadius = "4px";
-            tc.getContext("2d").drawImage(
-              origCanvas,
-              sx,
-              sy,
-              sw,
-              sh,
-              0,
-              0,
-              tw,
-              th,
-            );
-            thumbsDiv.appendChild(tc);
-          });
-
-          const lbl = document.createElement("div");
-          lbl.className = "pair-lbl";
-          lbl.textContent = "#" + (idxA + 1) + " + #" + (idxB + 1);
-          lbl.style.color = hex;
-
-          const sc = document.createElement("div");
-          sc.className = "pair-score";
-          sc.textContent =
-            "Grupo " + (group + 1) + " · Similaridade " + similarity + "%";
-
-          card.appendChild(thumbsDiv);
-          card.appendChild(lbl);
-          card.appendChild(sc);
-          grid.appendChild(card);
-        });
       }
 
       // ---------------------------------------------------------------
