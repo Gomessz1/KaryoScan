@@ -1862,33 +1862,45 @@
         minSolid,
         maxAspect,
       ) {
-        let labelsM = null, statsM = null, centroidsM = null, cleanBin = null,
-          dist = null, fg = null, bgDil = null, unknown = null,
-          markers = null, shifted = null, srcBgr = null, kBg = null;
+        let labelsM = null,
+          statsM = null,
+          centroidsM = null,
+          cleanBin = null,
+          dist = null,
+          fg = null,
+          bgDil = null,
+          unknown = null,
+          markers = null,
+          shifted = null,
+          srcBgr = null,
+          kBg = null;
         try {
-          // 0. PRE-FILTRO: remove blobs fora do intervalo de área do binário
-          //    antes de qualquer processamento. Isso impede que artefatos de fundo
-          //    (manchas, irregularidades de iluminação) sejam detectados como
-          //    cromossomos pelo watershed.
+          // 0. PRE-FILTRO: remove apenas ruído minúsculo (<metade da área mínima)
+          //    e manchas gigantescas de fundo (>12× a área máxima de um único
+          //    cromossomo). Clusters de cromossomos COLADOS têm área N×cromossomo,
+          //    então usamos limite generoso para não descartar esses grupos antes
+          //    do watershed tentar separá-los.
           labelsM    = new cv.Mat();
           statsM     = new cv.Mat();
           centroidsM = new cv.Mat();
           const nL   = cv.connectedComponentsWithStats(
-            binary, labelsM, statsM, centroidsM
+            binary, labelsM, statsM, centroidsM,
           );
           cleanBin = cv.Mat.zeros(binary.rows, binary.cols, cv.CV_8U);
           let hasCandidates = false;
+          // Limite superior para o pré-filtro = 12× maxArea de 1 cromossomo
+          // (permite grupos de até ~12 cromossomos colados passarem para o watershed)
+          const preMaxArea = maxArea * 12;
+          // Limite inferior = metade de minArea (só elimina ruído pixel)
+          const preMinArea = Math.max(1, Math.round(minArea * 0.5));
           for (let i = 1; i < nL; i++) {
             const a = statsM.intAt(i, cv.CC_STAT_AREA);
-            if (a < minArea || a > maxArea) continue;
-            const bw = statsM.intAt(i, cv.CC_STAT_WIDTH);
-            const bh = statsM.intAt(i, cv.CC_STAT_HEIGHT);
-            const ar = Math.max(bw, bh) / (Math.min(bw, bh) || 1);
-            if (ar > maxAspect) continue;
-            // Pinta o blob qualificado no binário limpo
+            if (a < preMinArea || a > preMaxArea) continue;
+            // Pinta o blob no binário limpo (sem filtro de aspecto aqui —
+            // os filtros de forma são aplicados após o watershed)
             let lMat = new cv.Mat(
               labelsM.rows, labelsM.cols, cv.CV_32S,
-              new cv.Scalar(i, 0, 0, 0)
+              new cv.Scalar(i, 0, 0, 0),
             );
             let msk = new cv.Mat();
             cv.compare(labelsM, lMat, msk, cv.CMP_EQ);
@@ -1900,9 +1912,23 @@
           labelsM = statsM = centroidsM = null;
           if (!hasCandidates) return; // nenhum candidato → fallback no chamador
 
-          // 1. Transformada de distância sobre o binário filtrado
+          // 0b. EROSÃO LEVE antes da distância: afina as pontes finas entre
+          //     cromossomos que se tocam, aumentando o vale na transformada
+          //     de distância e facilitando a criação de 2 sementes separadas.
+          let eroded = new cv.Mat();
+          let kEr = cv.getStructuringElement(cv.MORPH_ELLIPSE, new cv.Size(3,3));
+          cv.erode(cleanBin, eroded, kEr, new cv.Point(-1,-1), 1);
+          cv.dilate(eroded, eroded, kEr, new cv.Point(-1,-1), 1); // reopen
+          kEr.delete();
+          // Usa binário erodido APENAS para a transformada de distância/sementes;
+          // o cleanBin original é mantido para o "fundo seguro" na etapa 3.
+          let distSrc = eroded;
+
+          // 1. Transformada de distância sobre o binário erodido
+          //    (o vale entre cromossomos colados é mais profundo após erosão)
           dist = new cv.Mat();
-          cv.distanceTransform(cleanBin, dist, cv.DIST_L2, 5);
+          cv.distanceTransform(distSrc, dist, cv.DIST_L2, 5);
+          distSrc.delete();
           cv.normalize(dist, dist, 0, 255, cv.NORM_MINMAX);
           dist.convertTo(dist, cv.CV_8U);
 
@@ -1910,10 +1936,14 @@
           const pct = parseInt(document.getElementById("sWatershed").value);
           fg = new cv.Mat();
           cv.threshold(
-            dist, fg, Math.round((pct * 255) / 100), 255, cv.THRESH_BINARY,
+            dist,
+            fg,
+            Math.round((pct * 255) / 100),
+            255,
+            cv.THRESH_BINARY,
           );
 
-          // 3. "Fundo seguro" = dilatação do binário filtrado
+          // 3. "Fundo seguro" = dilatação do cleanBin original (não erodido)
           bgDil = new cv.Mat();
           kBg = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
           cv.dilate(cleanBin, bgDil, kBg, new cv.Point(-1, -1), 3);
@@ -1941,11 +1971,16 @@
 
           // 9. Extrai bounding rect por rótulo
           for (let lbl = 2; lbl <= numLabels; lbl++) {
-            let lblMat = null, mask = null, ctr = null, hier = null;
+            let lblMat = null,
+              mask = null,
+              ctr = null,
+              hier = null;
             try {
               lblMat = new cv.Mat(
-                shifted.rows, shifted.cols, cv.CV_32S,
-                new cv.Scalar(lbl, 0, 0, 0)
+                shifted.rows,
+                shifted.cols,
+                cv.CV_32S,
+                new cv.Scalar(lbl, 0, 0, 0),
               );
               mask = new cv.Mat();
               cv.compare(shifted, lblMat, mask, cv.CMP_EQ);
@@ -1953,7 +1988,11 @@
               ctr = new cv.MatVector();
               hier = new cv.Mat();
               cv.findContours(
-                mask, ctr, hier, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE,
+                mask,
+                ctr,
+                hier,
+                cv.RETR_EXTERNAL,
+                cv.CHAIN_APPROX_SIMPLE,
               );
 
               for (let ci = 0; ci < ctr.size(); ci++) {
@@ -1981,7 +2020,20 @@
             }
           }
         } finally {
-          safeDel(labelsM, statsM, centroidsM, cleanBin, dist, fg, bgDil, unknown, markers, shifted, srcBgr, kBg);
+          safeDel(
+            labelsM,
+            statsM,
+            centroidsM,
+            cleanBin,
+            dist,
+            fg,
+            bgDil,
+            unknown,
+            markers,
+            shifted,
+            srcBgr,
+            kBg,
+          );
         }
       }
 
