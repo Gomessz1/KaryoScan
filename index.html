@@ -463,9 +463,6 @@
       .control-panel {
         display: flex;
         flex-direction: column;
-        position: sticky;
-        top: 81px;
-        max-height: calc(100vh - 105px);
       }
 
       /* ── Tab navigation ─────────────────────────────────────────── */
@@ -502,18 +499,12 @@
         font-weight: 700;
       }
       .tab-body {
-        flex: 1;
-        overflow-y: auto;
         background: var(--bg);
         border: 1px solid var(--border);
         border-top: none;
         border-radius: 0 0 var(--r) var(--r);
         padding: 14px;
-        min-height: 0;
       }
-      .tab-body::-webkit-scrollbar { width: 5px; }
-      .tab-body::-webkit-scrollbar-track { background: var(--bg); }
-      .tab-body::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
       .tab-pane { display: none; }
       .tab-pane.active {
         display: flex;
