@@ -2950,16 +2950,6 @@
         applyZoom(pct);
       }
 
-      // Scroll do mouse = zoom
-      document.getElementById("bodyResult").addEventListener(
-        "wheel",
-        (e) => {
-          e.preventDefault();
-          stepZoom(e.deltaY < 0 ? 1 : -1);
-        },
-        { passive: false },
-      );
-
       // ================================================================
       //  Utilitários UI
       // ================================================================
