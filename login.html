@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KaryoScan — Acesso Institucional</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #060d1b;
+        --surface: #0d1a2e;
+        --border: #1e3352;
+        --accent: #3b82f6;
+        --accent2: #10b981;
+        --text: #e2e8f0;
+        --text-2: #94a3b8;
+        --grad: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+        --error: #ef4444;
+        --warn: #f59e0b;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse 60% 50% at 50% 50%,
+          rgba(59, 130, 246, 0.07) 0%,
+          transparent 70%
+        );
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 40px 36px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+        animation: fadeUp 0.4s ease both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+      .brand-icon {
+        width: 44px;
+        height: 44px;
+        background: var(--grad);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .brand-name {
+        font-size: 1.5rem;
+        font-weight: 900;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .brand-v {
+        font-size: 0.6rem;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        font-weight: 700;
+      }
+
+      .card-title {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-2);
+        margin-bottom: 32px;
+      }
+
+      label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-2);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .field {
+        margin-bottom: 18px;
+      }
+      input {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 11px 14px;
+        color: var(--text);
+        font-size: 0.9rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: inherit;
+      }
+      input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      }
+
+      .pw-wrap {
+        position: relative;
+      }
+      .pw-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-2);
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 4px;
+      }
+
+      .btn-login {
+        width: 100%;
+        padding: 13px;
+        background: var(--grad);
+        border: none;
+        border-radius: 9px;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 6px;
+      }
+      .btn-login:hover {
+        box-shadow: 0 6px 22px rgba(59, 130, 246, 0.4);
+        transform: translateY(-1px);
+      }
+      .btn-login:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .alert {
+        display: none;
+        padding: 11px 14px;
+        border-radius: 8px;
+        font-size: 0.83rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+      .alert.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+      }
+      .alert.warn {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: #fcd34d;
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 24px 0;
+      }
+      .help {
+        text-align: center;
+        font-size: 0.78rem;
+        color: var(--text-2);
+      }
+      .help a {
+        color: var(--accent);
+      }
+
+      .footer-link {
+        margin-top: 24px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-2);
+      }
+      .footer-link a {
+        color: var(--text-2);
+      }
+      .footer-link a:hover {
+        color: var(--text);
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="brand">
+        <div class="brand-icon">🔬</div>
+        <span class="brand-name">KaryoScan</span>
+        <span class="brand-v">v2.0</span>
+      </div>
+      <p class="card-title">Acesso Institucional</p>
+
+      <div class="alert error" id="alertError"></div>
+      <div class="alert warn" id="alertWarn"></div>
+
+      <form id="loginForm" onsubmit="doLogin(event)" autocomplete="on">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="usuario@instituicao.com.br"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <div class="pw-wrap">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              required
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="pw-toggle"
+              onclick="togglePw()"
+              aria-label="Mostrar/ocultar senha"
+            >
+              👁
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn-login" id="btnLogin">
+          Entrar no Sistema
+        </button>
+      </form>
+
+      <div class="divider"></div>
+      <p class="help">
+        Problemas de acesso?
+        <a href="mailto:contato@karyoscan.com.br">contato@karyoscan.com.br</a>
+      </p>
+    </div>
+    <div class="footer-link">
+      <a href="landing.html">← Voltar para o site</a>
+    </div>
+
+    <script>
+      // Read backend URL from query param or localStorage
+      const params = new URLSearchParams(location.search);
+      const backendParam = params.get("backend");
+      if (backendParam) localStorage.setItem("ks_backend", backendParam);
+
+      function getBackend() {
+        return localStorage.getItem("ks_backend") || "";
+      }
+
+      async function doLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const btn = document.getElementById("btnLogin");
+        const errEl = document.getElementById("alertError");
+        const warnEl = document.getElementById("alertWarn");
+
+        errEl.style.display = "none";
+        warnEl.style.display = "none";
+
+        const backend = getBackend();
+        if (!backend) {
+          errEl.textContent =
+            "URL do servidor não configurada. Acesse via link fornecido pela sua instituição.";
+          errEl.style.display = "block";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span>Verificando...';
+
+        try {
+          const res = await fetch(backend + "/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            if (res.status === 403) {
+              warnEl.textContent =
+                "⚠️ " +
+                (data.error ||
+                  "Licença expirada ou inativa. Entre em contato com o administrador.");
+              warnEl.style.display = "block";
+            } else {
+              errEl.textContent =
+                data.error ||
+                "Credenciais inválidas. Verifique e-mail e senha.";
+              errEl.style.display = "block";
+            }
+            btn.disabled = false;
+            btn.textContent = "Entrar no Sistema";
+            return;
+          }
+
+          localStorage.setItem("ks_token", data.token);
+
+          // Redirect admin to admin panel, others to app
+          const next = params.get("next");
+          if (
+            data.user &&
+            (data.user.role === "superadmin" || data.user.role === "admin")
+          ) {
+            window.location.href = next || "admin.html";
+          } else {
+            window.location.href = next || "index.html";
+          }
+        } catch (err) {
+          errEl.textContent =
+            "Não foi possível conectar ao servidor. Verifique sua conexão.";
+          errEl.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "Entrar no Sistema";
+        }
+      }
+
+      function togglePw() {
+        const inp = document.getElementById("password");
+        inp.type = inp.type === "password" ? "text" : "password";
+      }
+
+      // If already logged in, redirect
+      const token = localStorage.getItem("ks_token");
+      const backend = getBackend();
+      if (token && backend) {
+        fetch(backend + "/api/auth/verify", {
+          headers: { Authorization: "Bearer " + token },
+        })
+          .then((r) => {
+            if (r.ok)
+              return r.json().then((d) => {
+                if (
+                  d.user &&
+                  (d.user.role === "superadmin" || d.user.role === "admin")
+                ) {
+                  window.location.href = "admin.html";
+                } else {
+                  window.location.href = "index.html";
+                }
+              });
+          })
+          .catch(() => {});
+      }
+    </script>
+  </body>
+</html>

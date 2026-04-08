@@ -1589,6 +1589,11 @@
           <span class="status-dot" id="tfDot"></span>
           <span id="tfTxt">Carregando TF.js…</span>
         </div>
+        <div id="ksUserBar" style="display:none;align-items:center;gap:8px;padding:4px 10px;border:1px solid rgba(59,130,246,.3);border-radius:99px;background:rgba(59,130,246,.08);font-size:.72rem;color:#93c5fd">
+          <span>🏥</span>
+          <span id="ksUserName" style="font-weight:700"></span>
+          <button onclick="ksLogout()" style="background:none;border:none;color:#93c5fd;cursor:pointer;font-size:.72rem;padding:0 0 0 4px;font-weight:700">Sair ⎋</button>
+        </div>
       </div>
     </header>
 
@@ -2072,6 +2077,46 @@
      6. Bounding boxes + labels numerados
      7. Miniaturas individuais
 ================================================================ */
+
+      // ── Auth check (modo servidor) ─────────────────────────────────────
+      // Se ks_backend estiver configurado no localStorage, verifica o token JWT.
+      // Sem backend configurado (GitHub Pages / standalone), funciona normalmente.
+      (function ksAuthCheck() {
+        const BACKEND = localStorage.getItem('ks_backend');
+        const TOKEN   = localStorage.getItem('ks_token');
+        if (!BACKEND) return; // modo standalone
+        if (!TOKEN) {
+          window.location.href = 'login.html?backend=' + encodeURIComponent(BACKEND) + '&next=' + encodeURIComponent(window.location.href);
+          return;
+        }
+        fetch(BACKEND + '/api/auth/verify', { headers: { Authorization: 'Bearer ' + TOKEN } })
+          .then(r => {
+            if (!r.ok) {
+              localStorage.removeItem('ks_token');
+              window.location.href = 'login.html?backend=' + encodeURIComponent(BACKEND);
+              return;
+            }
+            return r.json().then(function(d) {
+              if (d.user) {
+                const bar = document.getElementById('ksUserBar');
+                const nm  = document.getElementById('ksUserName');
+                if (bar && nm) { nm.textContent = d.user.name; bar.style.display = 'flex'; }
+              }
+              if (d.daysLeft != null && d.daysLeft <= 30) {
+                const warn = document.createElement('div');
+                warn.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#92400e;color:#fef3c7;padding:7px 16px;font-size:.78rem;font-weight:700;text-align:center;letter-spacing:.01em';
+                warn.textContent = '⚠️  Sua licença expira em ' + d.daysLeft + ' dia(s). Entre em contato para renovar: contato@karyoscan.com.br';
+                document.body.prepend(warn);
+              }
+            });
+          }).catch(function() { /* servidor inacessível — permitir uso offline */ });
+      })();
+
+      function ksLogout() {
+        localStorage.removeItem('ks_token');
+        const b = localStorage.getItem('ks_backend');
+        window.location.href = b ? ('login.html?backend=' + encodeURIComponent(b)) : 'login.html';
+      }
 
       // ---------- Estado global ----------
       let cvReady = false; // OpenCV.js pronto?

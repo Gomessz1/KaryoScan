@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KaryoScan — Software de Cariotipagem com IA</title>
+    <meta
+      name="description"
+      content="Software de citogenética clínica com inteligência artificial. Detecte, pareie e classifique cromossomos automaticamente. Gere laudos completos em minutos."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #060d1b;
+        --surface: #0d1a2e;
+        --surface-2: #132038;
+        --border: #1e3352;
+        --accent: #3b82f6;
+        --accent2: #10b981;
+        --text: #e2e8f0;
+        --text-2: #94a3b8;
+        --muted: #475569;
+        --grad: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(6, 13, 27, 0.85);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 40px;
+      }
+      .nav-in {
+        max-width: 1200px;
+        margin: 0 auto;
+        height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nav-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--grad);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .nav-logo {
+        font-size: 1.2rem;
+        font-weight: 800;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .nav-v {
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+      .nav-links a {
+        font-size: 0.88rem;
+        color: var(--text-2);
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+      .nav-cta {
+        padding: 9px 22px;
+        background: var(--grad);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        white-space: nowrap;
+      }
+      .nav-cta:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 92vh;
+        display: flex;
+        align-items: center;
+        padding: 80px 40px 60px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            ellipse 80% 60% at 60% 40%,
+            rgba(59, 130, 246, 0.1) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 50% 40% at 80% 70%,
+            rgba(16, 185, 129, 0.07) 0%,
+            transparent 60%
+          );
+      }
+      .hero-in {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        border-radius: 99px;
+        background: rgba(59, 130, 246, 0.08);
+        color: #93c5fd;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin-bottom: 20px;
+      }
+      .hero h1 .grad {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-sub {
+        font-size: 1.05rem;
+        color: var(--text-2);
+        margin-bottom: 32px;
+        max-width: 500px;
+        line-height: 1.7;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .btn-primary {
+        padding: 14px 28px;
+        background: var(--grad);
+        color: #fff;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(59, 130, 246, 0.4);
+      }
+      .btn-outline {
+        padding: 14px 28px;
+        border: 1px solid var(--border);
+        color: var(--text-2);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .btn-outline:hover {
+        border-color: var(--accent);
+        color: var(--text);
+      }
+      .hero-trust {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 0.78rem;
+        color: var(--text-2);
+      }
+      .hero-trust span::before {
+        content: "✓ ";
+        color: var(--accent2);
+        font-weight: 700;
+      }
+
+      /* App Mockup */
+      .mockup-wrap {
+        position: relative;
+      }
+      .mockup {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(59, 130, 246, 0.15);
+      }
+      .mockup-bar {
+        background: var(--surface-2);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .mockup-dots {
+        display: flex;
+        gap: 6px;
+      }
+      .mockup-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .mockup-dots span:nth-child(1) {
+        background: #ef4444;
+      }
+      .mockup-dots span:nth-child(2) {
+        background: #f59e0b;
+      }
+      .mockup-dots span:nth-child(3) {
+        background: #10b981;
+      }
+      .mockup-bar-title {
+        font-size: 0.72rem;
+        color: var(--text-2);
+        font-weight: 600;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .mockup-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .m-hero {
+        background: linear-gradient(135deg, #1e293b, #162032);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        border-radius: 10px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .m-num-label {
+        font-size: 0.65rem;
+        color: var(--text-2);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .m-num {
+        font-size: 2.8rem;
+        font-weight: 900;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+      }
+      .m-status {
+        font-size: 0.72rem;
+        color: #10b981;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+      .m-pairs-title {
+        font-size: 0.65rem;
+        color: var(--text-2);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+      }
+      .m-pair-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .m-pair-chip {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        opacity: 0.85;
+      }
+      .m-cario {
+        background: var(--surface-2);
+        border-radius: 8px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 54px;
+      }
+      .m-bar {
+        border-radius: 3px 3px 0 0;
+        width: 8px;
+        opacity: 0.7;
+      }
+
+      /* ── STATS ── */
+      .stats {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 36px 40px;
+      }
+      .stats-in {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .stat-item {
+        text-align: center;
+      }
+      .stat-num {
+        font-size: 2.2rem;
+        font-weight: 900;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .stat-lbl {
+        font-size: 0.75rem;
+        color: var(--text-2);
+        margin-top: 4px;
+      }
+
+      /* ── SECTIONS ── */
+      section {
+        padding: 90px 40px;
+      }
+      .sec-in {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .sec-tag {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .sec-title {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 14px;
+      }
+      .sec-sub {
+        font-size: 1rem;
+        color: var(--text-2);
+        max-width: 560px;
+      }
+
+      /* ── FEATURES ── */
+      #features {
+        background: var(--surface);
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 48px;
+      }
+      .feat-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 26px 24px;
+        transition: all 0.2s;
+      }
+      .feat-card:hover {
+        border-color: rgba(59, 130, 246, 0.4);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+      }
+      .feat-icon {
+        font-size: 2rem;
+        margin-bottom: 14px;
+      }
+      .feat-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .feat-desc {
+        font-size: 0.85rem;
+        color: var(--text-2);
+        line-height: 1.6;
+      }
+
+      /* ── HOW IT WORKS ── */
+      #como {
+        background: var(--bg);
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        margin-top: 56px;
+        position: relative;
+      }
+      .steps::after {
+        content: "";
+        position: absolute;
+        top: 36px;
+        left: calc(16.6% + 20px);
+        right: calc(16.6% + 20px);
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        z-index: 0;
+      }
+      .step {
+        text-align: center;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+      }
+      .step-n {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: var(--grad);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        margin: 0 auto 20px;
+        box-shadow:
+          0 0 0 4px var(--bg),
+          0 0 0 6px rgba(59, 130, 246, 0.3);
+      }
+      .step-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .step-desc {
+        font-size: 0.85rem;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+
+      /* ── PRICING ── */
+      #planos {
+        background: var(--surface);
+      }
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 48px;
+        align-items: start;
+      }
+      .plan-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 28px;
+        transition: all 0.2s;
+      }
+      .plan-card.popular {
+        border-color: var(--accent);
+        background: linear-gradient(160deg, #0d1a2e, #0a1628);
+        box-shadow:
+          0 0 0 1px rgba(59, 130, 246, 0.3),
+          0 20px 60px rgba(59, 130, 246, 0.12);
+        transform: scale(1.03);
+      }
+      .plan-badge {
+        display: inline-block;
+        padding: 3px 12px;
+        background: var(--grad);
+        color: #fff;
+        border-radius: 99px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
+      }
+      .plan-name {
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+      .plan-price {
+        font-size: 2.6rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .plan-price sup {
+        font-size: 1rem;
+        font-weight: 700;
+        vertical-align: super;
+      }
+      .plan-period {
+        font-size: 0.78rem;
+        color: var(--text-2);
+        margin-bottom: 24px;
+      }
+      .plan-features {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 28px;
+      }
+      .plan-features li {
+        font-size: 0.85rem;
+        color: var(--text-2);
+        display: flex;
+        gap: 8px;
+      }
+      .plan-features li::before {
+        content: "✓";
+        color: var(--accent2);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .plan-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-align: center;
+        transition: all 0.2s;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+      }
+      .plan-card.popular .plan-btn {
+        background: var(--grad);
+        border: none;
+        color: #fff;
+      }
+      .plan-card.popular .plan-btn:hover {
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      }
+      .plan-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .plan-note {
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-2);
+        margin-top: 24px;
+      }
+
+      /* ── AUDIENCE ── */
+      #quem {
+        background: var(--bg);
+      }
+      .audience-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-top: 44px;
+      }
+      .aud-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px 20px;
+      }
+      .aud-icon {
+        font-size: 2rem;
+        margin-bottom: 12px;
+      }
+      .aud-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .aud-desc {
+        font-size: 0.82rem;
+        color: var(--text-2);
+        line-height: 1.55;
+      }
+
+      /* ── FAQ ── */
+      #faq {
+        background: var(--surface);
+      }
+      .faq-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 44px;
+      }
+      .faq-item {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 22px 24px;
+      }
+      .faq-q {
+        font-size: 0.92rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .faq-a {
+        font-size: 0.83rem;
+        color: var(--text-2);
+        line-height: 1.6;
+      }
+
+      /* ── CONTACT ── */
+      #contato {
+        background: var(--bg);
+      }
+      .contact-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: start;
+        margin-top: 48px;
+      }
+      .contact-info h3 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin-bottom: 14px;
+      }
+      .contact-info p {
+        font-size: 0.9rem;
+        color: var(--text-2);
+        line-height: 1.7;
+        margin-bottom: 24px;
+      }
+      .contact-points {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .cp {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        font-size: 0.85rem;
+        color: var(--text-2);
+      }
+      .cp span:first-child {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .contact-form {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 28px;
+      }
+      .contact-form h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .cf-field {
+        margin-bottom: 14px;
+      }
+      .cf-field input,
+      .cf-field textarea,
+      .cf-field select {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        color: var(--text);
+        font-size: 0.85rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: inherit;
+      }
+      .cf-field input:focus,
+      .cf-field textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      }
+      .cf-field textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+      .cf-submit {
+        width: 100%;
+        padding: 13px;
+        background: var(--grad);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cf-submit:hover {
+        box-shadow: 0 6px 22px rgba(59, 130, 246, 0.4);
+        transform: translateY(-1px);
+      }
+      .cf-ok {
+        display: none;
+        padding: 14px;
+        background: rgba(16, 185, 129, 0.12);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        color: #34d399;
+        font-size: 0.88rem;
+        text-align: center;
+        margin-top: 12px;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        padding: 32px 40px;
+      }
+      .footer-in {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 0.95rem;
+      }
+      .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+      .footer-links a {
+        font-size: 0.8rem;
+        color: var(--text-2);
+      }
+      .footer-links a:hover {
+        color: var(--text);
+      }
+      .footer-copy {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        .hero-in {
+          grid-template-columns: 1fr;
+        }
+        .mockup-wrap {
+          display: none;
+        }
+        .features-grid,
+        .steps {
+          grid-template-columns: 1fr 1fr;
+        }
+        .steps::after {
+          display: none;
+        }
+        .pricing-grid {
+          grid-template-columns: 1fr;
+          max-width: 400px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .plan-card.popular {
+          transform: none;
+        }
+        .audience-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .faq-grid {
+          grid-template-columns: 1fr;
+        }
+        .contact-wrap {
+          grid-template-columns: 1fr;
+        }
+        .stats-in {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+      @media (max-width: 600px) {
+        section,
+        .hero {
+          padding: 60px 20px;
+        }
+        nav {
+          padding: 0 20px;
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .audience-grid {
+          grid-template-columns: 1fr;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-in">
+        <div class="nav-brand">
+          <div class="nav-icon">🔬</div>
+          <span class="nav-logo">KaryoScan</span>
+          <span class="nav-v">v2.0</span>
+        </div>
+        <div class="nav-links">
+          <a href="#features">Recursos</a>
+          <a href="#como">Como Funciona</a>
+          <a href="#planos">Planos</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contato">Contato</a>
+        </div>
+        <a href="#contato" class="nav-cta">Agendar Demo</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="hero-in">
+        <div>
+          <div class="hero-pill">
+            ✦ Software Médico para Citogenética Clínica
+          </div>
+          <h1>
+            Cariotipagem<br /><span class="grad">automatizada</span><br />com IA
+          </h1>
+          <p class="hero-sub">
+            KaryoScan analisa imagens microscópicas de cariotipagem com
+            inteligência artificial — detecta, pareira e classifica todos os
+            cromossomos automaticamente, gerando laudos completos em minutos.
+          </p>
+          <div class="hero-btns">
+            <a href="#contato" class="btn-primary"
+              >Agendar Demonstração Gratuita →</a
+            >
+            <a href="#como" class="btn-outline">Ver como funciona</a>
+          </div>
+          <div class="hero-trust">
+            <span>Instalação local disponível</span>
+            <span>Suporte técnico incluído</span>
+            <span>LGPD Compatível</span>
+          </div>
+        </div>
+        <div class="mockup-wrap">
+          <div class="mockup">
+            <div class="mockup-bar">
+              <div class="mockup-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="mockup-bar-title"
+                >KaryoScan — Análise em Andamento</span
+              >
+            </div>
+            <div class="mockup-body">
+              <div class="m-hero">
+                <div>
+                  <div class="m-num-label">Cromossomos Detectados</div>
+                  <div class="m-num">46</div>
+                  <div class="m-status">
+                    ✅ Euplóide — 23 pares identificados
+                  </div>
+                </div>
+                <div style="font-size: 3rem; opacity: 0.15">🧬</div>
+              </div>
+              <div
+                style="
+                  background: var(--surface-2);
+                  border-radius: 8px;
+                  padding: 12px 14px;
+                "
+              >
+                <div class="m-pairs-title">
+                  Cariograma Visual — Pares Homólogos
+                </div>
+                <div class="m-pair-grid">
+                  <div class="m-pair-chip" style="background: #3b82f6"></div>
+                  <div class="m-pair-chip" style="background: #10b981"></div>
+                  <div class="m-pair-chip" style="background: #f59e0b"></div>
+                  <div class="m-pair-chip" style="background: #ef4444"></div>
+                  <div class="m-pair-chip" style="background: #8b5cf6"></div>
+                  <div class="m-pair-chip" style="background: #06b6d4"></div>
+                  <div class="m-pair-chip" style="background: #f97316"></div>
+                  <div class="m-pair-chip" style="background: #ec4899"></div>
+                  <div class="m-pair-chip" style="background: #84cc16"></div>
+                  <div class="m-pair-chip" style="background: #6366f1"></div>
+                  <div class="m-pair-chip" style="background: #14b8a6"></div>
+                  <div class="m-pair-chip" style="background: #e11d48"></div>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 8px 14px;
+                  background: rgba(16, 185, 129, 0.08);
+                  border-radius: 8px;
+                  border: 1px solid rgba(16, 185, 129, 0.2);
+                  font-size: 0.75rem;
+                  color: #34d399;
+                  font-weight: 700;
+                "
+              >
+                <span>📄 Laudo pronto para exportar</span>
+                <span>⏱ 1m 42s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stats-in">
+        <div class="stat-item">
+          <div class="stat-num">&lt; 2 min</div>
+          <div class="stat-lbl">Análise completa por exame</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">46</div>
+          <div class="stat-lbl">Cromossomos verificados automaticamente</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">23 pares</div>
+          <div class="stat-lbl">Homólogos identificados por IA</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-lbl">Baseado em padrões ISCN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section id="features">
+      <div class="sec-in">
+        <div class="sec-tag">Recursos</div>
+        <h2 class="sec-title">
+          Tudo que o laboratório precisa, em um só lugar
+        </h2>
+        <p class="sec-sub">
+          Do upload da imagem ao PDF do laudo — sem software adicional, sem
+          treinamento extenso.
+        </p>
+        <div class="features-grid">
+          <div class="feat-card">
+            <div class="feat-icon">🔬</div>
+            <div class="feat-title">Detecção Automática por IA</div>
+            <div class="feat-desc">
+              Algoritmos de visão computacional (OpenCV) identificam cada
+              cromossomo na imagem microscópica com filtros de precisão clínica.
+            </div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🧬</div>
+            <div class="feat-title">Pareamento de Homólogos</div>
+            <div class="feat-desc">
+              IA forma automaticamente os 23 pares de cromossomos homólogos por
+              similaridade de forma, tamanho e estrutura. Correção manual
+              disponível.
+            </div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">⚕️</div>
+            <div class="feat-title">Triagem de Aneuploidias</div>
+            <div class="feat-desc">
+              Indicador automático: detecta desvios da contagem esperada de 46
+              cromossomos e exibe alerta visual imediato (Trissomia, Monossomia
+              etc.).
+            </div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">📊</div>
+            <div class="feat-title">Cariograma Visual</div>
+            <div class="feat-desc">
+              Gera cariograma ordenado instantaneamente com todos os pares
+              representados visualmente, pronto para revisão e anexo ao laudo.
+            </div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">📄</div>
+            <div class="feat-title">Laudos em PDF</div>
+            <div class="feat-desc">
+              Exporta relatório completo com ficha do paciente, imagem anotada,
+              cariograma e resultados da análise — em um único clique.
+            </div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🔐</div>
+            <div class="feat-title">Acesso Institucional</div>
+            <div class="feat-desc">
+              Controle de usuários por instituição com licença por contrato.
+              Painel administrativo para gerenciar acessos, logs e validade.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="como">
+      <div class="sec-in">
+        <div class="sec-tag">Como Funciona</div>
+        <h2 class="sec-title">Simples de usar. Poderoso nos resultados.</h2>
+        <p class="sec-sub">
+          Fluxo completo de análise em 3 etapas, sem necessidade de treinamento
+          técnico em bioinformática.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-n">📷</div>
+            <div class="step-title">1. Carregue a Imagem</div>
+            <div class="step-desc">
+              Faça o upload da imagem microscópica da metáfase (PNG, JPG, TIFF).
+              O sistema aceita imagens de qualquer microscópio óptico.
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">🤖</div>
+            <div class="step-title">2. IA Analisa e Pareira</div>
+            <div class="step-desc">
+              O algoritmo detecta cada cromossomo, forma os pares homólogos,
+              verifica a contagem e gera o cariograma visual automaticamente.
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">📋</div>
+            <div class="step-title">3. Exporte o Laudo</div>
+            <div class="step-desc">
+              Preencha os dados do paciente e exporte o relatório completo em
+              PDF, pronto para ser anexado ao prontuário ou enviado ao médico
+              solicitante.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="planos">
+      <div class="sec-in">
+        <div class="sec-tag">Planos</div>
+        <h2 class="sec-title">Investimento por contrato, sem mensalidade</h2>
+        <p class="sec-sub">
+          Licença por 3 anos com suporte contínuo e todas as atualizações
+          inclusas.
+        </p>
+        <div class="pricing-grid">
+          <div class="plan-card">
+            <div class="plan-name">Básico</div>
+            <div class="plan-price"><sup>R$</sup>15.000</div>
+            <div class="plan-period">contrato de 3 anos · renovável</div>
+            <ul class="plan-features">
+              <li>Até 3 usuários simultâneos</li>
+              <li>Todos os recursos de análise</li>
+              <li>Exportação de laudos PDF</li>
+              <li>Suporte por e-mail (48h)</li>
+              <li>Atualizações inclusas</li>
+              <li>Instalação assistida remota</li>
+            </ul>
+            <a href="#contato" class="plan-btn">Solicitar Proposta</a>
+          </div>
+          <div class="plan-card popular">
+            <div class="plan-badge">⭐ Mais Popular</div>
+            <div class="plan-name">Profissional</div>
+            <div class="plan-price"><sup>R$</sup>30.000</div>
+            <div class="plan-period">contrato de 3 anos · renovável</div>
+            <ul class="plan-features">
+              <li>Até 10 usuários simultâneos</li>
+              <li>Todos os recursos de análise</li>
+              <li>Exportação de laudos PDF</li>
+              <li>Suporte prioritário (24h)</li>
+              <li>Atualizações inclusas</li>
+              <li>Treinamento online da equipe</li>
+              <li>Painel de administração</li>
+              <li>Relatórios de uso mensal</li>
+            </ul>
+            <a href="#contato" class="plan-btn">Solicitar Proposta</a>
+          </div>
+          <div class="plan-card">
+            <div class="plan-name">Empresarial</div>
+            <div class="plan-price">Consulte</div>
+            <div class="plan-period">contrato personalizado</div>
+            <ul class="plan-features">
+              <li>Usuários ilimitados</li>
+              <li>Todos os recursos de análise</li>
+              <li>Exportação de laudos PDF</li>
+              <li>Suporte dedicado 24/7</li>
+              <li>Atualizações inclusas</li>
+              <li>Treinamento presencial</li>
+              <li>Integração com HIS/LIS</li>
+              <li>SLA garantido em contrato</li>
+            </ul>
+            <a href="#contato" class="plan-btn">Falar com Consultor</a>
+          </div>
+        </div>
+        <p class="plan-note">
+          Todos os planos incluem período de avaliação supervisionado de 30 dias
+          antes da assinatura do contrato.
+        </p>
+      </div>
+    </section>
+
+    <!-- FOR WHOM -->
+    <section id="quem">
+      <div class="sec-in">
+        <div class="sec-tag">Para Quem</div>
+        <h2 class="sec-title">
+          Desenvolvido para profissionais de citogenética
+        </h2>
+        <p class="sec-sub">
+          KaryoScan atende laboratórios clínicos de diferentes portes e
+          especialidades.
+        </p>
+        <div class="audience-grid">
+          <div class="aud-card">
+            <div class="aud-icon">🏥</div>
+            <div class="aud-title">Hospitais e Maternidades</div>
+            <div class="aud-desc">
+              Suporte ao diagnóstico pré-natal e neonatal com agilidade e
+              precisão em exames de cariótipo.
+            </div>
+          </div>
+          <div class="aud-card">
+            <div class="aud-icon">🧪</div>
+            <div class="aud-title">Laboratórios de Citogenética</div>
+            <div class="aud-desc">
+              Automatize o fluxo de análise e aumente a capacidade de laudos sem
+              ampliar a equipe.
+            </div>
+          </div>
+          <div class="aud-card">
+            <div class="aud-icon">🎓</div>
+            <div class="aud-title">Universidades e Pesquisa</div>
+            <div class="aud-desc">
+              Ferramenta educacional e de pesquisa para cursos de Biomedicina,
+              Genética e Citologia.
+            </div>
+          </div>
+          <div class="aud-card">
+            <div class="aud-icon">🧬</div>
+            <div class="aud-title">Centros de Diagnóstico</div>
+            <div class="aud-desc">
+              Integre ao fluxo de diagnóstico molecular e genético com laudos
+              padronizados e rastreáveis.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="sec-in">
+        <div class="sec-tag">Dúvidas Frequentes</div>
+        <h2 class="sec-title">Perguntas frequentes</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-q">
+              Os dados dos pacientes ficam em nosso servidor?
+            </div>
+            <div class="faq-a">
+              Sim. KaryoScan pode ser instalado diretamente na infraestrutura do
+              seu laboratório (on-premises). Nenhum dado é enviado para
+              servidores externos, garantindo conformidade com a LGPD.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              O contrato inclui treinamento para a equipe?
+            </div>
+            <div class="faq-a">
+              Sim. Os planos Profissional e Empresarial incluem sessões de
+              treinamento online para toda a equipe técnica. O plano Empresarial
+              inclui treinamento presencial.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Como funciona a renovação do contrato?</div>
+            <div class="faq-a">
+              Avisamos com 60 dias de antecedência sobre o vencimento. O sistema
+              exibe alerta para os usuários. Após contato com nossa equipe, a
+              renovação é feita com proposta atualizada.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              Quais equipamentos ou softwares são necessários?
+            </div>
+            <div class="faq-a">
+              Apenas um navegador moderno (Chrome, Firefox, Edge). Não é
+              necessário instalar nada nas estações de trabalho. O servidor pode
+              rodar em Windows ou Linux com Node.js.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              O sistema funciona com qualquer microscópio?
+            </div>
+            <div class="faq-a">
+              Sim. KaryoScan aceita imagens em PNG, JPG, BMP e TIFF de qualquer
+              microscópio óptico. Também funciona com imagens exportadas de
+              sistemas de captura digital.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              É possível testar antes de fechar o contrato?
+            </div>
+            <div class="faq-a">
+              Sim, oferecemos um período de avaliação supervisionado de 30 dias
+              com suporte completo da equipe técnica, sem custo e sem
+              compromisso de contratação.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contato">
+      <div class="sec-in">
+        <div class="sec-tag">Contato</div>
+        <div class="contact-wrap">
+          <div class="contact-info">
+            <h3>Agende uma demonstração gratuita</h3>
+            <p>
+              Nossa equipe técnica apresenta o KaryoScan ao vivo para sua
+              equipe, com casos reais e sessão de perguntas e respostas. Sem
+              compromisso.
+            </p>
+            <div class="contact-points">
+              <div class="cp">
+                <span>📧</span><span>contato@karyoscan.com.br</span>
+              </div>
+              <div class="cp">
+                <span>📱</span
+                ><span>WhatsApp disponível para agendamento rápido</span>
+              </div>
+              <div class="cp">
+                <span>⏰</span><span>Resposta em até 24h úteis</span>
+              </div>
+              <div class="cp">
+                <span>🗓️</span
+                ><span>Demonstração online disponível de segunda a sexta</span>
+              </div>
+            </div>
+          </div>
+          <div class="contact-form">
+            <h3>Solicitar Demonstração</h3>
+            <form id="demoForm" onsubmit="sendDemo(event)">
+              <div class="form-row">
+                <div class="cf-field">
+                  <input
+                    type="text"
+                    name="nome"
+                    placeholder="Seu nome completo"
+                    required
+                  />
+                </div>
+                <div class="cf-field">
+                  <input
+                    type="text"
+                    name="cargo"
+                    placeholder="Cargo / Função"
+                  />
+                </div>
+              </div>
+              <div class="cf-field">
+                <input
+                  type="text"
+                  name="inst"
+                  placeholder="Nome da instituição / laboratório"
+                  required
+                />
+              </div>
+              <div class="form-row">
+                <div class="cf-field">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="E-mail corporativo"
+                    required
+                  />
+                </div>
+                <div class="cf-field">
+                  <input
+                    type="tel"
+                    name="tel"
+                    placeholder="Telefone / WhatsApp"
+                  />
+                </div>
+              </div>
+              <div class="cf-field">
+                <select name="plano">
+                  <option value="">Plano de interesse (opcional)</option>
+                  <option value="basico">Básico — R$ 15.000 / 3 anos</option>
+                  <option value="profissional">
+                    Profissional — R$ 30.000 / 3 anos ⭐
+                  </option>
+                  <option value="empresarial">
+                    Empresarial — Personalizado
+                  </option>
+                  <option value="avaliacao">Só quero avaliar primeiro</option>
+                </select>
+              </div>
+              <div class="cf-field">
+                <textarea
+                  name="msg"
+                  placeholder="Mensagem ou dúvidas (opcional)"
+                ></textarea>
+              </div>
+              <button type="submit" class="cf-submit">
+                Enviar Solicitação →
+              </button>
+              <div class="cf-ok" id="cfOk">
+                ✅ Solicitação enviada! Entraremos em contato em breve.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-in">
+        <div class="footer-brand">
+          <span>🔬</span> KaryoScan
+          <span
+            style="
+              font-size: 0.65rem;
+              color: var(--muted);
+              font-weight: 400;
+              margin-left: 4px;
+            "
+            >v2.0</span
+          >
+        </div>
+        <div class="footer-links">
+          <a href="#">Política de Privacidade</a>
+          <a href="#">Termos de Uso</a>
+          <a href="login.html">Acesso Institucional</a>
+        </div>
+        <div class="footer-copy">
+          © 2026 KaryoScan — Software de Citogenética Clínica
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function sendDemo(e) {
+        e.preventDefault();
+        const f = new FormData(e.target);
+        const subject = encodeURIComponent(
+          "Solicitação de Demonstração KaryoScan — " + (f.get("inst") || ""),
+        );
+        const body = encodeURIComponent(
+          "Nome: " +
+            f.get("nome") +
+            "\nCargo: " +
+            f.get("cargo") +
+            "\nInstituição: " +
+            f.get("inst") +
+            "\nE-mail: " +
+            f.get("email") +
+            "\nTelefone: " +
+            f.get("tel") +
+            "\nPlano de interesse: " +
+            (f.get("plano") || "Não informado") +
+            "\n\nMensagem:\n" +
+            (f.get("msg") || "—"),
+        );
+        window.location.href =
+          "mailto:contato@karyoscan.com.br?subject=" +
+          subject +
+          "&body=" +
+          body;
+        document.getElementById("cfOk").style.display = "block";
+        e.target.reset();
+      }
+
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const target = document.querySelector(a.getAttribute("href"));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+
+      // Animate stats on scroll
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.style.opacity = "1";
+        });
+      });
+      document
+        .querySelectorAll(".feat-card, .step, .plan-card, .aud-card, .faq-item")
+        .forEach((el) => {
+          el.style.opacity = "0";
+          el.style.transition = "opacity .5s ease, transform .4s ease";
+          el.style.transform = "translateY(16px)";
+          const o = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting) {
+                el.style.opacity = "1";
+                el.style.transform = "translateY(0)";
+                o.disconnect();
+              }
+            },
+            { threshold: 0.1 },
+          );
+          o.observe(el);
+        });
+    </script>
+  </body>
+</html>

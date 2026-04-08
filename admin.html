@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KaryoScan Admin</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #060d1b;
+        --surface: #0d1a2e;
+        --surface-2: #132038;
+        --border: #1e3352;
+        --accent: #3b82f6;
+        --accent2: #10b981;
+        --text: #e2e8f0;
+        --text-2: #94a3b8;
+        --error: #ef4444;
+        --warn: #f59e0b;
+        --grad: linear-gradient(135deg, #3b82f6, #10b981);
+        --sidebar-w: 230px;
+      }
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        flex-shrink: 0;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+      }
+      .sb-brand {
+        padding: 22px 20px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sb-icon {
+        width: 34px;
+        height: 34px;
+        background: var(--grad);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        flex-shrink: 0;
+      }
+      .sb-name {
+        font-size: 1.05rem;
+        font-weight: 900;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .sb-sub {
+        font-size: 0.62rem;
+        color: var(--text-2);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .sb-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: none;
+        background: none;
+        color: var(--text-2);
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 8px;
+        width: 100%;
+        text-align: left;
+        transition: all 0.15s;
+      }
+      .nav-btn:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+      .nav-btn.active {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent);
+      }
+      .nav-btn .nb-icon {
+        font-size: 1.05rem;
+        width: 22px;
+        text-align: center;
+      }
+
+      .sb-bottom {
+        padding: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .sb-user {
+        padding: 10px 12px;
+        font-size: 0.78rem;
+        color: var(--text-2);
+        margin-bottom: 6px;
+      }
+      .sb-user strong {
+        display: block;
+        color: var(--text);
+        font-size: 0.83rem;
+      }
+      .btn-logout {
+        display: block;
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text-2);
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-logout:hover {
+        border-color: var(--error);
+        color: var(--error);
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0 28px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .topbar-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+      .topbar-badge {
+        font-size: 0.7rem;
+        padding: 3px 10px;
+        background: rgba(16, 185, 129, 0.12);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 99px;
+        font-weight: 700;
+      }
+
+      .content {
+        flex: 1;
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      /* ── TABS ── */
+      .tab {
+        display: none;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .tab.active {
+        display: flex;
+      }
+
+      /* ── CARDS ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+      }
+      .sc-label {
+        font-size: 0.7rem;
+        color: var(--text-2);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+      }
+      .sc-value {
+        font-size: 2rem;
+        font-weight: 900;
+      }
+      .sc-value.blue {
+        color: var(--accent);
+      }
+      .sc-value.green {
+        color: var(--accent2);
+      }
+      .sc-value.warn {
+        color: var(--warn);
+      }
+      .sc-value.grad {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .sc-sub {
+        font-size: 0.72rem;
+        color: var(--text-2);
+        margin-top: 4px;
+      }
+
+      /* ── PANEL ── */
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .panel-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .panel-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .panel-body {
+        padding: 20px;
+      }
+
+      /* ── TABLE ── */
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+      thead {
+        background: var(--surface-2);
+      }
+      th {
+        padding: 10px 14px;
+        text-align: left;
+        color: var(--text-2);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      td {
+        padding: 11px 14px;
+        border-top: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: middle;
+      }
+      tr:hover td {
+        background: var(--surface-2);
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 9px;
+        border-radius: 99px;
+        font-size: 0.68rem;
+        font-weight: 700;
+      }
+      .badge-green {
+        background: rgba(16, 185, 129, 0.12);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+      .badge-blue {
+        background: rgba(59, 130, 246, 0.12);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+      }
+      .badge-warn {
+        background: rgba(245, 158, 11, 0.12);
+        color: #fcd34d;
+        border: 1px solid rgba(245, 158, 11, 0.25);
+      }
+      .badge-red {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.25);
+      }
+
+      /* ── BUTTONS ── */
+      .btn {
+        padding: 8px 16px;
+        border-radius: 7px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text);
+      }
+      .btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn-grad {
+        background: var(--grad);
+        border: none;
+        color: #fff;
+      }
+      .btn-grad:hover {
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+        color: #fff;
+      }
+      .btn-sm {
+        padding: 5px 11px;
+        font-size: 0.72rem;
+      }
+      .btn-danger {
+        border-color: var(--error);
+        color: var(--error);
+      }
+      .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      /* ── FORM ── */
+      .form-grid {
+        display: grid;
+        gap: 14px;
+      }
+      .form-grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .form-grid-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .field label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text-2);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 9px 12px;
+        color: var(--text);
+        font-size: 0.85rem;
+        outline: none;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        border-color: var(--accent);
+      }
+      .field select option {
+        background: var(--surface);
+      }
+      .form-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 4px;
+      }
+
+      /* ── MODAL ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      }
+      .modal-header {
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .modal-title {
+        font-size: 0.95rem;
+        font-weight: 800;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text-2);
+        font-size: 1.3rem;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+      .modal-close:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+      .modal-body {
+        padding: 22px 24px;
+      }
+      .alert-msg {
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        margin-bottom: 14px;
+        display: none;
+      }
+      .alert-msg.error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+      }
+      .alert-msg.success {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #34d399;
+      }
+
+      /* ── EXPIRY ROW COLORS ── */
+      .row-critical td {
+        background: rgba(239, 68, 68, 0.05) !important;
+      }
+      .row-warning td {
+        background: rgba(245, 158, 11, 0.04) !important;
+      }
+
+      /* ── LOADING ── */
+      .loading {
+        color: var(--text-2);
+        font-size: 0.85rem;
+        padding: 24px;
+        text-align: center;
+      }
+      .empty {
+        color: var(--text-2);
+        font-size: 0.83rem;
+        padding: 24px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-brand">
+        <div class="sb-icon">🔬</div>
+        <div>
+          <div class="sb-name">KaryoScan</div>
+          <div class="sb-sub">Painel Admin</div>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <button class="nav-btn active" onclick="showTab('dashboard', this)">
+          <span class="nb-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-btn" onclick="showTab('clientes', this)">
+          <span class="nb-icon">🏥</span> Clientes
+        </button>
+        <button class="nav-btn" onclick="showTab('licencas', this)">
+          <span class="nb-icon">🔑</span> Licenças
+        </button>
+        <button class="nav-btn" onclick="showTab('usuarios', this)">
+          <span class="nb-icon">👥</span> Usuários
+        </button>
+      </nav>
+      <div class="sb-bottom">
+        <div class="sb-user" id="sbUser"><strong>Carregando...</strong></div>
+        <button class="btn-logout" onclick="logout()">⎋ Sair</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="topbar">
+        <span class="topbar-title" id="topbarTitle">Dashboard</span>
+        <span class="topbar-badge">✓ Online</span>
+      </div>
+
+      <div class="content">
+        <!-- TAB: DASHBOARD -->
+        <div class="tab active" id="tab-dashboard">
+          <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+              <div class="sc-label">Clientes</div>
+              <div class="sc-value blue" id="sd-clients">—</div>
+              <div class="sc-sub">Instituições cadastradas</div>
+            </div>
+            <div class="stat-card">
+              <div class="sc-label">Licenças Ativas</div>
+              <div class="sc-value green" id="sd-active">—</div>
+              <div class="sc-sub">Contratos em vigor</div>
+            </div>
+            <div class="stat-card">
+              <div class="sc-label">Expirando em 30 dias</div>
+              <div class="sc-value warn" id="sd-expiring">—</div>
+              <div class="sc-sub">Requerem atenção</div>
+            </div>
+            <div class="stat-card">
+              <div class="sc-label">Receita Total</div>
+              <div class="sc-value grad" id="sd-revenue">—</div>
+              <div class="sc-sub">Contratos registrados</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title"
+                >⚠️ Licenças Expirando nos Próximos 60 dias</span
+              >
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Instituição</th>
+                    <th>Plano</th>
+                    <th>Vencimento</th>
+                    <th>Dias Restantes</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="tbExpiring">
+                  <tr>
+                    <td colspan="5" class="loading">Carregando...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: CLIENTES -->
+        <div class="tab" id="tab-clientes">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Clientes Cadastrados</span>
+              <button
+                class="btn btn-grad btn-sm"
+                onclick="openModal('modalNovoCliente')"
+              >
+                + Novo Cliente
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Instituição</th>
+                    <th>CNPJ</th>
+                    <th>Contato</th>
+                    <th>E-mail</th>
+                    <th>Plano</th>
+                    <th>Validade</th>
+                    <th>Usuários</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tbClientes">
+                  <tr>
+                    <td colspan="8" class="loading">Carregando...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: LICENÇAS -->
+        <div class="tab" id="tab-licencas">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Adicionar / Renovar Licença</span>
+            </div>
+            <div class="panel-body">
+              <form id="formLicenca" onsubmit="saveLicense(event)">
+                <div class="form-grid form-grid-2">
+                  <div class="field">
+                    <label>Instituição</label
+                    ><select id="lc-inst" required>
+                      <option value="">Selecione...</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Plano</label>
+                    <select id="lc-plan" required>
+                      <option value="basico">Básico — R$ 15.000</option>
+                      <option value="profissional" selected>
+                        Profissional — R$ 30.000
+                      </option>
+                      <option value="empresarial">Empresarial</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Data Início</label
+                    ><input type="date" id="lc-start" required />
+                  </div>
+                  <div class="field">
+                    <label>Data Término (3 anos)</label
+                    ><input type="date" id="lc-end" required />
+                  </div>
+                  <div class="field">
+                    <label>Valor (R$)</label
+                    ><input
+                      type="number"
+                      id="lc-price"
+                      placeholder="30000"
+                      min="0"
+                    />
+                  </div>
+                  <div class="field">
+                    <label>Máx. Usuários</label
+                    ><input
+                      type="number"
+                      id="lc-users"
+                      value="10"
+                      min="1"
+                      max="999"
+                    />
+                  </div>
+                </div>
+                <div class="field" style="margin-top: 14px">
+                  <label>Observações</label
+                  ><input
+                    type="text"
+                    id="lc-notes"
+                    placeholder="Nr. do contrato, responsável, etc."
+                  />
+                </div>
+                <div id="licAlert" class="alert-msg error"></div>
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    class="btn"
+                    onclick="clearLicenseForm()"
+                  >
+                    Limpar</button
+                  ><button type="submit" class="btn btn-grad">
+                    Salvar Licença
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Licenças Cadastradas</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Instituição</th>
+                    <th>Plano</th>
+                    <th>Início</th>
+                    <th>Término</th>
+                    <th>Valor</th>
+                    <th>Usuários</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tbLicencas">
+                  <tr>
+                    <td colspan="7" class="loading">Carregando...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: USUÁRIOS -->
+        <div class="tab" id="tab-usuarios">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Usuários Cadastrados</span>
+              <button
+                class="btn btn-grad btn-sm"
+                onclick="openModal('modalNovoUsuario')"
+              >
+                + Novo Usuário
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Instituição</th>
+                    <th>Perfil</th>
+                    <th>Último Acesso</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="tbUsuarios">
+                  <tr>
+                    <td colspan="7" class="loading">Carregando...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /content -->
+    </main>
+
+    <!-- ── MODAIS ── -->
+
+    <!-- Modal: Novo Cliente -->
+    <div class="modal-overlay" id="modalNovoCliente">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">Novo Cliente</span>
+          <button class="modal-close" onclick="closeModal('modalNovoCliente')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="alertNovoCli" class="alert-msg error"></div>
+          <form id="formNovoCliente" onsubmit="saveCliente(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label>Nome da Instituição *</label
+                ><input type="text" id="nc-name" required />
+              </div>
+              <div class="field">
+                <label>CNPJ</label
+                ><input
+                  type="text"
+                  id="nc-cnpj"
+                  placeholder="00.000.000/0000-00"
+                />
+              </div>
+              <div class="field">
+                <label>Nome do Responsável</label
+                ><input type="text" id="nc-contact" />
+              </div>
+              <div class="field">
+                <label>E-mail de Contato</label
+                ><input type="email" id="nc-email" />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn"
+                onclick="closeModal('modalNovoCliente')"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-grad">
+                Cadastrar Cliente
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Novo Usuário -->
+    <div class="modal-overlay" id="modalNovoUsuario">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">Novo Usuário</span>
+          <button class="modal-close" onclick="closeModal('modalNovoUsuario')">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="alertNovoUsr" class="alert-msg error"></div>
+          <form id="formNovoUsuario" onsubmit="saveUsuario(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label>Instituição *</label
+                ><select id="nu-inst" required>
+                  <option value="">Selecione...</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Perfil</label>
+                <select id="nu-role">
+                  <option value="user">Usuário Padrão</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Nome Completo *</label
+                ><input type="text" id="nu-name" required />
+              </div>
+              <div class="field">
+                <label>E-mail *</label
+                ><input type="email" id="nu-email" required />
+              </div>
+              <div class="field">
+                <label>Senha *</label
+                ><input type="password" id="nu-pass" required minlength="6" />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn"
+                onclick="closeModal('modalNovoUsuario')"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-grad">Criar Usuário</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const BACKEND = localStorage.getItem("ks_backend") || "";
+      const TOKEN = localStorage.getItem("ks_token") || "";
+
+      function api(path, options = {}) {
+        return fetch(BACKEND + path, {
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + TOKEN,
+            ...(options.headers || {}),
+          },
+        }).then((r) => {
+          if (r.status === 401 || r.status === 403) {
+            logout();
+            throw new Error("auth");
+          }
+          return r.json();
+        });
+      }
+
+      function logout() {
+        localStorage.removeItem("ks_token");
+        window.location.href = "login.html";
+      }
+
+      // Auth check
+      if (!BACKEND || !TOKEN) {
+        window.location.href = "login.html";
+      } else {
+        api("/api/auth/verify")
+          .then((d) => {
+            if (
+              !d.valid ||
+              (d.user.role !== "superadmin" && d.user.role !== "admin")
+            ) {
+              alert("Acesso restrito ao painel administrativo.");
+              window.location.href = "index.html";
+            }
+            document.getElementById("sbUser").innerHTML =
+              "<strong>" +
+              d.user.name +
+              "</strong>" +
+              (d.user.role === "superadmin" ? "Super Admin" : "Admin");
+          })
+          .catch(() => {
+            window.location.href = "login.html";
+          });
+      }
+
+      let institutions = [];
+
+      function showTab(name, btn) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("tab-" + name).classList.add("active");
+        btn.classList.add("active");
+        const titles = {
+          dashboard: "Dashboard",
+          clientes: "Clientes",
+          licencas: "Licenças",
+          usuarios: "Usuários",
+        };
+        document.getElementById("topbarTitle").textContent =
+          titles[name] || name;
+        if (name === "dashboard") loadDashboard();
+        if (name === "clientes") loadClientes();
+        if (name === "licencas") loadLicencas();
+        if (name === "usuarios") loadUsuarios();
+      }
+
+      function openModal(id) {
+        document.getElementById(id).classList.add("open");
+      }
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("open");
+      }
+      document.querySelectorAll(".modal-overlay").forEach((m) =>
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("open");
+        }),
+      );
+
+      function fmtMoney(v) {
+        return v ? "R$ " + Number(v).toLocaleString("pt-BR") : "—";
+      }
+      function fmtDate(d) {
+        if (!d) return "—";
+        const [y, m, day] = d.split("T")[0].split("-");
+        return day + "/" + m + "/" + y;
+      }
+      function daysColor(days) {
+        if (days <= 15) return "badge-red";
+        if (days <= 30) return "badge-warn";
+        return "badge-blue";
+      }
+
+      async function loadDashboard() {
+        const data = await api("/api/admin/dashboard").catch(() => null);
+        if (!data) return;
+        const s = data.stats;
+        document.getElementById("sd-clients").textContent = s.totalInstitutions;
+        document.getElementById("sd-active").textContent = s.activeInstitutions;
+        document.getElementById("sd-expiring").textContent = s.expiringIn30;
+        document.getElementById("sd-revenue").textContent = fmtMoney(
+          s.totalRevenue,
+        );
+        const tb = document.getElementById("tbExpiring");
+        if (!data.expiring.length) {
+          tb.innerHTML =
+            '<tr><td colspan="5" class="empty">Nenhuma licença expirando nos próximos 60 dias.</td></tr>';
+          return;
+        }
+        tb.innerHTML = data.expiring
+          .map((r) => {
+            const days = Math.ceil(r.days_left);
+            const cls =
+              days <= 15 ? "row-critical" : days <= 30 ? "row-warning" : "";
+            return `<tr class="${cls}"><td>${r.institution_name}</td><td><span class="badge badge-blue">${r.plan}</span></td><td>${fmtDate(r.end_date)}</td><td><span class="badge ${daysColor(days)}">${days} dia(s)</span></td><td><button class="btn btn-sm btn-grad" onclick="showTab('licencas',document.querySelectorAll('.nav-btn')[2])">Renovar</button></td></tr>`;
+          })
+          .join("");
+      }
+
+      async function loadClientes() {
+        const data = await api("/api/admin/institutions").catch(() => []);
+        institutions = data;
+        refreshInstSelects();
+        const tb = document.getElementById("tbClientes");
+        if (!data.length) {
+          tb.innerHTML =
+            '<tr><td colspan="8" class="empty">Nenhum cliente cadastrado.</td></tr>';
+          return;
+        }
+        tb.innerHTML = data
+          .map(
+            (r) => `
+          <tr>
+            <td><strong>${r.name}</strong></td>
+            <td>${r.cnpj || "—"}</td>
+            <td>${r.contact_name || "—"}</td>
+            <td>${r.contact_email || "—"}</td>
+            <td>${r.plan ? '<span class="badge badge-blue">' + r.plan + "</span>" : "—"}</td>
+            <td>${fmtDate(r.end_date)}</td>
+            <td>${r.user_count || 0}</td>
+            <td><button class="btn btn-sm" onclick="prefillLicense(${r.id},'${r.name.replace(/'/g, "").replace(/"/g, "")}')">+ Licença</button></td>
+          </tr>`,
+          )
+          .join("");
+      }
+
+      async function loadLicencas() {
+        await loadClientes();
+        const [instData, licData] = await Promise.all([
+          api("/api/admin/institutions").catch(() => []),
+          api("/api/admin/licenses").catch(() => []),
+        ]);
+        institutions = instData;
+        refreshInstSelects();
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("lc-start").value = today;
+        const end = new Date();
+        end.setFullYear(end.getFullYear() + 3);
+        document.getElementById("lc-end").value = end
+          .toISOString()
+          .split("T")[0];
+        const tb = document.getElementById("tbLicencas");
+        if (!licData.length) {
+          tb.innerHTML =
+            '<tr><td colspan="7" class="empty">Nenhuma licença cadastrada.</td></tr>';
+          return;
+        }
+        tb.innerHTML = licData
+          .map((r) => {
+            const days = Math.ceil(
+              (new Date(r.end_date) - new Date()) / 86400000,
+            );
+            const active = r.is_active && days > 0;
+            return `<tr>
+            <td>${r.institution_name || "—"}</td>
+            <td><span class="badge badge-blue">${r.plan}</span></td>
+            <td>${fmtDate(r.start_date)}</td>
+            <td>${fmtDate(r.end_date)}</td>
+            <td>${fmtMoney(r.price_brl)}</td>
+            <td>${r.max_users}</td>
+            <td>${active ? '<span class="badge badge-green">Ativa</span>' : '<span class="badge badge-red">Expirada</span>'}</td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      async function loadUsuarios() {
+        await loadClientes();
+        const data = await api("/api/admin/users").catch(() => []);
+        const tb = document.getElementById("tbUsuarios");
+        if (!data.length) {
+          tb.innerHTML =
+            '<tr><td colspan="7" class="empty">Nenhum usuário cadastrado.</td></tr>';
+          return;
+        }
+        tb.innerHTML = data
+          .map((r) => {
+            const last = r.last_login ? fmtDate(r.last_login) : "Nunca";
+            return `<tr>
+            <td><strong>${r.name}</strong></td>
+            <td>${r.email}</td>
+            <td>${r.institution_name || "Admin"}</td>
+            <td><span class="badge badge-blue">${r.role}</span></td>
+            <td>${last}</td>
+            <td>${r.is_active ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-red">Inativo</span>'}</td>
+            <td>
+              <button class="btn btn-sm ${r.is_active ? "btn-danger" : ""}" onclick="toggleUser(${r.id},${r.is_active})">
+                ${r.is_active ? "Desativar" : "Ativar"}
+              </button>
+            </td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      function refreshInstSelects() {
+        const opts = institutions
+          .map((i) => `<option value="${i.id}">${i.name}</option>`)
+          .join("");
+        ["lc-inst", "nu-inst"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el)
+            el.innerHTML = '<option value="">Selecione...</option>' + opts;
+        });
+      }
+
+      function prefillLicense(id, name) {
+        showTab("licencas", document.querySelectorAll(".nav-btn")[2]);
+        setTimeout(() => {
+          const sel = document.getElementById("lc-inst");
+          if (sel) sel.value = id;
+        }, 100);
+      }
+
+      async function saveCliente(e) {
+        e.preventDefault();
+        const al = document.getElementById("alertNovoCli");
+        al.style.display = "none";
+        const body = {
+          name: document.getElementById("nc-name").value,
+          cnpj: document.getElementById("nc-cnpj").value,
+          contact_name: document.getElementById("nc-contact").value,
+          contact_email: document.getElementById("nc-email").value,
+        };
+        const data = await api("/api/admin/institutions", {
+          method: "POST",
+          body: JSON.stringify(body),
+        }).catch((err) => ({ error: err.message }));
+        if (data.error) {
+          al.textContent = data.error;
+          al.style.display = "block";
+          return;
+        }
+        closeModal("modalNovoCliente");
+        document.getElementById("formNovoCliente").reset();
+        loadClientes();
+      }
+
+      async function saveLicense(e) {
+        e.preventDefault();
+        const al = document.getElementById("licAlert");
+        al.style.display = "none";
+        const body = {
+          institution_id: document.getElementById("lc-inst").value,
+          plan: document.getElementById("lc-plan").value,
+          price_brl: document.getElementById("lc-price").value || null,
+          start_date: document.getElementById("lc-start").value,
+          end_date: document.getElementById("lc-end").value,
+          max_users: document.getElementById("lc-users").value,
+          notes: document.getElementById("lc-notes").value,
+        };
+        const data = await api("/api/admin/licenses", {
+          method: "POST",
+          body: JSON.stringify(body),
+        }).catch((err) => ({ error: err.message }));
+        if (data.error) {
+          al.textContent = data.error;
+          al.style.display = "block";
+          return;
+        }
+        al.textContent = "✓ Licença salva com sucesso!";
+        al.className = "alert-msg success";
+        al.style.display = "block";
+        setTimeout(() => {
+          al.style.display = "none";
+          al.className = "alert-msg error";
+        }, 3000);
+        loadLicencas();
+      }
+
+      async function saveUsuario(e) {
+        e.preventDefault();
+        const al = document.getElementById("alertNovoUsr");
+        al.style.display = "none";
+        const body = {
+          institution_id: document.getElementById("nu-inst").value,
+          name: document.getElementById("nu-name").value,
+          email: document.getElementById("nu-email").value,
+          password: document.getElementById("nu-pass").value,
+          role: document.getElementById("nu-role").value,
+        };
+        const data = await api("/api/admin/users", {
+          method: "POST",
+          body: JSON.stringify(body),
+        }).catch((err) => ({ error: err.message }));
+        if (data.error) {
+          al.textContent = data.error;
+          al.style.display = "block";
+          return;
+        }
+        closeModal("modalNovoUsuario");
+        document.getElementById("formNovoUsuario").reset();
+        loadUsuarios();
+      }
+
+      async function toggleUser(id, currentActive) {
+        await api("/api/admin/users/" + id, {
+          method: "PATCH",
+          body: JSON.stringify({ is_active: !currentActive }),
+        });
+        loadUsuarios();
+      }
+
+      function clearLicenseForm() {
+        document.getElementById("formLicenca").reset();
+      }
+
+      // Initial load
+      loadDashboard();
+      loadClientes();
+    </script>
+  </body>
+</html>
