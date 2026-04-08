@@ -1347,6 +1347,162 @@
       }
 
       /* ===============================================================
+         ISCN Karyotype Formula Section
+      =============================================================== */
+      .iscn-section {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--r); overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,.3);
+      }
+      .iscn-head {
+        padding: 14px 20px; border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .iscn-head h3 { font-size: .85rem; font-weight: 700; color: var(--text-3); }
+      .iscn-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+      .iscn-formula-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+      .iscn-formula {
+        font-size: 2rem; font-weight: 900; font-family: 'Cascadia Code','Consolas',monospace;
+        letter-spacing: .03em; line-height: 1;
+      }
+      .iscn-formula.normal { color: var(--green); }
+      .iscn-formula.warn   { color: var(--yellow); }
+      .iscn-formula.error  { color: var(--red); }
+      .iscn-formula.pending { color: var(--text-3); }
+      .iscn-sex-badge {
+        font-size: .68rem; font-weight: 800; padding: 3px 9px; border-radius: 99px;
+        background: rgba(59,130,246,.12); color: #93c5fd; border: 1px solid rgba(59,130,246,.25);
+      }
+      .iscn-conditions { display: flex; flex-direction: column; gap: 7px; }
+      .iscn-cond {
+        padding: 9px 13px; border-radius: 9px; font-size: .8rem; font-weight: 600;
+        display: flex; align-items: flex-start; gap: 9px; line-height: 1.4;
+      }
+      .iscn-cond.normal { background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.25); color: #6ee7b7; }
+      .iscn-cond.warn   { background: rgba(245,158,11,.1);  border: 1px solid rgba(245,158,11,.25); color: #fde68a; }
+      .iscn-cond.error  { background: rgba(239,68,68,.1);   border: 1px solid rgba(239,68,68,.25);  color: #fca5a5; }
+      .iscn-cond-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+      .iscn-cond-label { font-weight: 700; }
+      .iscn-cond-code { font-family: monospace; font-size: .75rem; opacity: .8; }
+      .iscn-disclaimer {
+        font-size: .68rem; color: var(--muted); font-style: italic;
+        border-top: 1px solid var(--border); padding-top: 10px; margin-top: 2px;
+      }
+
+      /* ===============================================================
+         Morfometria Cromossômica
+      =============================================================== */
+      .morpho-section {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--r); overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,.3);
+      }
+      .morpho-head {
+        padding: 14px 20px; border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      }
+      .morpho-head h3 { font-size: .85rem; font-weight: 700; color: var(--text-3); }
+      .morpho-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+      .scale-group { display: flex; align-items: center; gap: 5px; }
+      .scale-group label { font-size: .7rem; color: var(--text-3); font-weight: 600; white-space: nowrap; }
+      .scale-group select {
+        background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+        padding: 4px 8px; color: var(--text); font-size: .73rem; outline: none; cursor: pointer;
+      }
+      .scale-group input {
+        width: 66px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+        padding: 4px 8px; color: var(--text); font-size: .73rem; outline: none;
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+      .scale-group input::-webkit-outer-spin-button,
+      .scale-group input::-webkit-inner-spin-button { -webkit-appearance: none; }
+      .scale-group input:focus, .scale-group select:focus { border-color: var(--accent); }
+      .morpho-table-wrap { overflow-x: auto; }
+      .morpho-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+      .morpho-table thead { background: var(--surface-2); }
+      .morpho-table th {
+        padding: 9px 12px; text-align: left; color: var(--text-3);
+        font-size: .65rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; white-space: nowrap;
+      }
+      .morpho-table td { padding: 7px 12px; border-top: 1px solid var(--border); color: var(--text-2); vertical-align: middle; }
+      .morpho-table tr:hover td { background: var(--surface-2); }
+      .morpho-table tr.unpaired-row td { opacity: .55; }
+      .morph-chip {
+        display: inline-block; padding: 1px 7px; border-radius: 99px;
+        font-size: .65rem; font-weight: 700; white-space: nowrap;
+      }
+      .morph-M  { background: rgba(59,130,246,.12);  color: #93c5fd;  border: 1px solid rgba(59,130,246,.2); }
+      .morph-SM { background: rgba(16,185,129,.12);  color: #6ee7b7;  border: 1px solid rgba(16,185,129,.2); }
+      .morph-A  { background: rgba(245,158,11,.12);  color: #fde68a;  border: 1px solid rgba(245,158,11,.2); }
+      .denver-chip {
+        display: inline-block; padding: 1px 8px; border-radius: 6px;
+        font-size: .65rem; font-weight: 800; background: var(--surface-3); color: var(--text-2);
+      }
+      .btn-csv {
+        padding: 4px 11px; border: 1px solid var(--border); background: none; color: var(--text-3);
+        border-radius: 6px; font-size: .7rem; font-weight: 700; cursor: pointer; transition: all .15s;
+      }
+      .btn-csv:hover { border-color: var(--accent); color: var(--accent); }
+      .morpho-empty { padding: 24px; text-align: center; color: var(--text-3); font-size: .83rem; }
+
+      /* ===============================================================
+         Histórico de Exames
+      =============================================================== */
+      .hist-modal {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75);
+        z-index: 300; align-items: center; justify-content: center; padding: 20px;
+      }
+      .hist-modal.open { display: flex; }
+      .hist-box {
+        background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+        width: 100%; max-width: 620px; max-height: 82vh; display: flex; flex-direction: column;
+        box-shadow: 0 24px 80px rgba(0,0,0,.7);
+        animation: fadeUp .25s ease both;
+      }
+      .hist-head {
+        padding: 16px 22px; border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+      }
+      .hist-head h3 { font-size: .92rem; font-weight: 800; }
+      .hist-close {
+        background: none; border: none; color: var(--text-3); font-size: 1.1rem;
+        cursor: pointer; padding: 4px 8px; border-radius: 6px;
+      }
+      .hist-close:hover { background: var(--surface-3); color: var(--text); }
+      .hist-list { overflow-y: auto; flex: 1; }
+      .hist-item {
+        display: flex; align-items: flex-start; gap: 12px; padding: 13px 20px;
+        border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s;
+      }
+      .hist-item:last-child { border-bottom: none; }
+      .hist-item:hover { background: var(--surface-2); }
+      .hist-item:hover .hist-load-hint { opacity: 1; }
+      .hist-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+      .hist-info { flex: 1; min-width: 0; }
+      .hist-date { font-size: .68rem; color: var(--text-3); margin-bottom: 2px; }
+      .hist-patient { font-size: .88rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .hist-formula { font-size: .75rem; color: var(--accent); font-weight: 800; font-family: monospace; margin-top: 2px; }
+      .hist-sub { font-size: .7rem; color: var(--text-3); margin-top: 1px; }
+      .hist-load-hint { font-size: .65rem; color: var(--accent); font-weight: 700; opacity: 0; transition: opacity .15s; margin-top: 3px; }
+      .hist-del {
+        background: none; border: none; color: var(--muted); cursor: pointer;
+        padding: 6px 8px; border-radius: 6px; font-size: .85rem; flex-shrink: 0; line-height: 1;
+      }
+      .hist-del:hover { background: rgba(239,68,68,.12); color: var(--red); }
+      .hist-empty { padding: 44px 20px; text-align: center; color: var(--text-3); font-size: .85rem; }
+      .hist-footer {
+        padding: 12px 20px; border-top: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+      }
+      .hist-count { font-size: .72rem; color: var(--text-3); }
+      .btn-clear-hist {
+        padding: 5px 12px; border: 1px solid rgba(239,68,68,.3); background: none;
+        color: var(--red); border-radius: 6px; font-size: .72rem; font-weight: 700; cursor: pointer;
+      }
+      .btn-clear-hist:hover { background: rgba(239,68,68,.08); }
+
+      /* ===============================================================
          Print report
       =============================================================== */
       #printHeader {
@@ -1589,10 +1745,36 @@
           <span class="status-dot" id="tfDot"></span>
           <span id="tfTxt">Carregando TF.js…</span>
         </div>
-        <div id="ksUserBar" style="display:none;align-items:center;gap:8px;padding:4px 10px;border:1px solid rgba(59,130,246,.3);border-radius:99px;background:rgba(59,130,246,.08);font-size:.72rem;color:#93c5fd">
+        <div
+          id="ksUserBar"
+          style="
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 10px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 99px;
+            background: rgba(59, 130, 246, 0.08);
+            font-size: 0.72rem;
+            color: #93c5fd;
+          "
+        >
           <span>🏥</span>
-          <span id="ksUserName" style="font-weight:700"></span>
-          <button onclick="ksLogout()" style="background:none;border:none;color:#93c5fd;cursor:pointer;font-size:.72rem;padding:0 0 0 4px;font-weight:700">Sair ⎋</button>
+          <span id="ksUserName" style="font-weight: 700"></span>
+          <button
+            onclick="ksLogout()"
+            style="
+              background: none;
+              border: none;
+              color: #93c5fd;
+              cursor: pointer;
+              font-size: 0.72rem;
+              padding: 0 0 0 4px;
+              font-weight: 700;
+            "
+          >
+            Sair ⎋
+          </button>
         </div>
       </div>
     </header>
@@ -1637,6 +1819,29 @@
                   id="fNotes"
                   placeholder="Ex: Suspeita de Trissomia 21"
                 />
+              </div>
+              <div class="form-field">
+                <label>Complemento Sexual</label>
+                <select id="fSex" onchange="if(parseInt(document.getElementById('sCount').textContent)>0)computeISCN(parseInt(document.getElementById('sCount').textContent))">
+                  <option value="ND">Não determinado</option>
+                  <option value="XX">XX — Feminino</option>
+                  <option value="XY">XY — Masculino</option>
+                  <option value="X">X — Monossomia X</option>
+                  <option value="XXY">XXY — Klinefelter</option>
+                  <option value="XXX">XXX — Trissomia X</option>
+                  <option value="XYY">XYY</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Indicação Clínica</label>
+                <select id="fIndication">
+                  <option value="">—</option>
+                  <option value="prenatal">Diagnóstico Pré-natal</option>
+                  <option value="postnatal">Diagnóstico Pós-natal</option>
+                  <option value="onco">Investigação Oncológica</option>
+                  <option value="infertility">Infertilidade / Aborto</option>
+                  <option value="research">Pesquisa / Outro</option>
+                </select>
               </div>
             </div>
           </div>
@@ -1883,6 +2088,18 @@
             >
               📄 Exportar Relatório PDF
             </button>
+            <button
+              class="btn btn-ghost"
+              id="btnSaveExam"
+              onclick="saveExam()"
+              disabled
+              title="Salva este exame no histórico local"
+            >
+              💾 Salvar no Histórico
+            </button>
+            <button class="btn btn-ghost" onclick="openHistory()">
+              🗂 Ver Histórico de Exames
+            </button>
           </div>
         </div>
       </aside>
@@ -1899,9 +2116,27 @@
           <div class="hero-icon">🧬</div>
         </div>
 
+        <!-- ISCN Karyotype Formula -->
+        <div class="iscn-section" id="iscnSection" style="display:none">
+          <div class="iscn-head">
+            <h3>🔬 Fórmula Cariotípica (ISCN)</h3>
+            <span style="font-size:.68rem;color:var(--muted)">Notação Internacional de Nomenclatura de Cromossomos</span>
+          </div>
+          <div class="iscn-body">
+            <div class="iscn-formula-wrap">
+              <span class="iscn-formula pending" id="iscnFormula">—</span>
+              <span class="iscn-sex-badge" id="iscnSexBadge" style="display:none"></span>
+            </div>
+            <div class="iscn-conditions" id="iscnConditions"></div>
+            <div class="iscn-disclaimer">
+              ⚠️ Fórmula gerada automaticamente com base na contagem e no complemento sexual informado.
+              A confirmação e notação definitiva ISCN devem ser feitas pelo citogeneticista responsável.
+            </div>
+          </div>
+        </div>
+
         <!-- Secondary stats -->
         <div class="stats-bar">
-          <div class="stat-card">
             <div class="stat-val g" id="sAvg">—</div>
             <div class="stat-lbl">Área Média (px²)</div>
           </div>
@@ -1987,7 +2222,7 @@
         <!-- Karyogram -->
         <div class="karyo-section" id="karyoSection">
           <div class="karyo-head">
-            <h3>🦬 Cariograma Visual</h3>
+            <h3>� Cariograma Visual</h3>
             <span style="font-size: 0.72rem; color: var(--muted)" id="karyoMeta"
               >—</span
             >
@@ -2001,20 +2236,43 @@
           </div>
         </div>
 
-        <!-- Karyogram -->
-        <div class="karyo-section" id="karyoSection">
-          <div class="karyo-head">
-            <h3>🧬 Cariograma Visual</h3>
-            <span style="font-size: 0.72rem; color: var(--muted)" id="karyoMeta"
-              >—</span
-            >
-          </div>
-          <div class="karyo-body">
-            <div id="karyoGrid" class="karyo-grid">
-              <div class="karyo-empty">
-                Cariograma aparecerá após o pareamento.
+        <!-- Morfometria Cromossômica -->
+        <div class="morpho-section" id="morphoSection" style="display:none">
+          <div class="morpho-head">
+            <h3>📐 Morfometria Cromossômica</h3>
+            <div class="morpho-controls">
+              <div class="scale-group">
+                <label>Escala:</label>
+                <select id="scalePreset" onchange="applyScalePreset()">
+                  <option value="">Selecionar obj.</option>
+                  <option value="0.065">100× (~0,065 µm/px)</option>
+                  <option value="0.103">63× (~0,103 µm/px)</option>
+                  <option value="0.161">40× (~0,161 µm/px)</option>
+                  <option value="0.402">16× (~0,402 µm/px)</option>
+                  <option value="custom">Personalizado…</option>
+                </select>
+                <input type="number" id="scaleInput" placeholder="µm/px" step="0.001" min="0.001"
+                  oninput="refreshMorphoTable()" style="display:none" />
               </div>
+              <button class="btn-csv" onclick="exportMorphoCSV()" title="Baixar tabela como CSV">⬇ CSV</button>
             </div>
+          </div>
+          <div class="morpho-table-wrap">
+            <table class="morpho-table">
+              <thead>
+                <tr>
+                  <th>Par / Crom.</th>
+                  <th>Comp. Rel. (%)</th>
+                  <th>Comp. (µm)</th>
+                  <th>Razão de Braços</th>
+                  <th>Tipo Morf.</th>
+                  <th>Grupo Denver</th>
+                </tr>
+              </thead>
+              <tbody id="morphoTbody">
+                <tr><td colspan="6" class="morpho-empty">Aguardando análise…</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -2062,6 +2320,23 @@
       <!-- /results-panel -->
     </main>
 
+    <!-- History Modal -->
+    <div class="hist-modal" id="histModal" onclick="if(event.target===this)closeHistory()">
+      <div class="hist-box">
+        <div class="hist-head">
+          <h3>🗂 Histórico de Exames</h3>
+          <button class="hist-close" onclick="closeHistory()">✕</button>
+        </div>
+        <div class="hist-list" id="histList">
+          <div class="hist-empty">Nenhum exame salvo ainda.</div>
+        </div>
+        <div class="hist-footer">
+          <span class="hist-count" id="histCount">0 exame(s)</span>
+          <button class="btn-clear-hist" onclick="clearHistory()">🗑 Limpar tudo</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ================================================================
      JavaScript
 ================================================================ -->
@@ -2082,40 +2357,59 @@
       // Se ks_backend estiver configurado no localStorage, verifica o token JWT.
       // Sem backend configurado (GitHub Pages / standalone), funciona normalmente.
       (function ksAuthCheck() {
-        const BACKEND = localStorage.getItem('ks_backend');
-        const TOKEN   = localStorage.getItem('ks_token');
+        const BACKEND = localStorage.getItem("ks_backend");
+        const TOKEN = localStorage.getItem("ks_token");
         if (!BACKEND) return; // modo standalone
         if (!TOKEN) {
-          window.location.href = 'login.html?backend=' + encodeURIComponent(BACKEND) + '&next=' + encodeURIComponent(window.location.href);
+          window.location.href =
+            "login.html?backend=" +
+            encodeURIComponent(BACKEND) +
+            "&next=" +
+            encodeURIComponent(window.location.href);
           return;
         }
-        fetch(BACKEND + '/api/auth/verify', { headers: { Authorization: 'Bearer ' + TOKEN } })
-          .then(r => {
+        fetch(BACKEND + "/api/auth/verify", {
+          headers: { Authorization: "Bearer " + TOKEN },
+        })
+          .then((r) => {
             if (!r.ok) {
-              localStorage.removeItem('ks_token');
-              window.location.href = 'login.html?backend=' + encodeURIComponent(BACKEND);
+              localStorage.removeItem("ks_token");
+              window.location.href =
+                "login.html?backend=" + encodeURIComponent(BACKEND);
               return;
             }
-            return r.json().then(function(d) {
+            return r.json().then(function (d) {
               if (d.user) {
-                const bar = document.getElementById('ksUserBar');
-                const nm  = document.getElementById('ksUserName');
-                if (bar && nm) { nm.textContent = d.user.name; bar.style.display = 'flex'; }
+                const bar = document.getElementById("ksUserBar");
+                const nm = document.getElementById("ksUserName");
+                if (bar && nm) {
+                  nm.textContent = d.user.name;
+                  bar.style.display = "flex";
+                }
               }
               if (d.daysLeft != null && d.daysLeft <= 30) {
-                const warn = document.createElement('div');
-                warn.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#92400e;color:#fef3c7;padding:7px 16px;font-size:.78rem;font-weight:700;text-align:center;letter-spacing:.01em';
-                warn.textContent = '⚠️  Sua licença expira em ' + d.daysLeft + ' dia(s). Entre em contato para renovar: contato@karyoscan.com.br';
+                const warn = document.createElement("div");
+                warn.style.cssText =
+                  "position:fixed;top:0;left:0;right:0;z-index:9999;background:#92400e;color:#fef3c7;padding:7px 16px;font-size:.78rem;font-weight:700;text-align:center;letter-spacing:.01em";
+                warn.textContent =
+                  "⚠️  Sua licença expira em " +
+                  d.daysLeft +
+                  " dia(s). Entre em contato para renovar: contato@karyoscan.com.br";
                 document.body.prepend(warn);
               }
             });
-          }).catch(function() { /* servidor inacessível — permitir uso offline */ });
+          })
+          .catch(function () {
+            /* servidor inacessível — permitir uso offline */
+          });
       })();
 
       function ksLogout() {
-        localStorage.removeItem('ks_token');
-        const b = localStorage.getItem('ks_backend');
-        window.location.href = b ? ('login.html?backend=' + encodeURIComponent(b)) : 'login.html';
+        localStorage.removeItem("ks_token");
+        const b = localStorage.getItem("ks_backend");
+        window.location.href = b
+          ? "login.html?backend=" + encodeURIComponent(b)
+          : "login.html";
       }
 
       // ---------- Estado global ----------
@@ -2826,6 +3120,13 @@
             ")";
           el.style.color = "var(--red)";
         }
+
+        // ISCN formula (atualiza sempre que count muda)
+        if (count > 0) computeISCN(count);
+
+        // Enable save button
+        const btnSave = document.getElementById('btnSaveExam');
+        if (btnSave) btnSave.disabled = count === 0;
       }
 
       // ================================================================
@@ -2855,35 +3156,69 @@
       // ================================================================
       function exportReport() {
         // Preenche o cabeçalho de impressão com dados do paciente
-        const patient = document.getElementById("fPatient").value || "—";
-        const id = document.getElementById("fID").value || "—";
-        const inst = document.getElementById("fInst").value || "—";
-        const notes = document.getElementById("fNotes").value || "—";
-        const rawDate = document.getElementById("fDate").value;
-        const dateStr = rawDate
-          ? new Date(rawDate + "T12:00:00").toLocaleDateString("pt-BR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })
-          : new Date().toLocaleDateString("pt-BR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            });
-        const count = document.getElementById("sCount").textContent;
-        const status = document
-          .getElementById("sCountStatus")
-          .textContent.replace(/^[^a-zA-Z0-9]/u, "")
-          .trim();
+        const patient    = document.getElementById("fPatient").value || "—";
+        const id         = document.getElementById("fID").value || "—";
+        const inst       = document.getElementById("fInst").value || "—";
+        const notes      = document.getElementById("fNotes").value || "—";
+        const sexEl      = document.getElementById("fSex");
+        const sexLabel   = sexEl ? sexEl.options[sexEl.selectedIndex].text : "—";
+        const indicEl    = document.getElementById("fIndication");
+        const indication = indicEl && indicEl.value ? indicEl.options[indicEl.selectedIndex].text : "—";
+        const rawDate    = document.getElementById("fDate").value;
+        const dateStr    = rawDate
+          ? new Date(rawDate + "T12:00:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
+          : new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+        const count  = document.getElementById("sCount").textContent;
+        const status = document.getElementById("sCountStatus").textContent.replace(/^[^a-zA-Z0-9]/u, "").trim();
+        const iscnFormula = _iscnData ? _iscnData.formula : "—";
+        const iscnCond    = (_iscnData && _iscnData.conditions.length > 0) ? _iscnData.conditions[0].label : "—";
+
+        // Build morphometry rows for print
+        let morphoRows = '';
+        if (_morphoData.length > 0) {
+          morphoRows = `
+            <br/>
+            <table style="width:100%;border-collapse:collapse;font-size:.75rem;margin-top:6px">
+              <thead>
+                <tr style="background:#eff6ff">
+                  <th style="padding:4px 8px;text-align:left;border:1px solid #bfdbfe;color:#1e40af">Par</th>
+                  <th style="padding:4px 8px;text-align:left;border:1px solid #bfdbfe;color:#1e40af">Comp. Rel.</th>
+                  <th style="padding:4px 8px;text-align:left;border:1px solid #bfdbfe;color:#1e40af">Comp. (µm)</th>
+                  <th style="padding:4px 8px;text-align:left;border:1px solid #bfdbfe;color:#1e40af">Razão Braços</th>
+                  <th style="padding:4px 8px;text-align:left;border:1px solid #bfdbfe;color:#1e40af">Tipo Morf.</th>
+                  <th style="padding:4px 8px;text-align:left;border:1px solid #bfdbfe;color:#1e40af">Gr. Denver</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${_morphoData.map(r => `<tr>
+                  <td style="padding:3px 8px;border:1px solid #e2e8f0">${r.label}</td>
+                  <td style="padding:3px 8px;border:1px solid #e2e8f0">${r.relPct}%</td>
+                  <td style="padding:3px 8px;border:1px solid #e2e8f0">${r.lenUm !== '—' ? r.lenUm + ' µm' : '—'}</td>
+                  <td style="padding:3px 8px;border:1px solid #e2e8f0">${r.ar}</td>
+                  <td style="padding:3px 8px;border:1px solid #e2e8f0">${r.morphCode} – ${r.morphLabel}</td>
+                  <td style="padding:3px 8px;border:1px solid #e2e8f0">Gr. ${r.group}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>`;
+        }
 
         document.getElementById("printHeader").innerHTML = `
           <table>
             <tr><td>Paciente:</td><td>${patient}</td><td>ID / Prontuário:</td><td>${id}</td></tr>
             <tr><td>Instituição:</td><td>${inst}</td><td>Data do Exame:</td><td>${dateStr}</td></tr>
+            <tr><td>Compl. Sexual:</td><td>${sexLabel}</td><td>Indicação:</td><td>${indication}</td></tr>
             <tr><td>Observações:</td><td colspan="3">${notes}</td></tr>
             <tr><td>Cromossomos:</td><td><strong>${count}</strong></td><td>Status:</td><td>${status}</td></tr>
-          </table>`;
+            <tr>
+              <td>Fórmula ISCN:</td>
+              <td colspan="3" style="font-family:monospace;font-weight:900;font-size:1rem;color:#1e40af">${iscnFormula} <span style="font-family:inherit;font-weight:400;font-size:.8rem;color:#475569">— ${iscnCond}</span></td>
+            </tr>
+          </table>
+          ${morphoRows}
+          <p style="font-size:.62rem;color:#94a3b8;margin-top:8px;font-style:italic">
+            Fórmula ISCN e morfometria geradas automaticamente pelo KaryoScan v2.0.
+            Revisão e validação clínica obrigatórias por citogeneticista habilitado.
+          </p>`;
 
         window.print();
       }
@@ -2912,6 +3247,16 @@
         document.getElementById("sRes").textContent = "—";
         document.getElementById("sTime").textContent = "—";
         document.getElementById("sCountStatus").textContent = "";
+
+        // Reset ISCN & morphometry
+        _iscnData = null;
+        _morphoData = [];
+        const iscnSec = document.getElementById('iscnSection');
+        if (iscnSec) iscnSec.style.display = 'none';
+        const morphSec = document.getElementById('morphoSection');
+        if (morphSec) morphSec.style.display = 'none';
+        const btnSave = document.getElementById('btnSaveExam');
+        if (btnSave) btnSave.disabled = true;
 
         resetResult(true);
         resetZoom();
@@ -3658,6 +4003,9 @@
           stepMsg("Gerando cariograma…");
           buildKaryogram(origCanvas, rects, areas, pairedPairs, unpairedIdxs);
 
+          // 5b. Morfometria
+          buildMorphometryTable(rects, areas, pairedPairs, unpairedIdxs);
+
           // 6. K-Means ainda é usado para o painel de grupos (secundário)
           mlK = Math.min(Math.ceil(rects.length / 2), 12);
           if (rects.length >= 2) {
@@ -3926,6 +4274,332 @@
           }
         });
       }
+
+      // ================================================================
+      //  ISCN Karyotype Formula
+      // ================================================================
+      const ISCN_CONDITIONS = [
+        { delta: 0,  sex: 'XX',  type: 'normal', icon: '✅', label: 'Cariótipo feminino normal',                    code: '46,XX',   desc: 'Diplóide, 23 pares de cromossomos homólogos' },
+        { delta: 0,  sex: 'XY',  type: 'normal', icon: '✅', label: 'Cariótipo masculino normal',                   code: '46,XY',   desc: 'Diplóide, 23 pares de cromossomos homólogos' },
+        { delta: 0,  sex: 'ND',  type: 'normal', icon: '✅', label: 'Contagem normal (46)',                         code: '46,??',   desc: 'Confirme o complemento sexual para notação completa' },
+        { delta: 1,  sex: 'XX',  type: 'warn',   icon: '⚠️', label: 'Possível Trissomia — Investigar',             code: '47,XX,+?', desc: 'Síndrome de Down (+21), Edwards (+18) ou Patau (+13) se confirmado' },
+        { delta: 1,  sex: 'XY',  type: 'warn',   icon: '⚠️', label: 'Possível Trissomia — Investigar',             code: '47,XY,+?', desc: 'Identificar o cromossomo extra para concluir a notação' },
+        { delta: 1,  sex: 'XXY', type: 'warn',   icon: '⚠️', label: 'Compatível com Síndrome de Klinefelter',      code: '47,XXY',  desc: '47 cromossomos, complemento XXY. Associado com infertilidade masculina' },
+        { delta: 1,  sex: 'XXX', type: 'warn',   icon: '⚠️', label: 'Trissomia do X (47,XXX)',                      code: '47,XXX',  desc: 'Fenótipo feminino, geralmente fértil. Consultar geneticista' },
+        { delta: 1,  sex: 'XYY', type: 'warn',   icon: '⚠️', label: 'Síndrome 47,XYY',                              code: '47,XYY',  desc: 'Fenótipo masculino. Geralmente assintomático' },
+        { delta: -1, sex: 'X',   type: 'error',  icon: '❌', label: 'Compatível com Síndrome de Turner',            code: '45,X',    desc: '45 cromossomos, monossomia X. Associado com disgenesia gonadal' },
+        { delta: -1, sex: 'XX',  type: 'error',  icon: '❌', label: 'Monossomia — Investigar',                      code: '45,XX,-?', desc: 'Identifique qual cromossomo está ausente para completar a notação' },
+        { delta: -1, sex: 'XY',  type: 'error',  icon: '❌', label: 'Monossomia — Investigar',                      code: '45,XY,-?', desc: 'Identifique qual cromossomo está ausente para completar a notação' },
+        { delta: -1, sex: 'ND',  type: 'error',  icon: '❌', label: 'Monossomia detectada',                         code: '45,??,−?', desc: 'Informe o complemento sexual e identifique o cromossomo ausente' },
+        { delta: 2,  sex: null,  type: 'error',  icon: '❌', label: 'Polissomia ou erro de contagem',                code: '48,??',   desc: '2 cromossomos a mais. Verificar sobreposição ou fragmentos na imagem' },
+        { delta: -2, sex: null,  type: 'error',  icon: '❌', label: 'Nulissomia/Dupla monossomia ou erro de cont.', code: '44,??',   desc: '2 cromossomos a menos. Ajustar parâmetros de detecção se necessário' },
+      ];
+
+      let _iscnData = null; // cache para uso no PDF
+
+      function computeISCN(count) {
+        const sex = (document.getElementById('fSex') || {}).value || 'ND';
+        const delta = count - 46;
+        const baseFormula = count + ',' + (sex === 'ND' ? '??' : sex);
+        _iscnData = { formula: baseFormula, sex, delta, count, conditions: [] };
+
+        const section = document.getElementById('iscnSection');
+        const formulaEl = document.getElementById('iscnFormula');
+        const badgeEl = document.getElementById('iscnSexBadge');
+        const conds = document.getElementById('iscnConditions');
+        if (!section) return;
+
+        section.style.display = '';
+        formulaEl.textContent = baseFormula;
+        formulaEl.className = 'iscn-formula ' + (delta === 0 ? 'normal' : Math.abs(delta) <= 2 ? 'warn' : 'error');
+
+        if (sex !== 'ND') {
+          badgeEl.textContent = sex;
+          badgeEl.style.display = '';
+        } else {
+          badgeEl.style.display = 'none';
+        }
+
+        // Match conditions
+        const matched = ISCN_CONDITIONS.filter(c =>
+          c.delta === delta && (c.sex === null || c.sex === sex)
+        );
+        if (matched.length === 0 && delta !== 0) {
+          // Generic large delta
+          _iscnData.conditions = [{ type: 'error', icon: '❌', label: 'Anomalia cromossômica significativa', code: baseFormula, desc: 'Delta de ' + (delta > 0 ? '+' : '') + delta + ' em relação ao esperado (46). Revisar parâmetros de detecção.' }];
+        } else {
+          _iscnData.conditions = matched;
+        }
+
+        conds.innerHTML = _iscnData.conditions.map(c => `
+          <div class="iscn-cond ${c.type}">
+            <span class="iscn-cond-icon">${c.icon}</span>
+            <div>
+              <div class="iscn-cond-label">${c.label} <span class="iscn-cond-code">${c.code}</span></div>
+              <div style="font-size:.72rem;opacity:.8;margin-top:2px">${c.desc}</div>
+            </div>
+          </div>`).join('');
+      }
+
+      // ================================================================
+      //  Morfometria Cromossômica
+      // ================================================================
+      let _morphoData = []; // cache for CSV export
+
+      function getDenverGroup(rankPct) {
+        // rankPct: 0 = largest pair, 1 = smallest
+        if (rankPct < 0.13)  return 'A'; // pairs 1-3
+        if (rankPct < 0.22)  return 'B'; // pairs 4-5
+        if (rankPct < 0.52)  return 'C'; // pairs 6-12,X
+        if (rankPct < 0.65)  return 'D'; // pairs 13-15
+        if (rankPct < 0.78)  return 'E'; // pairs 16-18
+        if (rankPct < 0.87)  return 'F'; // pairs 19-20
+        return 'G';                        // pairs 21-22,Y
+      }
+
+      function getMorphType(ar) {
+        if (ar <= 1.7) return { code: 'M',  label: 'Metacêntrico' };
+        if (ar <= 3.0) return { code: 'SM', label: 'Submetacêntrico' };
+        return             { code: 'A',  label: 'Acrocêntrico' };
+      }
+
+      function getScale() {
+        const inp = document.getElementById('scaleInput');
+        const val = inp ? parseFloat(inp.value) : NaN;
+        return isNaN(val) || val <= 0 ? null : val;
+      }
+
+      function applyScalePreset() {
+        const sel = document.getElementById('scalePreset');
+        const inp = document.getElementById('scaleInput');
+        if (!sel || !inp) return;
+        if (sel.value === 'custom') {
+          inp.style.display = '';
+          inp.focus();
+        } else if (sel.value) {
+          inp.value = sel.value;
+          inp.style.display = '';
+        } else {
+          inp.style.display = 'none';
+          inp.value = '';
+        }
+        refreshMorphoTable();
+      }
+
+      function buildMorphometryTable(localRects, localAreas, pairs, unpaired) {
+        const section = document.getElementById('morphoSection');
+        const tbody = document.getElementById('morphoTbody');
+        if (!section || !tbody) return;
+        if (!pairs || (pairs.length + unpaired.length) === 0) { section.style.display = 'none'; return; }
+        section.style.display = '';
+
+        const scale = getScale();
+        _morphoData = [];
+
+        // Compute length for each chromosome (longer bbox dimension)
+        const lenPx = localRects.map(r => Math.max(r.width, r.height));
+        const widPx = localRects.map(r => Math.min(r.width, r.height));
+
+        // Build pair entries: avg length of the two chromosomes
+        const pairLens = pairs.map(({ idxA, idxB }) => (lenPx[idxA] + lenPx[idxB]) / 2);
+        const unpairedLens = unpaired.map(idx => lenPx[idx]);
+
+        const totalLen = pairLens.reduce((a, b) => a + b, 0) + unpairedLens.reduce((a, b) => a + b, 0);
+
+        // Sort pairs by average length descending for Denver ranking
+        const sortedPairIdxs = pairLens
+          .map((len, i) => ({ len, i }))
+          .sort((a, b) => b.len - a.len)
+          .map(x => x.i);
+
+        // Build a rank map: pairIdx → rank (0 = largest)
+        const rankMap = {};
+        sortedPairIdxs.forEach((pairIdx, rank) => { rankMap[pairIdx] = rank; });
+
+        let rows = '';
+        pairs.forEach(({ idxA, idxB }, pi) => {
+          const avgLen  = pairLens[pi];
+          const avgWid  = (widPx[idxA] + widPx[idxB]) / 2;
+          const relPct  = totalLen > 0 ? (avgLen / totalLen * 100).toFixed(2) : '—';
+          const lenUm   = scale ? (avgLen * scale).toFixed(2) + ' µm' : '—';
+          const ar      = avgWid > 0 ? (avgLen / avgWid).toFixed(2) : '—';
+          const rank    = rankMap[pi];
+          const group   = getDenverGroup(rank / Math.max(pairs.length - 1, 1));
+          const morph   = getMorphType(avgLen / Math.max(avgWid, 1));
+          const hex     = PAIR_COLORS_HEX[pi % PAIR_COLORS_HEX.length];
+
+          _morphoData.push({ label: 'Par ' + (pi + 1), relPct, lenUm: scale ? (avgLen * scale).toFixed(2) : '—', ar, morphCode: morph.code, morphLabel: morph.label, group });
+
+          rows += `<tr>
+            <td><span style="display:inline-block;width:9px;height:9px;border-radius:3px;background:${hex};margin-right:5px"></span> Par ${pi + 1}</td>
+            <td>${relPct}%</td>
+            <td>${lenUm}</td>
+            <td>${typeof ar === 'string' ? ar : ar}</td>
+            <td><span class="morph-chip morph-${morph.code}">${morph.code} — ${morph.label}</span></td>
+            <td><span class="denver-chip">Gr. ${group}</span></td>
+          </tr>`;
+        });
+
+        // Unpaired rows
+        unpaired.forEach((idx, ui) => {
+          const len    = lenPx[idx];
+          const wid    = widPx[idx];
+          const relPct = totalLen > 0 ? (len / totalLen * 100).toFixed(2) : '—';
+          const lenUm  = scale ? (len * scale).toFixed(2) + ' µm' : '—';
+          const ar     = wid > 0 ? (len / wid).toFixed(2) : '—';
+          const morph  = getMorphType(len / Math.max(wid, 1));
+
+          _morphoData.push({ label: '#' + (idx + 1) + ' (s/par)', relPct, lenUm: scale ? (len * scale).toFixed(2) : '—', ar, morphCode: morph.code, morphLabel: morph.label, group: '?' });
+
+          rows += `<tr class="unpaired-row">
+            <td><span style="display:inline-block;width:9px;height:9px;border-radius:3px;background:#94a3b8;margin-right:5px"></span> #${idx + 1} <span style="font-size:.65rem;color:var(--muted)">(sem par)</span></td>
+            <td>${relPct}%</td>
+            <td>${lenUm}</td>
+            <td>${ar}</td>
+            <td><span class="morph-chip morph-${morph.code}">${morph.code} — ${morph.label}</span></td>
+            <td><span class="denver-chip" style="opacity:.5">—</span></td>
+          </tr>`;
+        });
+
+        tbody.innerHTML = rows;
+      }
+
+      function refreshMorphoTable() {
+        if (pairedPairs && pairedPairs.length > 0) {
+          const origCanvas = document.getElementById('canvasOrig');
+          buildMorphometryTable(rects, areas, pairedPairs, unpairedIdxs);
+        }
+      }
+
+      function exportMorphoCSV() {
+        if (!_morphoData.length) { toast('Execute a análise primeiro.', 'warn'); return; }
+        const hdr = ['Par/Cromossomo', 'Comp. Relativo (%)', 'Comp. (µm)', 'Razão de Braços', 'Tipo Morf.', 'Grupo Denver'];
+        const rows = _morphoData.map(r => [r.label, r.relPct, r.lenUm, r.ar, r.morphCode + ' - ' + r.morphLabel, 'Gr. ' + r.group]);
+        const patient = (document.getElementById('fPatient') || {}).value || 'KaryoScan';
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const csv = [hdr, ...rows].map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
+        const a = document.createElement('a');
+        a.download = 'morfometria_' + patient.replace(/\s+/g, '_') + '_' + dateStr + '.csv';
+        a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+        a.click();
+        toast('CSV exportado!', 'success');
+      }
+
+      // ================================================================
+      //  Histórico de Exames (localStorage)
+      // ================================================================
+      const HIST_KEY = 'ks_exam_history';
+      const HIST_MAX = 25;
+
+      function getHistory() {
+        try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); } catch { return []; }
+      }
+
+      function saveHistory(arr) {
+        try { localStorage.setItem(HIST_KEY, JSON.stringify(arr)); } catch { /* quota exceeded */ }
+      }
+
+      function saveExam() {
+        const count  = parseInt(document.getElementById('sCount').textContent) || 0;
+        if (count === 0) { toast('Detecte os cromossomos antes de salvar.', 'warn'); return; }
+        const sex    = (document.getElementById('fSex') || {}).value || 'ND';
+        const formula = _iscnData ? _iscnData.formula : count + ',' + sex;
+        const cond   = (_iscnData && _iscnData.conditions.length > 0) ? _iscnData.conditions[0].label : '';
+        const hist   = getHistory();
+        const record = {
+          id:          Date.now(),
+          createdAt:   new Date().toISOString(),
+          patient:     (document.getElementById('fPatient') || {}).value || 'Paciente sem nome',
+          mrn:         (document.getElementById('fID') || {}).value || '',
+          inst:        (document.getElementById('fInst') || {}).value || '',
+          sex,
+          indication:  (document.getElementById('fIndication') || {}).value || '',
+          notes:       (document.getElementById('fNotes') || {}).value || '',
+          examDate:    (document.getElementById('fDate') || {}).value || '',
+          count,
+          formula,
+          condition:   cond,
+          pairs:       pairedPairs.length,
+          unpaired:    unpairedIdxs.length,
+          morphoData:  _morphoData.slice(0, 30), // save up to 30 rows
+        };
+        hist.unshift(record);
+        if (hist.length > HIST_MAX) hist.splice(HIST_MAX);
+        saveHistory(hist);
+        document.getElementById('btnSaveExam').textContent = '✅ Salvo!';
+        setTimeout(() => { document.getElementById('btnSaveExam').textContent = '💾 Salvar no Histórico'; }, 2000);
+        toast('Exame salvo no histórico!', 'success');
+      }
+
+      function openHistory() {
+        renderHistory();
+        document.getElementById('histModal').classList.add('open');
+      }
+
+      function closeHistory() {
+        document.getElementById('histModal').classList.remove('open');
+      }
+
+      function renderHistory() {
+        const hist = getHistory();
+        const list = document.getElementById('histList');
+        const count = document.getElementById('histCount');
+        count.textContent = hist.length + ' exame(s) salvos';
+        if (!hist.length) {
+          list.innerHTML = '<div class="hist-empty">📭 Nenhum exame salvo neste dispositivo.<br><small>Clique em "💾 Salvar no Histórico" após cada análise.</small></div>';
+          return;
+        }
+        list.innerHTML = hist.map(r => {
+          const d = new Date(r.createdAt);
+          const dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) +
+                          ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          const condHtml = r.condition ? `<div class="hist-sub">📋 ${r.condition}</div>` : '';
+          return `<div class="hist-item" onclick="loadExam(${r.id})" title="Clique para carregar dados deste exame">
+            <div class="hist-icon">🧬</div>
+            <div class="hist-info">
+              <div class="hist-date">${dateStr}</div>
+              <div class="hist-patient">${r.patient}${r.mrn ? ' · ' + r.mrn : ''}</div>
+              <div class="hist-formula">${r.formula} · ${r.count} crom. · ${r.pairs} par(es)</div>
+              ${condHtml}
+              ${r.inst ? '<div class="hist-sub">🏥 ' + r.inst + '</div>' : ''}
+              <div class="hist-load-hint">→ Clique para carregar dados do paciente</div>
+            </div>
+            <button class="hist-del" onclick="deleteExam(${r.id},event)" title="Excluir">🗑</button>
+          </div>`;
+        }).join('');
+      }
+
+      function loadExam(id) {
+        const hist = getHistory();
+        const r = hist.find(x => x.id === id);
+        if (!r) return;
+        const setVal = (elId, val) => { const el = document.getElementById(elId); if (el && val !== undefined) el.value = val; };
+        setVal('fPatient', r.patient);
+        setVal('fID', r.mrn);
+        setVal('fInst', r.inst);
+        setVal('fDate', r.examDate);
+        setVal('fNotes', r.notes);
+        setVal('fSex', r.sex);
+        setVal('fIndication', r.indication);
+        closeHistory();
+        toast('Dados de "' + r.patient + '" carregados na ficha.', 'success');
+      }
+
+      function deleteExam(id, event) {
+        event.stopPropagation();
+        if (!confirm('Excluir este exame do histórico?')) return;
+        const hist = getHistory().filter(x => x.id !== id);
+        saveHistory(hist);
+        renderHistory();
+      }
+
+      function clearHistory() {
+        if (!confirm('Excluir todos os exames salvos? Esta ação não pode ser desfeita.')) return;
+        saveHistory([]);
+        renderHistory();
+        toast('Histórico apagado.', 'info');
+      }
+
     </script>
 
     <!--
