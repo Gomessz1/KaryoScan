@@ -1296,40 +1296,39 @@
       .zoom-bar {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         padding: 8px 14px;
         border-top: 1px solid var(--border);
         background: var(--surface-2);
       }
-      .zoom-bar label {
-        font-size: 0.7rem;
-        color: var(--muted);
-        white-space: nowrap;
-      }
-      .zoom-bar input[type="range"] {
-        flex: 1;
-      }
       .zoom-val {
-        font-size: 0.72rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: var(--accent);
-        min-width: 38px;
-        text-align: right;
+        min-width: 46px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
       }
       .zoom-btn {
-        padding: 3px 9px;
+        padding: 4px 12px;
         border: 1px solid var(--border);
         background: var(--surface-3);
         color: var(--text-3);
         border-radius: 6px;
         cursor: pointer;
-        font-size: 0.7rem;
+        font-size: 0.82rem;
         font-weight: 700;
         transition: all var(--tr);
+        line-height: 1;
       }
       .zoom-btn:hover {
         border-color: var(--accent);
         color: var(--accent);
+        background: rgba(59, 130, 246, 0.08);
+      }
+      .zoom-btn.zoom-step {
+        font-size: 1rem;
+        padding: 2px 11px;
       }
       .cv-body-zoom {
         overflow: auto;
@@ -1573,8 +1572,12 @@
       <div class="brand">
         <div class="brand-icon">🔬</div>
         <div>
-          <h1 class="brand-name">KaryoScan <span class="version-badge">v2.0</span></h1>
-          <p class="brand-sub">Detecção &amp; Pareamento de Cromossomos — Uso Clínico</p>
+          <h1 class="brand-name">
+            KaryoScan <span class="version-badge">v2.0</span>
+          </h1>
+          <p class="brand-sub">
+            Detecção &amp; Pareamento de Cromossomos — Uso Clínico
+          </p>
         </div>
       </div>
       <div class="header-status">
@@ -1597,9 +1600,14 @@
           <div class="card-title">📄 Ficha do Exame</div>
           <div class="ctrl-list">
             <div class="form-grid">
-              <div class="form-field" style="grid-column:1/-1">
+              <div class="form-field" style="grid-column: 1/-1">
                 <label>Paciente</label>
-                <input type="text" id="fPatient" placeholder="Nome completo" autocomplete="name" />
+                <input
+                  type="text"
+                  id="fPatient"
+                  placeholder="Nome completo"
+                  autocomplete="name"
+                />
               </div>
               <div class="form-field">
                 <label>ID / Prontuário</label>
@@ -1609,13 +1617,21 @@
                 <label>Data do Exame</label>
                 <input type="date" id="fDate" />
               </div>
-              <div class="form-field" style="grid-column:1/-1">
+              <div class="form-field" style="grid-column: 1/-1">
                 <label>Instituição / Laboratório</label>
-                <input type="text" id="fInst" placeholder="Hospital / Lab de Citogenética" />
+                <input
+                  type="text"
+                  id="fInst"
+                  placeholder="Hospital / Lab de Citogenética"
+                />
               </div>
-              <div class="form-field" style="grid-column:1/-1">
+              <div class="form-field" style="grid-column: 1/-1">
                 <label>Laudo / Observações</label>
-                <input type="text" id="fNotes" placeholder="Ex: Suspeita de Trissomia 21" />
+                <input
+                  type="text"
+                  id="fNotes"
+                  placeholder="Ex: Suspeita de Trissomia 21"
+                />
               </div>
             </div>
           </div>
@@ -1904,12 +1920,24 @@
             <div class="cv-placeholder" id="phResult">
               <span>🔬</span>Execute a detecção…
             </div>
-            <canvas id="canvasResult" style="display:none"></canvas>
+            <canvas id="canvasResult" style="display: none"></canvas>
           </div>
           <div class="zoom-bar">
-            <label>🔍 Zoom</label>
-            <input type="range" id="sZoom" min="50" max="400" step="10" value="100" />
+            <button
+              class="zoom-btn zoom-step"
+              onclick="stepZoom(-25)"
+              title="Diminuir zoom"
+            >
+              −
+            </button>
             <span class="zoom-val" id="vZoom">100%</span>
+            <button
+              class="zoom-btn zoom-step"
+              onclick="stepZoom(+25)"
+              title="Aumentar zoom"
+            >
+              +
+            </button>
             <button class="zoom-btn" onclick="resetZoom()">1:1</button>
             <button class="zoom-btn" onclick="fitZoom()">Ajustar</button>
           </div>
@@ -1955,11 +1983,15 @@
         <div class="karyo-section" id="karyoSection">
           <div class="karyo-head">
             <h3>🦬 Cariograma Visual</h3>
-            <span style="font-size:.72rem;color:var(--muted)" id="karyoMeta">—</span>
+            <span style="font-size: 0.72rem; color: var(--muted)" id="karyoMeta"
+              >—</span
+            >
           </div>
           <div class="karyo-body">
             <div id="karyoGrid" class="karyo-grid">
-              <div class="karyo-empty">Cariograma aparecerá após o pareamento.</div>
+              <div class="karyo-empty">
+                Cariograma aparecerá após o pareamento.
+              </div>
             </div>
           </div>
         </div>
@@ -1968,11 +2000,15 @@
         <div class="karyo-section" id="karyoSection">
           <div class="karyo-head">
             <h3>🧬 Cariograma Visual</h3>
-            <span style="font-size:.72rem;color:var(--muted)" id="karyoMeta">—</span>
+            <span style="font-size: 0.72rem; color: var(--muted)" id="karyoMeta"
+              >—</span
+            >
           </div>
           <div class="karyo-body">
             <div id="karyoGrid" class="karyo-grid">
-              <div class="karyo-empty">Cariograma aparecerá após o pareamento.</div>
+              <div class="karyo-empty">
+                Cariograma aparecerá após o pareamento.
+              </div>
             </div>
           </div>
         </div>
@@ -2044,7 +2080,9 @@
       let areas = []; // Áreas (px²) dos contornos, na mesma ordem
 
       // Pré-preenche data de hoje
-      document.getElementById("fDate").value = new Date().toISOString().slice(0, 10);
+      document.getElementById("fDate").value = new Date()
+        .toISOString()
+        .slice(0, 10);
 
       // Paleta de cores para as caixas (RGBA)
       const PALETTE = [
@@ -2725,13 +2763,22 @@
         if (count === 0) {
           el.textContent = "";
         } else if (delta === 0) {
-          el.innerHTML = '<span class="cs-icon">✅</span> 46 esperados — Euplóide';
+          el.innerHTML =
+            '<span class="cs-icon">✅</span> 46 esperados — Euplóide';
           el.style.color = "var(--green)";
         } else if (Math.abs(delta) <= 3) {
-          el.innerHTML = '<span class="cs-icon">⚠️</span> 46 esperados (delta ' + (delta > 0 ? '+' : '') + delta + ')';
+          el.innerHTML =
+            '<span class="cs-icon">⚠️</span> 46 esperados (delta ' +
+            (delta > 0 ? "+" : "") +
+            delta +
+            ")";
           el.style.color = "var(--yellow)";
         } else {
-          el.innerHTML = '<span class="cs-icon">❌</span> 46 esperados (delta ' + (delta > 0 ? '+' : '') + delta + ')';
+          el.innerHTML =
+            '<span class="cs-icon">❌</span> 46 esperados (delta ' +
+            (delta > 0 ? "+" : "") +
+            delta +
+            ")";
           el.style.color = "var(--red)";
         }
       }
@@ -2744,8 +2791,15 @@
         if (c.style.display === "none") return;
         const a = document.createElement("a");
         const patient = document.getElementById("fPatient").value.trim();
-        const dateStr = (document.getElementById("fDate").value || new Date().toISOString().slice(0,10)).replace(/-/g, '');
-        a.download = "karyoscan_" + (patient ? patient.replace(/\s+/g, '_') + '_' : '') + dateStr + ".png";
+        const dateStr = (
+          document.getElementById("fDate").value ||
+          new Date().toISOString().slice(0, 10)
+        ).replace(/-/g, "");
+        a.download =
+          "karyoscan_" +
+          (patient ? patient.replace(/\s+/g, "_") + "_" : "") +
+          dateStr +
+          ".png";
         a.href = c.toDataURL("image/png");
         a.click();
         toast("Download iniciado!", "success");
@@ -2757,15 +2811,26 @@
       function exportReport() {
         // Preenche o cabeçalho de impressão com dados do paciente
         const patient = document.getElementById("fPatient").value || "—";
-        const id      = document.getElementById("fID").value || "—";
-        const inst    = document.getElementById("fInst").value || "—";
-        const notes   = document.getElementById("fNotes").value || "—";
+        const id = document.getElementById("fID").value || "—";
+        const inst = document.getElementById("fInst").value || "—";
+        const notes = document.getElementById("fNotes").value || "—";
         const rawDate = document.getElementById("fDate").value;
         const dateStr = rawDate
-          ? new Date(rawDate + 'T12:00:00').toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'})
-          : new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
-        const count   = document.getElementById("sCount").textContent;
-        const status  = document.getElementById("sCountStatus").textContent.replace(/^[^a-zA-Z0-9]/u,'').trim();
+          ? new Date(rawDate + "T12:00:00").toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          : new Date().toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            });
+        const count = document.getElementById("sCount").textContent;
+        const status = document
+          .getElementById("sCountStatus")
+          .textContent.replace(/^[^a-zA-Z0-9]/u, "")
+          .trim();
 
         document.getElementById("printHeader").innerHTML = `
           <table>
@@ -2843,46 +2908,57 @@
       // ================================================================
       //  Zoom / Pan no canvas resultado
       // ================================================================
-      let _zoomLevel = 1.0;
+      let _zoomLevel = 100; // percentage
+      const ZOOM_MIN = 25,
+        ZOOM_MAX = 400,
+        ZOOM_STEPS = [25, 33, 50, 67, 75, 100, 125, 150, 200, 250, 300, 400];
 
       function applyZoom(pct) {
-        _zoomLevel = pct / 100;
-        document.getElementById('vZoom').textContent = pct + '%';
-        const c = document.getElementById('canvasResult');
-        c.style.transform = 'scale(' + _zoomLevel + ')';
-        // Expande o container para o tamanho transformado
-        const body = document.getElementById('bodyResult');
-        body.style.minHeight = Math.round(c.height * _zoomLevel) + 'px';
+        _zoomLevel = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, pct));
+        document.getElementById("vZoom").textContent = _zoomLevel + "%";
+        const c = document.getElementById("canvasResult");
+        c.style.transform = "scale(" + _zoomLevel / 100 + ")";
+        c.style.transformOrigin = "top left";
+        const body = document.getElementById("bodyResult");
+        body.style.minHeight = Math.round((c.height * _zoomLevel) / 100) + "px";
+        body.style.minWidth = Math.round((c.width * _zoomLevel) / 100) + "px";
+      }
+
+      function stepZoom(delta) {
+        // Salta para o valor mais próximo na lista de níveis
+        const dir = delta > 0 ? 1 : -1;
+        let idx = ZOOM_STEPS.findIndex((v) => v >= _zoomLevel);
+        if (idx === -1) idx = ZOOM_STEPS.length - 1;
+        const next =
+          ZOOM_STEPS[Math.max(0, Math.min(ZOOM_STEPS.length - 1, idx + dir))];
+        applyZoom(next);
       }
 
       function resetZoom() {
-        document.getElementById('sZoom').value = 100;
         applyZoom(100);
       }
 
       function fitZoom() {
-        const c = document.getElementById('canvasResult');
-        const body = document.getElementById('bodyResult');
-        if (!c || c.style.display === 'none') return;
+        const c = document.getElementById("canvasResult");
+        const body = document.getElementById("bodyResult");
+        if (!c || c.style.display === "none") return;
         const availW = body.clientWidth - 4;
-        const pct = Math.max(10, Math.min(400, Math.round((availW / c.width) * 100)));
-        document.getElementById('sZoom').value = pct;
+        const pct = Math.max(
+          ZOOM_MIN,
+          Math.min(ZOOM_MAX, Math.round((availW / c.width) * 100)),
+        );
         applyZoom(pct);
       }
 
-      document.getElementById('sZoom').addEventListener('input', function () {
-        applyZoom(parseInt(this.value));
-      });
-
-      // Scroll wheel = zoom
-      document.getElementById('bodyResult').addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const step = e.deltaY < 0 ? 10 : -10;
-        const slider = document.getElementById('sZoom');
-        const newVal = Math.max(50, Math.min(400, parseInt(slider.value) + step));
-        slider.value = newVal;
-        applyZoom(newVal);
-      }, { passive: false });
+      // Scroll do mouse = zoom
+      document.getElementById("bodyResult").addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          stepZoom(e.deltaY < 0 ? 1 : -1);
+        },
+        { passive: false },
+      );
 
       // ================================================================
       //  Utilitários UI
@@ -3593,7 +3669,8 @@
 
         const total = pairs.length * 2 + unpaired.length;
         if (total === 0) {
-          grid.innerHTML = '<div class="karyo-empty">Nenhum cromossomo para exibir.</div>';
+          grid.innerHTML =
+            '<div class="karyo-empty">Nenhum cromossomo para exibir.</div>';
           document.getElementById("karyoMeta").textContent = "—";
           return;
         }
@@ -3610,16 +3687,33 @@
           const sy = Math.max(0, rect.y - PAD);
           const sx2 = Math.min(origCanvas.width, rect.x + rect.width + PAD);
           const sy2 = Math.min(origCanvas.height, rect.y + rect.height + PAD);
-          const sw = sx2 - sx, sh = sy2 - sy;
+          const sw = sx2 - sx,
+            sh = sy2 - sy;
           const scale = MAX_H / Math.max(sw, sh, 1);
           const tw = Math.max(1, Math.round(sw * scale));
           const th = Math.max(1, Math.round(sh * scale));
           const tc = document.createElement("canvas");
-          tc.width = tw; tc.height = th;
+          tc.width = tw;
+          tc.height = th;
           tc.className = "karyo-thumb";
           tc.style.borderColor = borderHex;
-          tc.getContext("2d").drawImage(origCanvas, sx, sy, sw, sh, 0, 0, tw, th);
-          tc.title = "Cromossomo #" + (idx + 1) + " · " + areas[idx].toLocaleString("pt-BR") + " px²";
+          tc.getContext("2d").drawImage(
+            origCanvas,
+            sx,
+            sy,
+            sw,
+            sh,
+            0,
+            0,
+            tw,
+            th,
+          );
+          tc.title =
+            "Cromossomo #" +
+            (idx + 1) +
+            " · " +
+            areas[idx].toLocaleString("pt-BR") +
+            " px²";
           return tc;
         }
 
