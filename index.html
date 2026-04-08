@@ -463,7 +463,69 @@
       .control-panel {
         display: flex;
         flex-direction: column;
+        position: sticky;
+        top: 81px;
+        max-height: calc(100vh - 105px);
       }
+
+      /* ── Tab navigation ─────────────────────────────────────────── */
+      .tab-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r) var(--r) 0 0;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .tab-btn {
+        padding: 13px 6px;
+        border: none;
+        background: transparent;
+        color: var(--text-3);
+        font-size: 0.74rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--tr);
+        border-bottom: 2px solid transparent;
+        line-height: 1.3;
+        text-align: center;
+      }
+      .tab-btn:hover {
+        background: var(--surface-2);
+        color: var(--text-2);
+      }
+      .tab-btn.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        background: var(--surface-2);
+        font-weight: 700;
+      }
+      .tab-body {
+        flex: 1;
+        overflow-y: auto;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 var(--r) var(--r);
+        padding: 14px;
+        min-height: 0;
+      }
+      .tab-body::-webkit-scrollbar { width: 5px; }
+      .tab-body::-webkit-scrollbar-track { background: var(--bg); }
+      .tab-body::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
+      .tab-pane { display: none; }
+      .tab-pane.active {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .tab-pane .card + .card { margin-top: 0; }
+      .panel-footer {
+        padding: 12px 0 0;
+        flex-shrink: 0;
+      }
+
       .results-panel {
         display: flex;
         flex-direction: column;
@@ -1782,326 +1844,211 @@
     <main>
       <!-- LEFT: control panel -->
       <aside class="control-panel">
-        <!-- Patient info card -->
-        <div class="card">
-          <div class="card-title">📄 Ficha do Exame</div>
-          <div class="ctrl-list">
-            <div class="form-grid">
-              <div class="form-field" style="grid-column: 1/-1">
-                <label>Paciente</label>
-                <input
-                  type="text"
-                  id="fPatient"
-                  placeholder="Nome completo"
-                  autocomplete="name"
-                />
-              </div>
-              <div class="form-field">
-                <label>ID / Prontuário</label>
-                <input type="text" id="fID" placeholder="MR-000000" />
-              </div>
-              <div class="form-field">
-                <label>Data do Exame</label>
-                <input type="date" id="fDate" />
-              </div>
-              <div class="form-field" style="grid-column: 1/-1">
-                <label>Instituição / Laboratório</label>
-                <input
-                  type="text"
-                  id="fInst"
-                  placeholder="Hospital / Lab de Citogenética"
-                />
-              </div>
-              <div class="form-field" style="grid-column: 1/-1">
-                <label>Laudo / Observações</label>
-                <input
-                  type="text"
-                  id="fNotes"
-                  placeholder="Ex: Suspeita de Trissomia 21"
-                />
-              </div>
-              <div class="form-field">
-                <label>Complemento Sexual</label>
-                <select id="fSex" onchange="if(parseInt(document.getElementById('sCount').textContent)>0)computeISCN(parseInt(document.getElementById('sCount').textContent))">
-                  <option value="ND">Não determinado</option>
-                  <option value="XX">XX — Feminino</option>
-                  <option value="XY">XY — Masculino</option>
-                  <option value="X">X — Monossomia X</option>
-                  <option value="XXY">XXY — Klinefelter</option>
-                  <option value="XXX">XXX — Trissomia X</option>
-                  <option value="XYY">XYY</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label>Indicação Clínica</label>
-                <select id="fIndication">
-                  <option value="">—</option>
-                  <option value="prenatal">Diagnóstico Pré-natal</option>
-                  <option value="postnatal">Diagnóstico Pós-natal</option>
-                  <option value="onco">Investigação Oncológica</option>
-                  <option value="infertility">Infertilidade / Aborto</option>
-                  <option value="research">Pesquisa / Outro</option>
-                </select>
-              </div>
-            </div>
-          </div>
+        <!-- Tab navigation -->
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="switchTab('exame')">📋 Exame</button>
+          <button class="tab-btn" onclick="switchTab('params')">⚙️ Parâmetros</button>
+          <button class="tab-btn" onclick="switchTab('acoes')">▶ Ações</button>
         </div>
 
-        <!-- Upload card -->
-        <div class="card">
-          <div class="card-title">Imagem de Entrada</div>
-          <input type="file" id="fileInput" accept="image/*" />
-          <label class="drop-zone" id="dropZone" for="fileInput">
-            <span class="dz-icon">📂</span>
-            <p><strong>Toque aqui</strong> para escolher</p>
-            <p style="margin-top: 3px">
-              <small>Galeria · Câmera · Arquivos</small>
-            </p>
-            <p style="margin-top: 2px"><small>PNG · JPG · BMP · TIFF</small></p>
-          </label>
-          <label
-            for="fileInput"
-            class="upload-btn"
-            onclick="document.getElementById('fileInput').click()"
-          >
-            📷 Selecionar Imagem
-          </label>
+        <!-- Tab body -->
+        <div class="tab-body">
+
+          <!-- ── TAB: EXAME ── -->
+          <div class="tab-pane active" id="tabExame">
+
+            <!-- Upload -->
+            <div class="card">
+              <div class="card-title">Imagem de Entrada</div>
+              <input type="file" id="fileInput" accept="image/*" />
+              <label class="drop-zone" id="dropZone" for="fileInput">
+                <span class="dz-icon">📂</span>
+                <p><strong>Toque aqui</strong> para escolher</p>
+                <p style="margin-top: 3px"><small>Galeria · Câmera · Arquivos</small></p>
+                <p style="margin-top: 2px"><small>PNG · JPG · BMP · TIFF</small></p>
+              </label>
+              <label for="fileInput" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                📷 Selecionar Imagem
+              </label>
+            </div>
+
+            <!-- Original image preview (compact) -->
+            <div class="card" style="padding: 0">
+              <div class="cv-head">
+                <span class="cv-head-title">Pré-visualização</span>
+                <span class="badge badge-blue">Entrada</span>
+              </div>
+              <div class="cv-body" id="bodyOrig" style="min-height: 120px">
+                <div class="cv-placeholder" id="phOrig">
+                  <span>🖼️</span>Aguardando imagem…
+                </div>
+                <canvas id="canvasOrig" style="display: none"></canvas>
+              </div>
+            </div>
+
+            <!-- Patient form -->
+            <div class="card">
+              <div class="card-title">📄 Ficha do Exame</div>
+              <div class="ctrl-list">
+                <div class="form-grid">
+                  <div class="form-field" style="grid-column: 1/-1">
+                    <label>Paciente</label>
+                    <input type="text" id="fPatient" placeholder="Nome completo" autocomplete="name" />
+                  </div>
+                  <div class="form-field">
+                    <label>ID / Prontuário</label>
+                    <input type="text" id="fID" placeholder="MR-000000" />
+                  </div>
+                  <div class="form-field">
+                    <label>Data do Exame</label>
+                    <input type="date" id="fDate" />
+                  </div>
+                  <div class="form-field" style="grid-column: 1/-1">
+                    <label>Instituição / Laboratório</label>
+                    <input type="text" id="fInst" placeholder="Hospital / Lab de Citogenética" />
+                  </div>
+                  <div class="form-field" style="grid-column: 1/-1">
+                    <label>Laudo / Observações</label>
+                    <input type="text" id="fNotes" placeholder="Ex: Suspeita de Trissomia 21" />
+                  </div>
+                  <div class="form-field">
+                    <label>Complemento Sexual</label>
+                    <select id="fSex" onchange="if(parseInt(document.getElementById('sCount').textContent)>0)computeISCN(parseInt(document.getElementById('sCount').textContent))">
+                      <option value="ND">Não determinado</option>
+                      <option value="XX">XX — Feminino</option>
+                      <option value="XY">XY — Masculino</option>
+                      <option value="X">X — Monossomia X</option>
+                      <option value="XXY">XXY — Klinefelter</option>
+                      <option value="XXX">XXX — Trissomia X</option>
+                      <option value="XYY">XYY</option>
+                    </select>
+                  </div>
+                  <div class="form-field">
+                    <label>Indicação Clínica</label>
+                    <select id="fIndication">
+                      <option value="">—</option>
+                      <option value="prenatal">Diagnóstico Pré-natal</option>
+                      <option value="postnatal">Diagnóstico Pós-natal</option>
+                      <option value="onco">Investigação Oncológica</option>
+                      <option value="infertility">Infertilidade / Aborto</option>
+                      <option value="research">Pesquisa / Outro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /tabExame -->
+
+          <!-- ── TAB: PARÂMETROS ── -->
+          <div class="tab-pane" id="tabParams">
+
+            <div class="card">
+              <div class="card-title">Parâmetros de Detecção</div>
+              <div class="ctrl-list">
+                <div class="toggle-row">
+                  <div class="info">Equalizar Histograma<small>Ativar apenas se imagem tiver baixo contraste</small></div>
+                  <label class="toggle"><input type="checkbox" id="togEqualize" /><span class="tog-sl"></span></label>
+                </div>
+                <div class="ctrl-group">
+                  <label>Suavização Gaussiana <span id="vBlur">3</span></label>
+                  <input type="range" id="sBlur" min="1" max="21" step="2" value="3" />
+                </div>
+                <div class="ctrl-group" id="grpThresh">
+                  <label>Threshold (Binarização) <span id="vThresh">90</span></label>
+                  <input type="range" id="sThresh" min="0" max="255" value="90" />
+                </div>
+                <div class="toggle-row">
+                  <div class="info">Auto Threshold (Otsu)<small>Calcula limite automaticamente — recomendado</small></div>
+                  <label class="toggle"><input type="checkbox" id="togOtsu" checked /><span class="tog-sl"></span></label>
+                </div>
+                <div class="toggle-row">
+                  <div class="info">Inverter Binarização<small>Para cromossomos escuros em fundo claro</small></div>
+                  <label class="toggle"><input type="checkbox" id="togInvert" checked /><span class="tog-sl"></span></label>
+                </div>
+                <div class="ctrl-group">
+                  <label>Kernel Morfológico <span id="vMorph">3</span></label>
+                  <input type="range" id="sMorph" min="1" max="13" step="2" value="3" />
+                </div>
+                <div class="toggle-row">
+                  <div class="info">Separar cromossomos sobrepostos<small>Watershed — divide objetos que se tocam</small></div>
+                  <label class="toggle"><input type="checkbox" id="togWatershed" checked /><span class="tog-sl"></span></label>
+                </div>
+                <div class="ctrl-group" id="grpWatershed">
+                  <label>Distância mínima (watershed) <span id="vWatershed">30</span>%</label>
+                  <input type="range" id="sWatershed" min="10" max="90" step="5" value="30" />
+                </div>
+                <div class="ctrl-group">
+                  <label>Área Mínima (px²) <span id="vArea">800</span></label>
+                  <input type="range" id="sArea" min="50" max="6000" step="50" value="800" />
+                </div>
+                <div class="ctrl-group">
+                  <label>Área Máxima (px²) <span id="vMaxArea">50000</span></label>
+                  <input type="range" id="sMaxArea" min="1000" max="200000" step="1000" value="50000" />
+                </div>
+                <div class="ctrl-group">
+                  <label>Solidez Mínima <span id="vSolidity">50</span>%</label>
+                  <input type="range" id="sSolidity" min="10" max="90" step="5" value="50" />
+                </div>
+                <div class="ctrl-group">
+                  <label>Proporção máx. (L/C) <span id="vAspect">8</span>:1</label>
+                  <input type="range" id="sAspect" min="2" max="20" step="1" value="8" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Classificação ML</div>
+              <div class="ctrl-list">
+                <div class="toggle-row">
+                  <div class="info">Classificar após detecção<small>Executa pareamento automaticamente</small></div>
+                  <label class="toggle"><input type="checkbox" id="togAutoClassify" checked /><span class="tog-sl"></span></label>
+                </div>
+              </div>
+              <div style="margin-top: 14px">
+                <button class="btn btn-ghost" id="btnClassify" onclick="runClassification()" disabled>
+                  🧠 Parear Cromossomos
+                </button>
+              </div>
+            </div>
+
+          </div><!-- /tabParams -->
+
+          <!-- ── TAB: AÇÕES ── -->
+          <div class="tab-pane" id="tabAcoes">
+
+            <div class="card">
+              <div class="card-title">Exportar &amp; Salvar</div>
+              <div class="btn-group">
+                <button class="btn btn-success" id="btnDownload" onclick="downloadResult()" disabled>
+                  ⬇ Baixar Imagem Processada
+                </button>
+                <button class="btn btn-ghost" id="btnReport" onclick="exportReport()" disabled>
+                  📄 Exportar Relatório PDF
+                </button>
+                <button class="btn btn-ghost" id="btnSaveExam" onclick="saveExam()" disabled title="Salva este exame no histórico local">
+                  💾 Salvar no Histórico
+                </button>
+                <button class="btn btn-ghost" onclick="openHistory()">
+                  🗂 Ver Histórico de Exames
+                </button>
+                <button class="btn btn-ghost" onclick="clearAll()">
+                  🗑 Limpar Área de Trabalho
+                </button>
+              </div>
+            </div>
+
+          </div><!-- /tabAcoes -->
+
+        </div><!-- /tab-body -->
+
+        <!-- Persistent detect button always visible -->
+        <div class="panel-footer">
+          <button class="btn btn-primary" id="btnProcess" onclick="processImage()" disabled>
+            ⚡ Detectar Cromossomos
+          </button>
         </div>
 
-        <!-- Original image card -->
-        <div class="card" style="padding: 0">
-          <div class="cv-head">
-            <span class="cv-head-title">Imagem Original</span>
-            <span class="badge badge-blue">Entrada</span>
-          </div>
-          <div class="cv-body" id="bodyOrig">
-            <div class="cv-placeholder" id="phOrig">
-              <span>🖼️</span>Aguardando imagem…
-            </div>
-            <canvas id="canvasOrig" style="display: none"></canvas>
-          </div>
-        </div>
-
-        <!-- Parameters card -->
-        <div class="card">
-          <div class="card-title">Parâmetros de Detecção</div>
-          <div class="ctrl-list">
-            <div class="toggle-row">
-              <div class="info">
-                Equalizar Histograma<small
-                  >Ativar apenas se imagem tiver baixo contraste</small
-                >
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="togEqualize" /><span
-                  class="tog-sl"
-                ></span
-              ></label>
-            </div>
-
-            <div class="ctrl-group">
-              <label>Suavização Gaussiana <span id="vBlur">3</span></label>
-              <input
-                type="range"
-                id="sBlur"
-                min="1"
-                max="21"
-                step="2"
-                value="3"
-              />
-            </div>
-
-            <div class="ctrl-group" id="grpThresh">
-              <label
-                >Threshold (Binarização) <span id="vThresh">90</span></label
-              >
-              <input type="range" id="sThresh" min="0" max="255" value="90" />
-            </div>
-            <div class="toggle-row">
-              <div class="info">
-                Auto Threshold (Otsu)<small
-                  >Calcula limite automaticamente — recomendado</small
-                >
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="togOtsu" checked /><span
-                  class="tog-sl"
-                ></span
-              ></label>
-            </div>
-            <div class="toggle-row">
-              <div class="info">
-                Inverter Binarização<small
-                  >Para cromossomos escuros em fundo claro</small
-                >
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="togInvert" checked /><span
-                  class="tog-sl"
-                ></span
-              ></label>
-            </div>
-
-            <div class="ctrl-group">
-              <label>Kernel Morfológico <span id="vMorph">3</span></label>
-              <input
-                type="range"
-                id="sMorph"
-                min="1"
-                max="13"
-                step="2"
-                value="3"
-              />
-            </div>
-
-            <div class="toggle-row">
-              <div class="info">
-                Separar cromossomos sobrepostos<small
-                  >Watershed — divide objetos que se tocam</small
-                >
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="togWatershed" checked /><span
-                  class="tog-sl"
-                ></span
-              ></label>
-            </div>
-            <div class="ctrl-group" id="grpWatershed">
-              <label
-                >Distância mínima (watershed)
-                <span id="vWatershed">30</span>%</label
-              >
-              <input
-                type="range"
-                id="sWatershed"
-                min="10"
-                max="90"
-                step="5"
-                value="30"
-              />
-            </div>
-
-            <div class="ctrl-group">
-              <label>Área Mínima (px²) <span id="vArea">800</span></label>
-              <input
-                type="range"
-                id="sArea"
-                min="50"
-                max="6000"
-                step="50"
-                value="800"
-              />
-            </div>
-            <div class="ctrl-group">
-              <label>Área Máxima (px²) <span id="vMaxArea">50000</span></label>
-              <input
-                type="range"
-                id="sMaxArea"
-                min="1000"
-                max="200000"
-                step="1000"
-                value="50000"
-              />
-            </div>
-            <div class="ctrl-group">
-              <label>Solidez Mínima <span id="vSolidity">50</span>%</label>
-              <input
-                type="range"
-                id="sSolidity"
-                min="10"
-                max="90"
-                step="5"
-                value="50"
-              />
-            </div>
-            <div class="ctrl-group">
-              <label>Proporção máx. (L/C) <span id="vAspect">8</span>:1</label>
-              <input
-                type="range"
-                id="sAspect"
-                min="2"
-                max="20"
-                step="1"
-                value="8"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- ML card -->
-        <div class="card">
-          <div class="card-title">Classificação ML</div>
-          <div class="ctrl-list">
-            <div class="toggle-row">
-              <div class="info">
-                Classificar após detecção<small
-                  >Executa pareamento automaticamente</small
-                >
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="togAutoClassify" checked /><span
-                  class="tog-sl"
-                ></span
-              ></label>
-            </div>
-          </div>
-          <div style="margin-top: 14px">
-            <button
-              class="btn btn-ghost"
-              id="btnClassify"
-              onclick="runClassification()"
-              disabled
-            >
-              🧠 Parear Cromossomos
-            </button>
-          </div>
-        </div>
-
-        <!-- Actions card -->
-        <div class="card">
-          <div class="card-title">Ações</div>
-          <div class="btn-group">
-            <button
-              class="btn btn-primary"
-              id="btnProcess"
-              onclick="processImage()"
-              disabled
-            >
-              ⚡ Detectar Cromossomos
-            </button>
-            <button
-              class="btn btn-success"
-              id="btnDownload"
-              onclick="downloadResult()"
-              disabled
-            >
-              ⬇ Baixar Imagem Processada
-            </button>
-            <button class="btn btn-ghost" onclick="clearAll()">
-              🗑 Limpar Área de Trabalho
-            </button>
-            <button
-              class="btn btn-ghost"
-              id="btnReport"
-              onclick="exportReport()"
-              disabled
-            >
-              📄 Exportar Relatório PDF
-            </button>
-            <button
-              class="btn btn-ghost"
-              id="btnSaveExam"
-              onclick="saveExam()"
-              disabled
-              title="Salva este exame no histórico local"
-            >
-              💾 Salvar no Histórico
-            </button>
-            <button class="btn btn-ghost" onclick="openHistory()">
-              🗂 Ver Histórico de Exames
-            </button>
-          </div>
-        </div>
       </aside>
 
       <!-- RIGHT: results panel -->
@@ -3226,6 +3173,17 @@
       // ================================================================
       //  Limpar
       // ================================================================
+      function switchTab(name) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        const id = 'tab' + name.charAt(0).toUpperCase() + name.slice(1);
+        const pane = document.getElementById(id);
+        if (pane) pane.classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          if (b.getAttribute('onclick') === "switchTab('" + name + "')") b.classList.add('active');
+        });
+      }
+
       function clearAll() {
         srcImage = null;
         rects = [];
