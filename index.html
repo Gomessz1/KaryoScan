@@ -1133,6 +1133,389 @@
       }
 
       /* ===============================================================
+         Patient / exam form
+      =============================================================== */
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .form-field label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-3);
+      }
+      .form-field input,
+      .form-field select {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 12px;
+        color: var(--text);
+        font-size: 0.83rem;
+        outline: none;
+        transition:
+          border-color var(--tr),
+          box-shadow var(--tr);
+        width: 100%;
+      }
+      .form-field input:focus,
+      .form-field select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      /* ===============================================================
+         Version badge & header extras
+      =============================================================== */
+      .version-badge {
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 99px;
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+
+      /* ===============================================================
+         Count status indicator
+      =============================================================== */
+      .count-status {
+        font-size: 0.72rem;
+        font-weight: 700;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.3s;
+      }
+      .count-status .cs-icon {
+        font-size: 0.85rem;
+      }
+
+      /* ===============================================================
+         Karyogram
+      =============================================================== */
+      .karyo-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      }
+      .karyo-head {
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--surface-2);
+      }
+      .karyo-head h3 {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-3);
+      }
+      .karyo-body {
+        padding: 14px;
+        overflow-x: auto;
+      }
+      .karyo-body::-webkit-scrollbar {
+        height: 4px;
+      }
+      .karyo-body::-webkit-scrollbar-track {
+        background: var(--surface-2);
+      }
+      .karyo-body::-webkit-scrollbar-thumb {
+        background: var(--surface-3);
+        border-radius: 2px;
+      }
+      .karyo-grid {
+        display: flex;
+        gap: 4px;
+        align-items: flex-end;
+        min-width: max-content;
+        padding-bottom: 4px;
+      }
+      .karyo-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+      }
+      .karyo-pair-num {
+        font-size: 0.58rem;
+        font-weight: 800;
+        color: var(--muted);
+        text-align: center;
+        min-width: 28px;
+      }
+      .karyo-thumb {
+        border-radius: 4px;
+        border: 2px solid transparent;
+        display: block;
+        cursor: pointer;
+        transition: all var(--tr);
+      }
+      .karyo-thumb:hover {
+        transform: scale(1.12);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        position: relative;
+      }
+      .karyo-sep {
+        width: 1px;
+        background: var(--border);
+        height: 70px;
+        align-self: center;
+        margin: 0 4px;
+        flex-shrink: 0;
+      }
+      .karyo-empty {
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      /* ===============================================================
+         Zoom bar
+      =============================================================== */
+      .zoom-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--surface-2);
+      }
+      .zoom-bar label {
+        font-size: 0.7rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .zoom-bar input[type="range"] {
+        flex: 1;
+      }
+      .zoom-val {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--accent);
+        min-width: 38px;
+        text-align: right;
+      }
+      .zoom-btn {
+        padding: 3px 9px;
+        border: 1px solid var(--border);
+        background: var(--surface-3);
+        color: var(--text-3);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 700;
+        transition: all var(--tr);
+      }
+      .zoom-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .cv-body-zoom {
+        overflow: auto;
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        cursor: grab;
+      }
+      .cv-body-zoom:active {
+        cursor: grabbing;
+      }
+      .cv-body-zoom canvas {
+        transform-origin: top left;
+        transition: transform 0.15s;
+      }
+
+      /* ===============================================================
+         Print report
+      =============================================================== */
+      #printHeader {
+        display: none;
+      }
+      @media print {
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        body {
+          background: white !important;
+          color: #1e293b !important;
+        }
+        .control-panel,
+        #overlay,
+        .toast,
+        #btnProcess,
+        #btnDownload,
+        #btnClassify,
+        .thumb-section,
+        .group-section,
+        .zoom-bar,
+        .pair-mode-bar,
+        #btnManualPair,
+        .header-status {
+          display: none !important;
+        }
+        header {
+          background: white !important;
+          border-bottom: 2px solid #1e293b !important;
+          padding: 10px 20px !important;
+          box-shadow: none !important;
+          position: static !important;
+        }
+        .brand-name {
+          color: #1e40af !important;
+          -webkit-text-fill-color: #1e40af !important;
+          font-size: 1.2rem !important;
+        }
+        .brand-sub {
+          color: #64748b !important;
+        }
+        .brand-icon {
+          background: #dbeafe !important;
+          box-shadow: none !important;
+        }
+        #printHeader {
+          display: block !important;
+          border: 1px solid #e2e8f0;
+          border-radius: 10px;
+          padding: 14px 20px;
+          margin-bottom: 14px;
+          background: #f8fafc !important;
+          font-size: 0.88rem;
+        }
+        #printHeader table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        #printHeader td {
+          padding: 3px 10px;
+          font-size: 0.82rem;
+          color: #334155;
+        }
+        #printHeader td:first-child {
+          font-weight: 700;
+          color: #1e40af;
+          width: 160px;
+        }
+        main {
+          display: block !important;
+          padding: 0 !important;
+          max-width: 100% !important;
+        }
+        .results-panel {
+          gap: 10px !important;
+        }
+        .hero-stat {
+          background: #eff6ff !important;
+          border: 1px solid #bfdbfe !important;
+          box-shadow: none !important;
+          page-break-inside: avoid;
+        }
+        .hero-value {
+          color: #1d4ed8 !important;
+          -webkit-text-fill-color: #1d4ed8 !important;
+          font-size: 2.5rem !important;
+        }
+        .hero-sub,
+        .hero-label {
+          color: #475569 !important;
+        }
+        .count-status {
+          color: inherit !important;
+        }
+        .stats-bar .stat-card {
+          background: white !important;
+          border-color: #e2e8f0 !important;
+        }
+        .stat-val {
+          color: #1d4ed8 !important;
+        }
+        .stat-val.g {
+          color: #059669 !important;
+        }
+        .stat-val.y {
+          color: #d97706 !important;
+        }
+        .cv-card {
+          box-shadow: none !important;
+          border: 1px solid #e2e8f0 !important;
+          page-break-inside: avoid;
+        }
+        .cv-body,
+        .cv-body-zoom {
+          background: #f8fafc !important;
+          min-height: unset !important;
+        }
+        .cv-head {
+          background: #f1f5f9 !important;
+        }
+        .cv-head-title {
+          color: #334155 !important;
+        }
+        .badge-green {
+          background: #dcfce7 !important;
+          color: #16a34a !important;
+        }
+        .karyo-section {
+          box-shadow: none !important;
+          border: 1px solid #e2e8f0 !important;
+          page-break-inside: avoid;
+        }
+        .karyo-head {
+          background: #f1f5f9 !important;
+        }
+        .karyo-head h3 {
+          color: #334155 !important;
+        }
+        .pair-section {
+          page-break-inside: avoid;
+          border: 1px solid #e2e8f0 !important;
+          box-shadow: none !important;
+        }
+        .pair-head {
+          background: #f1f5f9 !important;
+        }
+        .pair-head h3 {
+          color: #334155 !important;
+        }
+        .pair-card {
+          border: 1px solid #e2e8f0 !important;
+          background: white !important;
+        }
+        .pair-score,
+        .pair-lbl {
+          color: #475569 !important;
+        }
+        canvas {
+          max-width: 100% !important;
+        }
+        @page {
+          margin: 15mm 12mm;
+        }
+      }
+
+      /* ===============================================================
          Responsive
       =============================================================== */
       @media (max-width: 1024px) {
@@ -1182,13 +1565,16 @@
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
+    <!-- Print-only patient header -->
+    <div id="printHeader"></div>
+
     <!-- Header -->
     <header>
       <div class="brand">
         <div class="brand-icon">🔬</div>
         <div>
-          <h1 class="brand-name">KaryoScan</h1>
-          <p class="brand-sub">Detecção inteligente de cromossomos</p>
+          <h1 class="brand-name">KaryoScan <span class="version-badge">v2.0</span></h1>
+          <p class="brand-sub">Detecção &amp; Pareamento de Cromossomos — Uso Clínico</p>
         </div>
       </div>
       <div class="header-status">
@@ -1206,6 +1592,35 @@
     <main>
       <!-- LEFT: control panel -->
       <aside class="control-panel">
+        <!-- Patient info card -->
+        <div class="card">
+          <div class="card-title">📄 Ficha do Exame</div>
+          <div class="ctrl-list">
+            <div class="form-grid">
+              <div class="form-field" style="grid-column:1/-1">
+                <label>Paciente</label>
+                <input type="text" id="fPatient" placeholder="Nome completo" autocomplete="name" />
+              </div>
+              <div class="form-field">
+                <label>ID / Prontuário</label>
+                <input type="text" id="fID" placeholder="MR-000000" />
+              </div>
+              <div class="form-field">
+                <label>Data do Exame</label>
+                <input type="date" id="fDate" />
+              </div>
+              <div class="form-field" style="grid-column:1/-1">
+                <label>Instituição / Laboratório</label>
+                <input type="text" id="fInst" placeholder="Hospital / Lab de Citogenética" />
+              </div>
+              <div class="form-field" style="grid-column:1/-1">
+                <label>Laudo / Observações</label>
+                <input type="text" id="fNotes" placeholder="Ex: Suspeita de Trissomia 21" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Upload card -->
         <div class="card">
           <div class="card-title">Imagem de Entrada</div>
@@ -1439,6 +1854,14 @@
             <button class="btn btn-ghost" onclick="clearAll()">
               🗑 Limpar Área de Trabalho
             </button>
+            <button
+              class="btn btn-ghost"
+              id="btnReport"
+              onclick="exportReport()"
+              disabled
+            >
+              📄 Exportar Relatório PDF
+            </button>
           </div>
         </div>
       </aside>
@@ -1477,11 +1900,18 @@
             <span class="cv-head-title">Resultado da Detecção</span>
             <span class="badge badge-green">Processado</span>
           </div>
-          <div class="cv-body" id="bodyResult">
+          <div class="cv-body cv-body-zoom" id="bodyResult">
             <div class="cv-placeholder" id="phResult">
               <span>🔬</span>Execute a detecção…
             </div>
-            <canvas id="canvasResult" style="display: none"></canvas>
+            <canvas id="canvasResult" style="display:none"></canvas>
+          </div>
+          <div class="zoom-bar">
+            <label>🔍 Zoom</label>
+            <input type="range" id="sZoom" min="50" max="400" step="10" value="100" />
+            <span class="zoom-val" id="vZoom">100%</span>
+            <button class="zoom-btn" onclick="resetZoom()">1:1</button>
+            <button class="zoom-btn" onclick="fitZoom()">Ajustar</button>
           </div>
         </div>
 
@@ -1517,6 +1947,32 @@
           <div class="group-body" id="groupBody">
             <div class="grp-empty">
               Execute a detecção e a classificação para ver os grupos.
+            </div>
+          </div>
+        </div>
+
+        <!-- Karyogram -->
+        <div class="karyo-section" id="karyoSection">
+          <div class="karyo-head">
+            <h3>🦬 Cariograma Visual</h3>
+            <span style="font-size:.72rem;color:var(--muted)" id="karyoMeta">—</span>
+          </div>
+          <div class="karyo-body">
+            <div id="karyoGrid" class="karyo-grid">
+              <div class="karyo-empty">Cariograma aparecerá após o pareamento.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Karyogram -->
+        <div class="karyo-section" id="karyoSection">
+          <div class="karyo-head">
+            <h3>🧬 Cariograma Visual</h3>
+            <span style="font-size:.72rem;color:var(--muted)" id="karyoMeta">—</span>
+          </div>
+          <div class="karyo-body">
+            <div id="karyoGrid" class="karyo-grid">
+              <div class="karyo-empty">Cariograma aparecerá após o pareamento.</div>
             </div>
           </div>
         </div>
@@ -1586,6 +2042,9 @@
       let srcImage = null; // HTMLImageElement da imagem carregada
       let rects = []; // Bounding rects detectados {x,y,width,height}
       let areas = []; // Áreas (px²) dos contornos, na mesma ordem
+
+      // Pré-preenche data de hoje
+      document.getElementById("fDate").value = new Date().toISOString().slice(0, 10);
 
       // Paleta de cores para as caixas (RGBA)
       const PALETTE = [
@@ -1929,6 +2388,7 @@
 
           document.getElementById("btnDownload").disabled = false;
           document.getElementById("btnClassify").disabled = false;
+          document.getElementById("btnReport").disabled = false;
           toast(
             rects.length + " cromossomo(s) detectado(s) em " + elapsed + " ms",
             "success",
@@ -2258,6 +2718,22 @@
         } else {
           document.getElementById("sAvg").textContent = "—";
         }
+        // Indicador de contagem esperada (humano: 46)
+        const expected = 46;
+        const delta = count - expected;
+        const el = document.getElementById("sCountStatus");
+        if (count === 0) {
+          el.textContent = "";
+        } else if (delta === 0) {
+          el.innerHTML = '<span class="cs-icon">✅</span> 46 esperados — Euplóide';
+          el.style.color = "var(--green)";
+        } else if (Math.abs(delta) <= 3) {
+          el.innerHTML = '<span class="cs-icon">⚠️</span> 46 esperados (delta ' + (delta > 0 ? '+' : '') + delta + ')';
+          el.style.color = "var(--yellow)";
+        } else {
+          el.innerHTML = '<span class="cs-icon">❌</span> 46 esperados (delta ' + (delta > 0 ? '+' : '') + delta + ')';
+          el.style.color = "var(--red)";
+        }
       }
 
       // ================================================================
@@ -2267,10 +2743,39 @@
         const c = document.getElementById("canvasResult");
         if (c.style.display === "none") return;
         const a = document.createElement("a");
-        a.download = "karyoscan_resultado.png";
+        const patient = document.getElementById("fPatient").value.trim();
+        const dateStr = (document.getElementById("fDate").value || new Date().toISOString().slice(0,10)).replace(/-/g, '');
+        a.download = "karyoscan_" + (patient ? patient.replace(/\s+/g, '_') + '_' : '') + dateStr + ".png";
         a.href = c.toDataURL("image/png");
         a.click();
         toast("Download iniciado!", "success");
+      }
+
+      // ================================================================
+      //  Exportar Relatório PDF (via print)
+      // ================================================================
+      function exportReport() {
+        // Preenche o cabeçalho de impressão com dados do paciente
+        const patient = document.getElementById("fPatient").value || "—";
+        const id      = document.getElementById("fID").value || "—";
+        const inst    = document.getElementById("fInst").value || "—";
+        const notes   = document.getElementById("fNotes").value || "—";
+        const rawDate = document.getElementById("fDate").value;
+        const dateStr = rawDate
+          ? new Date(rawDate + 'T12:00:00').toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'})
+          : new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+        const count   = document.getElementById("sCount").textContent;
+        const status  = document.getElementById("sCountStatus").textContent.replace(/^[^a-zA-Z0-9]/u,'').trim();
+
+        document.getElementById("printHeader").innerHTML = `
+          <table>
+            <tr><td>Paciente:</td><td>${patient}</td><td>ID / Prontuário:</td><td>${id}</td></tr>
+            <tr><td>Instituição:</td><td>${inst}</td><td>Data do Exame:</td><td>${dateStr}</td></tr>
+            <tr><td>Observações:</td><td colspan="3">${notes}</td></tr>
+            <tr><td>Cromossomos:</td><td><strong>${count}</strong></td><td>Status:</td><td>${status}</td></tr>
+          </table>`;
+
+        window.print();
       }
 
       // ================================================================
@@ -2296,8 +2801,10 @@
         document.getElementById("sAvg").textContent = "—";
         document.getElementById("sRes").textContent = "—";
         document.getElementById("sTime").textContent = "—";
+        document.getElementById("sCountStatus").textContent = "";
 
         resetResult(true);
+        resetZoom();
         toast("Área de trabalho limpa.", "info");
       }
 
@@ -2306,6 +2813,7 @@
         document.getElementById("phResult").style.display = "block";
         document.getElementById("btnDownload").disabled = true;
         document.getElementById("btnClassify").disabled = true;
+        document.getElementById("btnReport").disabled = true;
         document.getElementById("thumbGrid").innerHTML =
           '<div class="thumb-empty">As miniaturas de cada cromossomo aparecerão aqui após a detecção.</div>';
         document.getElementById("thumbCount").textContent = "0 objetos";
@@ -2314,16 +2822,67 @@
         document.getElementById("groupLegend").innerHTML = "";
         document.getElementById("groupMeta").textContent = "—";
         document.getElementById("pairGrid").innerHTML =
-          '<div class="pair-empty">Os pares sugeridos aparecerão aqui após a classificação.</div>';
+          '<div class="pair-empty">Os pares aparecerão aqui após a classificação.</div>';
         document.getElementById("pairMeta").textContent = "—";
+        document.getElementById("karyoGrid").innerHTML =
+          '<div class="karyo-empty">Cariograma aparecerá após o pareamento.</div>';
+        document.getElementById("karyoMeta").textContent = "—";
+        document.getElementById("btnManualPair").style.display = "none";
         mlLabels = [];
         mlFeatNorm = [];
+        pairedPairs = [];
+        unpairedIdxs = [];
         if (clearStats) {
           document.getElementById("sCount").textContent = "—";
           document.getElementById("sAvg").textContent = "—";
           document.getElementById("sTime").textContent = "—";
+          document.getElementById("sCountStatus").textContent = "";
         }
       }
+
+      // ================================================================
+      //  Zoom / Pan no canvas resultado
+      // ================================================================
+      let _zoomLevel = 1.0;
+
+      function applyZoom(pct) {
+        _zoomLevel = pct / 100;
+        document.getElementById('vZoom').textContent = pct + '%';
+        const c = document.getElementById('canvasResult');
+        c.style.transform = 'scale(' + _zoomLevel + ')';
+        // Expande o container para o tamanho transformado
+        const body = document.getElementById('bodyResult');
+        body.style.minHeight = Math.round(c.height * _zoomLevel) + 'px';
+      }
+
+      function resetZoom() {
+        document.getElementById('sZoom').value = 100;
+        applyZoom(100);
+      }
+
+      function fitZoom() {
+        const c = document.getElementById('canvasResult');
+        const body = document.getElementById('bodyResult');
+        if (!c || c.style.display === 'none') return;
+        const availW = body.clientWidth - 4;
+        const pct = Math.max(10, Math.min(400, Math.round((availW / c.width) * 100)));
+        document.getElementById('sZoom').value = pct;
+        applyZoom(pct);
+      }
+
+      document.getElementById('sZoom').addEventListener('input', function () {
+        applyZoom(parseInt(this.value));
+      });
+
+      // Scroll wheel = zoom
+      document.getElementById('bodyResult').addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const step = e.deltaY < 0 ? 10 : -10;
+        const slider = document.getElementById('sZoom');
+        const newVal = Math.max(50, Math.min(400, parseInt(slider.value) + step));
+        slider.value = newVal;
+        applyZoom(newVal);
+      }, { passive: false });
 
       // ================================================================
       //  Utilitários UI
@@ -2984,13 +3543,18 @@
           stepMsg("Renderizando painel…");
           renderPairsPanel(origCanvas, rects, areas, pairedPairs, unpairedIdxs);
 
-          // 5. K-Means ainda é usado para o painel de grupos (secundário)
+          // 5. Cariograma visual
+          stepMsg("Gerando cariograma…");
+          buildKaryogram(origCanvas, rects, areas, pairedPairs, unpairedIdxs);
+
+          // 6. K-Means ainda é usado para o painel de grupos (secundário)
           mlK = Math.min(Math.ceil(rects.length / 2), 12);
           if (rects.length >= 2) {
             mlLabels = await kMeansTF(mlFeatNorm, mlK);
             renderGroups(origCanvas, rects, areas, mlLabels, mlK);
           }
 
+          document.getElementById("btnReport").disabled = false;
           toast(
             pairedPairs.length +
               " par(es) identificado(s)" +
@@ -3018,6 +3582,96 @@
           pairedPairs.length ? pairedPairs : [],
           unpairedIdxs.length ? unpairedIdxs : rects.map((_, i) => i),
         );
+      }
+
+      // ---------------------------------------------------------------
+      //  Cariograma visual — cromossomos ordenados por tamanho em pares
+      // ---------------------------------------------------------------
+      function buildKaryogram(origCanvas, rects, areas, pairs, unpaired) {
+        const grid = document.getElementById("karyoGrid");
+        grid.innerHTML = "";
+
+        const total = pairs.length * 2 + unpaired.length;
+        if (total === 0) {
+          grid.innerHTML = '<div class="karyo-empty">Nenhum cromossomo para exibir.</div>';
+          document.getElementById("karyoMeta").textContent = "—";
+          return;
+        }
+
+        document.getElementById("karyoMeta").textContent =
+          pairs.length + " par(es) · " + unpaired.length + " sem par";
+
+        const PAD = 3;
+        const MAX_H = 72; // altura máx da miniatura em px
+
+        function makeThumbCanvas(idx, borderHex) {
+          const rect = rects[idx];
+          const sx = Math.max(0, rect.x - PAD);
+          const sy = Math.max(0, rect.y - PAD);
+          const sx2 = Math.min(origCanvas.width, rect.x + rect.width + PAD);
+          const sy2 = Math.min(origCanvas.height, rect.y + rect.height + PAD);
+          const sw = sx2 - sx, sh = sy2 - sy;
+          const scale = MAX_H / Math.max(sw, sh, 1);
+          const tw = Math.max(1, Math.round(sw * scale));
+          const th = Math.max(1, Math.round(sh * scale));
+          const tc = document.createElement("canvas");
+          tc.width = tw; tc.height = th;
+          tc.className = "karyo-thumb";
+          tc.style.borderColor = borderHex;
+          tc.getContext("2d").drawImage(origCanvas, sx, sy, sw, sh, 0, 0, tw, th);
+          tc.title = "Cromossomo #" + (idx + 1) + " · " + areas[idx].toLocaleString("pt-BR") + " px²";
+          return tc;
+        }
+
+        // Pares — renderiza dois thumbs empilhados em cada coluna
+        pairs.forEach(({ idxA, idxB }, pi) => {
+          const hex = PAIR_COLORS_HEX[pi % PAIR_COLORS_HEX.length];
+
+          const col = document.createElement("div");
+          col.className = "karyo-col";
+
+          const num = document.createElement("div");
+          num.className = "karyo-pair-num";
+          num.textContent = "Par " + (pi + 1);
+          num.style.color = hex;
+
+          const tcA = makeThumbCanvas(idxA, hex);
+          const tcB = makeThumbCanvas(idxB, hex);
+
+          col.appendChild(num);
+          col.appendChild(tcA);
+          col.appendChild(tcB);
+          grid.appendChild(col);
+
+          // Separador a cada 5 pares (grupos visuais)
+          if ((pi + 1) % 5 === 0 && pi + 1 < pairs.length) {
+            const sep = document.createElement("div");
+            sep.className = "karyo-sep";
+            grid.appendChild(sep);
+          }
+        });
+
+        // Cromossomos sem par — coluna única com "?"
+        if (unpaired.length > 0) {
+          const sep = document.createElement("div");
+          sep.className = "karyo-sep";
+          grid.appendChild(sep);
+
+          unpaired.forEach((idx) => {
+            const col = document.createElement("div");
+            col.className = "karyo-col";
+
+            const num = document.createElement("div");
+            num.className = "karyo-pair-num";
+            num.textContent = "#" + (idx + 1) + " ?";
+            num.style.color = "#94a3b8";
+            col.appendChild(num);
+
+            const tc = makeThumbCanvas(idx, "#94a3b8");
+            col.appendChild(tc);
+            grid.appendChild(col);
+          });
+        }
       }
 
       // ---------------------------------------------------------------
